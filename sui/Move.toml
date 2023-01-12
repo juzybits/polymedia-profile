@@ -4,7 +4,7 @@ version = "0.0.1"
 authors = ["juzybits <https://twitter.com/juzybits>"]
 
 [dependencies]
-Sui = { local = "../../sui/crates/sui-framework" }
+Sui = { local = "../../../sui/crates/sui-framework" }
 
 [addresses]
 polymedia_profile = "0x0"
