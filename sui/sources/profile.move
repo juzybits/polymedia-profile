@@ -1,16 +1,16 @@
-module polymedia_profile::profile {
-
+module polymedia_profile::profile
+{
     use std::string::{Self, String};
     use std::vector;
     use sui::object::{Self, UID};
-    use sui::object_table::{Self, ObjectTable};
-    use sui::tx_context::{Self, TxContext};
+    use sui::table::{Self, Table};
     use sui::transfer;
+    use sui::tx_context::{Self, TxContext};
 
     struct Registry has key, store {
         id: UID,
         name: String,
-        profiles: ObjectTable<address, Profile>,
+        profiles: Table<address, address>,
     }
 
     struct Profile has key, store {
@@ -27,44 +27,51 @@ module polymedia_profile::profile {
         let registry = Registry {
             id: object::new(ctx),
             name: string::utf8(name),
-            profiles: object_table::new(ctx),
+            profiles: table::new(ctx),
         };
         transfer::share_object(registry);
     }
 
     public entry fun create_profile(
+        registry: &mut Registry,
         name: vector<u8>,
         image: vector<u8>,
         description: vector<u8>,
-        registry: &mut Registry,
         ctx: &mut TxContext,
     ) {
+        let profile_uid = object::new(ctx);
+        let profile_addr = object::uid_to_address(&profile_uid);
         let profile = Profile {
-            id: object::new(ctx),
+            id: profile_uid,
             name: string::utf8(name),
             image: string::utf8(image),
             description: string::utf8(description),
         };
         let sender_addr = tx_context::sender(ctx);
-        object_table::add(&mut registry.profiles, sender_addr, profile);
-        // transfer::transfer(profile, sender_addr);
+        table::add(&mut registry.profiles, sender_addr, profile_addr);
+        transfer::transfer(profile, sender_addr);
     }
 
     public fun get_profiles(
         registry: &Registry,
-        addresses: vector<address>,
-    ): vector<address> {
-        let profiles = vector::empty<address>();
-        while (!vector::is_empty(&addresses)) {
-            let address = vector::pop_back(&mut addresses);
-            if ( object_table::contains(&registry.profiles, address) ) {
-                let profile = object_table::borrow(&registry.profiles, address);
-                let profile_id = object::id(profile);
-                let profile_address = object::id_to_address(&profile_id);
-                vector::push_back(&mut profiles, profile_address);
+        lookup_addresses: vector<address>,
+    ): vector<address>
+    {
+        let not_found_addr = @0x0;
+        let profile_addresses = vector::empty<address>();
+        let length = vector::length(&lookup_addresses);
+        let index = 0;
+        while ( index < length ) {
+            let lookup_addr = *vector::borrow(&lookup_addresses, index);
+            if ( table::contains(&registry.profiles, lookup_addr) ) {
+                let profile_addr = *table::borrow(&registry.profiles, lookup_addr);
+                vector::push_back(&mut profile_addresses, profile_addr);
+            } else {
+                vector::push_back(&mut profile_addresses, not_found_addr);
             };
+            index = index + 1
         };
-        return profiles
+        return profile_addresses
     }
 
 }
