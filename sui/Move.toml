@@ -1,5 +1,5 @@
 [package]
-name = "Polymedia Accounts"
+name = "Polymedia Profile"
 version = "0.0.1"
 authors = ["juzybits <https://twitter.com/juzybits>"]
 
@@ -7,4 +7,4 @@ authors = ["juzybits <https://twitter.com/juzybits>"]
 Sui = { local = "../../sui/crates/sui-framework" }
 
 [addresses]
-polymedia_accounts = "0x0"
+polymedia_profile = "0x0"
