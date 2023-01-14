@@ -1,14 +1,16 @@
-import { useEffect } from 'react';
+// import { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import { EthosConnectProvider } from 'ethos-connect';
+
+import { Nav } from './Nav';
 import imgLogo from '../img/logo.png';
 
 export function App()
 {
     // TODO: remove
-    useEffect(() => {
-        foo();
-    }, []);
+    // useEffect(() => {
+    //     foo();
+    // }, []);
 
     return <EthosConnectProvider
         ethosConfiguration={{hideEmailSignIn: true}}
@@ -16,11 +18,13 @@ export function App()
         dappIcon={<img src={imgLogo} alt='Polymedia logo' />}
         connectMessage='Polymedia Profile'
         >
+        <Nav />
         <Outlet context={[]} />
     </EthosConnectProvider>;
 }
 
 // TODO: remove
+/*
 import { getProfiles } from '@polymedia/tools';
 async function foo() {
     const result = await getProfiles({
@@ -35,3 +39,4 @@ async function foo() {
     console.log(JSON.stringify(result));
     console.log(result);
 }
+*/

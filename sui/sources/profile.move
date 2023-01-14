@@ -74,4 +74,5 @@ module polymedia_profile::profile
         return profile_addresses
     }
 
+    // public fun get_profile_info(); // TODO
 }
