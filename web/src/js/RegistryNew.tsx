@@ -49,7 +49,7 @@ export function RegistryNew() {
         });
     };
 
-    return <div id='page' className='page-tool'>
+    return <div id='page' className='page-registry-new'>
     <div className='new-wrapper'>
 
         <div className='new-content'>
