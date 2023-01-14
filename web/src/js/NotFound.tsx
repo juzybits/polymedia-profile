@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 
-export function NotFound(props: any) {
+export function NotFound() {
     useEffect(() => {
-        document.title = 'Polymedia Accounts - Not found';
+        document.title = 'Polymedia Profile - Not found';
     }, []);
 
     return <div id='page' className='page-notfound'>

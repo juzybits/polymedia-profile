@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import { EthosConnectProvider } from 'ethos-connect';
 import imgLogo from '../img/logo.png';
 
-export function App(props: any)
+export function App()
 {
     // TODO: remove
     useEffect(() => {
@@ -12,9 +12,9 @@ export function App(props: any)
 
     return <EthosConnectProvider
         ethosConfiguration={{hideEmailSignIn: true}}
-        dappName='Polymedia Accounts'
+        dappName='Polymedia Profile'
         dappIcon={<img src={imgLogo} alt='Polymedia logo' />}
-        connectMessage='Polymedia Accounts'
+        connectMessage='Polymedia Profile'
         >
         <Outlet context={[]} />
     </EthosConnectProvider>;

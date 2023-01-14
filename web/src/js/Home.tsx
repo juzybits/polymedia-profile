@@ -1,14 +1,13 @@
-import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import '../css/Home.less';
-import imgLogo from '../img/logo.png';
 
-export function Home(props: any) {
-    useEffect(() => {
-        document.title = 'Polymedia Accounts';
-    }, []);
-
+export function Home() {
     return <div id='page' className='page-home'>
-        HOME
+        <h1>
+            HOME
+        </h1>
+        <ul className='tmp-list'>
+            <li><Link to='/registry/new'>/registry/new</Link></li>
+        </ul>
     </div>;
 }
