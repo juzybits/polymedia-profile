@@ -24,13 +24,13 @@ export function App()
 }
 
 
-import { getProfileObjectIds } from './lib/profile';
+import { getProfileObjectIds } from '@polymedia/profile-sdk';
 
 // TODO: remove
 async function foo() {
     const result = await getProfileObjectIds({
-        packageId: '0xc7722a5f88c5cbf0f4005eed969e76bebeba2415',
-        registryId: '0xd58562b32f7016c88dc351a92040cd5255ce8831',
+        packageId: '0x029a669d58113d3153811722f684dc3b7785543d',
+        registryId: '0x0faaf2d1fcb02a6a3a1372d8b149929051f7a84a',
         lookupAddresses: [
             '0x1111111111111111111111111111111111111111',
             '0xe6717d39d166d9fa852c52e9ec0f76cb750457b7',

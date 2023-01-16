@@ -1,6 +1,9 @@
 import { JsonRpcProvider, Network, SignableTransaction } from '@mysten/sui.js';
 import { BCS, getSuiMoveConfig } from '@mysten/bcs';
 
+// TODO: getProfiles() : Promise<Array<Profile>>
+// TODO: ProfileCache to only fetch new addresses
+
 const rpc = new JsonRpcProvider(Network.DEVNET);
 const bcs = new BCS(getSuiMoveConfig());
 
@@ -9,7 +12,6 @@ export type GetProfilesArgs = {
     registryId: string;
     lookupAddresses: string[];
 }
-// TODO: getProfiles() : Promise<Array<Profile>>
 export async function getProfileObjectIds({ packageId, registryId, lookupAddresses }
         : GetProfilesArgs): Promise<Array<string>|string> {
     const moveCall = {

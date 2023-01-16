@@ -1,11 +1,11 @@
 import { useEffect, useState, SyntheticEvent } from 'react';
 import { ethos } from 'ethos-connect';
 
-import { createProfile } from '@polymedia/tools';
+import { createProfile } from '@polymedia/profile-sdk';
 import '../css/ProfileNew.less';
 
-const POLYMEDIA_PROFILE_PACKAGE = '0x36c3f157d123bf2be6a1ec3e5fe8df069436ae3f'; // TODO move to polymedia-tools
-const POLYMEDIA_PROFILE_REGISTRY = '0xc7e6e1f8e6d40306a582b43fabf30c56e8340110'; // TODO move to polymedia-tools
+const POLYMEDIA_PROFILE_PACKAGE = '0x029a669d58113d3153811722f684dc3b7785543d'; // TODO move to polymedia-tools
+const POLYMEDIA_PROFILE_REGISTRY = '0x0faaf2d1fcb02a6a3a1372d8b149929051f7a84a'; // TODO move to polymedia-tools
 
 export function ProfileNew() {
     useEffect(() => {

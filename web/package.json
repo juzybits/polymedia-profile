@@ -1,5 +1,5 @@
 {
-    "name": "@polymedia/profile",
+    "name": "@polymedia/profile-web",
     "author": "juzybits <https://twitter.com/juzybits>",
     "private": true,
     "dependencies": {

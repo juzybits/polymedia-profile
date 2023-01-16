@@ -1,10 +1,10 @@
 import { useEffect, useState, SyntheticEvent } from 'react';
 import { ethos } from 'ethos-connect';
 
-import { createRegistry } from '@polymedia/tools';
+import { createRegistry } from '@polymedia/profile-sdk';
 import '../css/RegistryNew.less';
 
-const POLYMEDIA_PROFILE_PACKAGE = '0x36c3f157d123bf2be6a1ec3e5fe8df069436ae3f'; // TODO move to polymedia-tools
+const POLYMEDIA_PROFILE_PACKAGE = '0x029a669d58113d3153811722f684dc3b7785543d'; // TODO move to polymedia-tools
 
 export function RegistryNew() {
     useEffect(() => {
