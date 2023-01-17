@@ -1,6 +1,9 @@
 import { JsonRpcProvider, Network, SignableTransaction } from '@mysten/sui.js';
 import { BCS, getSuiMoveConfig } from '@mysten/bcs';
 
+export const POLYMEDIA_PROFILE_PACKAGE_ID = '0xb836580486fd2b50405bd7f2fc0909c4da8edb8b';
+export const POLYMEDIA_PROFILE_REGISTRY_ID = '0xebd78965372873f7423a2184bcc50966e8119afb';
+
 // TODO: getProfiles() : Promise<Array<Profile>>
 // TODO: ProfileCache to only fetch new addresses
 
@@ -8,12 +11,15 @@ const rpc = new JsonRpcProvider(Network.DEVNET);
 const bcs = new BCS(getSuiMoveConfig());
 
 export type GetProfilesArgs = {
-    packageId: string;
-    registryId: string;
     lookupAddresses: string[];
+    packageId?: string;
+    registryId?: string;
 }
-export async function getProfileObjectIds({ packageId, registryId, lookupAddresses }
-        : GetProfilesArgs): Promise<Array<string>|string> {
+export async function getProfileObjectIds({
+        lookupAddresses,
+        packageId = POLYMEDIA_PROFILE_PACKAGE_ID,
+        registryId = POLYMEDIA_PROFILE_REGISTRY_ID
+    }: GetProfilesArgs): Promise<Array<string>|string> {
     const moveCall = {
         packageObjectId: packageId,
         module: 'profile',
@@ -33,7 +39,7 @@ export async function getProfileObjectIds({ packageId, registryId, lookupAddress
             const valueType: string = returnValue[1];
             const valueData = Uint8Array.from(returnValue[0]);
             const profileAddreses: Array<string> = bcs.de(valueType, valueData, 'hex');
-            return profileAddreses;
+            return profileAddreses; // TODO transform into Map<string, string>
         } else {
             return effects.status.error;
         }
@@ -48,11 +54,14 @@ export type WalletArg = {
 }
 export type CreateRegistryArgs = {
     wallet: WalletArg,
-    packageId: string;
     registryName: string;
+    packageId?: string;
 }
-export async function createRegistry({ wallet, packageId, registryName }
-        : CreateRegistryArgs): Promise<any> {
+export async function createRegistry({
+        wallet,
+        registryName,
+        packageId = POLYMEDIA_PROFILE_PACKAGE_ID,
+    } : CreateRegistryArgs): Promise<any> {
     return wallet.signAndExecuteTransaction({
         kind: 'moveCall',
         data: {
@@ -66,19 +75,24 @@ export async function createRegistry({ wallet, packageId, registryName }
             gasBudget: 1000,
         }
     });
-
 }
 
 export type CreateProfileArgs = {
     wallet: WalletArg,
-    packageId: string;
-    registryId: string,
     name: string,
-    image: string,
-    description: string,
+    image?: string,
+    description?: string,
+    packageId?: string;
+    registryId?: string,
 }
-export async function createProfile({ wallet, packageId, registryId, name, image, description }
-        : CreateProfileArgs): Promise<any> {
+export async function createProfile({
+        wallet,
+        name,
+        image = '',
+        description = '',
+        packageId = POLYMEDIA_PROFILE_PACKAGE_ID,
+        registryId = POLYMEDIA_PROFILE_REGISTRY_ID
+    } : CreateProfileArgs): Promise<any> {
     return wallet.signAndExecuteTransaction({
         kind: 'moveCall',
         data: {
@@ -95,5 +109,4 @@ export async function createProfile({ wallet, packageId, registryId, name, image
             gasBudget: 1000,
         }
     });
-
 }

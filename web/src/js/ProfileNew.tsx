@@ -4,9 +4,6 @@ import { ethos } from 'ethos-connect';
 import { createProfile } from '@polymedia/profile-sdk';
 import '../css/ProfileNew.less';
 
-const POLYMEDIA_PROFILE_PACKAGE = '0x029a669d58113d3153811722f684dc3b7785543d'; // TODO move to polymedia-tools
-const POLYMEDIA_PROFILE_REGISTRY = '0x0faaf2d1fcb02a6a3a1372d8b149929051f7a84a'; // TODO move to polymedia-tools
-
 export function ProfileNew() {
     useEffect(() => {
         document.title = 'Polymedia Profile - New Profile';
@@ -28,11 +25,9 @@ export function ProfileNew() {
             return;
         }
         setWaiting(true);
-        console.debug(`[onSubmitCreateProfile] Calling item::create on package: ${POLYMEDIA_PROFILE_PACKAGE}`);
+        console.debug(`[onSubmitCreateProfile] Attempting to create profile: ${inputName}`);
         createProfile({
             wallet: wallet,
-            packageId: POLYMEDIA_PROFILE_PACKAGE,
-            registryId: POLYMEDIA_PROFILE_REGISTRY,
             name: inputName,
             image: inputImage,
             description: inputDescription,

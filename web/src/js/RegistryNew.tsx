@@ -4,8 +4,6 @@ import { ethos } from 'ethos-connect';
 import { createRegistry } from '@polymedia/profile-sdk';
 import '../css/RegistryNew.less';
 
-const POLYMEDIA_PROFILE_PACKAGE = '0x029a669d58113d3153811722f684dc3b7785543d'; // TODO move to polymedia-tools
-
 export function RegistryNew() {
     useEffect(() => {
         document.title = 'Polymedia Profile - New Registry';
@@ -25,10 +23,9 @@ export function RegistryNew() {
             return;
         }
         setWaiting(true);
-        console.debug(`[onSubmitCreateRegistry] Calling item::create on package: ${POLYMEDIA_PROFILE_PACKAGE}`);
+        console.debug(`[onSubmitCreateRegistry] Attempting to create registry with name: ${inputName}`);
         createRegistry({
             wallet: wallet,
-            packageId: POLYMEDIA_PROFILE_PACKAGE,
             registryName: inputName
         })
         .then((resp: any) => {
