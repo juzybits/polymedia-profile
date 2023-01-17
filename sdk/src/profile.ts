@@ -2,7 +2,7 @@ import { JsonRpcProvider, Network, SignableTransaction, OwnedObjectRef, Transact
 import { BCS, getSuiMoveConfig } from '@mysten/bcs';
 
 export const POLYMEDIA_PROFILE_PACKAGE_ID = '0xb836580486fd2b50405bd7f2fc0909c4da8edb8b';
-export const POLYMEDIA_PROFILE_REGISTRY_ID = '0xebd78965372873f7423a2184bcc50966e8119afb';
+export const POLYMEDIA_PROFILE_REGISTRY_ID = '0x566b219a1e913f952dc1390417c5958b1935b92b';
 
 // TODO: getProfiles() : Promise<Array<Profile>>
 // TODO: ProfileCache to only fetch new addresses
@@ -33,7 +33,8 @@ export async function getProfileObjectIds({
     const callerAddress = '0x7777777777777777777777777777777777777777';
     return await rpc.devInspectMoveCall(callerAddress, moveCall)
     .then((resp: any) => {
-        const effects = resp.effects || resp.EffectsCert?.effects?.effects; // Sui/Ethos || Suiet
+        //                  Sui/Ethos || Suiet
+        const effects = (resp.effects || resp.EffectsCert?.effects?.effects) as TransactionEffects;
         if (effects.status.status == 'success') {
             const returnValue: Array<any> = resp.results.Ok[0][1].returnValues[0]; // grab the 1st and only tuple
             const valueType: string = returnValue[1];
@@ -90,7 +91,6 @@ export async function createRegistry({
     .catch((error: any) => {
         return error.message;
     });
-
 }
 
 export type CreateProfileArgs = {
@@ -108,7 +108,7 @@ export async function createProfile({
         description = '',
         packageId = POLYMEDIA_PROFILE_PACKAGE_ID,
         registryId = POLYMEDIA_PROFILE_REGISTRY_ID
-    } : CreateProfileArgs): Promise<any> {
+    } : CreateProfileArgs): Promise<Array<OwnedObjectRef>|string> {
     return wallet.signAndExecuteTransaction({
         kind: 'moveCall',
         data: {
@@ -124,5 +124,20 @@ export async function createProfile({
             ],
             gasBudget: 1000,
         }
+    })
+    .then((resp: any) => {
+        const effects = resp.effects || resp.EffectsCert?.effects?.effects; // Sui/Ethos || Suiet
+        if (effects.status.status == 'success') {
+            console.debug('[onSubmitCreateProfile] Success:', resp);
+            return [ // `sui::dynamic_field::Field` and `polymedia_profile::profile::Profile`
+                effects.created[0] as OwnedObjectRef,
+                effects.created[1] as OwnedObjectRef,
+            ];
+        } else {
+            return effects.status.error;
+        }
+    })
+    .catch((error: any) => {
+        return error.message;
     });
 }

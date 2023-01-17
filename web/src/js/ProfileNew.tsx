@@ -17,7 +17,7 @@ export function ProfileNew() {
 
     const { status, wallet } = ethos.useWallet();
 
-    const onSubmitCreateProfile = (e: SyntheticEvent) => {
+    const onSubmitCreateProfile = async (e: SyntheticEvent) => {
         e.preventDefault();
         const isConnected = status=='connected' && wallet && wallet.address;
         if (!isConnected) {
@@ -26,30 +26,19 @@ export function ProfileNew() {
         }
         setWaiting(true);
         console.debug(`[onSubmitCreateProfile] Attempting to create profile: ${inputName}`);
-        createProfile({
+        const result = await createProfile({
             wallet: wallet,
             name: inputName,
             image: inputImage,
             description: inputDescription,
-        })
-        .then((resp: any) => {
-            const effects = resp.effects || resp.EffectsCert?.effects?.effects; // Sui/Ethos || Suiet
-            if (effects.status.status == 'success') {
-                console.debug('[onSubmitCreateProfile] Success:', resp);
-                const newObjId0 = effects.created[0].reference.objectId;
-                const newObjId1 = effects.created[1].reference.objectId;
-                console.debug('[onSubmitCreateProfile] New object ID 0:', newObjId0);
-                console.debug('[onSubmitCreateProfile] New object ID 1:', newObjId1);
-            } else {
-                setError(effects.status.error);
-            }
-        })
-        .catch((error: any) => {
-            setError(error.message);
-        })
-        .finally(() => {
-            setWaiting(false);
         });
+        if (typeof result == 'string') {
+            setError(result);
+        } else { // Array<OwnedObjectRef>
+            console.debug('[onSubmitCreateProfile] New object ID 0:', result[0].reference.objectId);
+            console.debug('[onSubmitCreateProfile] New object ID 1:', result[1].reference.objectId);
+        }
+        setWaiting(false);
     };
 
     return <div id='page' className='page-profile-new'>

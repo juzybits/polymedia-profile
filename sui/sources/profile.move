@@ -30,6 +30,7 @@ module polymedia_profile::profile
             profiles: table::new(ctx),
         };
         transfer::share_object(registry);
+        // TODO: emit event
     }
 
     public entry fun create_profile(
@@ -50,6 +51,7 @@ module polymedia_profile::profile
         let sender_addr = tx_context::sender(ctx);
         table::add(&mut registry.profiles, sender_addr, profile_addr);
         transfer::transfer(profile, sender_addr);
+        // TODO: emit event
     }
 
     public fun get_profiles(
