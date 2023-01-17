@@ -1,25 +1,33 @@
-import { JsonRpcProvider, Network, SignableTransaction, OwnedObjectRef, TransactionEffects } from '@mysten/sui.js';
 import { BCS, getSuiMoveConfig } from '@mysten/bcs';
+import {
+    GetObjectDataResponse,
+    JsonRpcProvider,
+    Network,
+    OwnedObjectRef,
+    SignableTransaction,
+    SuiObjectRef,
+    TransactionEffects,
+} from '@mysten/sui.js';
 
 export const POLYMEDIA_PROFILE_PACKAGE_ID = '0xb836580486fd2b50405bd7f2fc0909c4da8edb8b';
 export const POLYMEDIA_PROFILE_REGISTRY_ID = '0x566b219a1e913f952dc1390417c5958b1935b92b';
 
-// TODO: getProfiles() : Promise<Array<Profile>>
+// TODO: getProfiles() : Promise<Profile[]>>
 // TODO: ProfileCache to only fetch new addresses
 
 const rpc = new JsonRpcProvider(Network.DEVNET);
 const bcs = new BCS(getSuiMoveConfig());
 
-export type GetProfilesArgs = {
+export type FindProfileObjectIdsArgs = {
     lookupAddresses: string[];
     packageId?: string;
     registryId?: string;
 }
-export async function getProfileObjectIds({
+export function findProfileObjectIds({
         lookupAddresses,
         packageId = POLYMEDIA_PROFILE_PACKAGE_ID,
         registryId = POLYMEDIA_PROFILE_REGISTRY_ID
-    }: GetProfilesArgs): Promise<Array<string>|string> {
+    }: FindProfileObjectIdsArgs): Promise<string[]|string> {
     const moveCall = {
         packageObjectId: packageId,
         module: 'profile',
@@ -31,19 +39,44 @@ export async function getProfileObjectIds({
         ],
     };
     const callerAddress = '0x7777777777777777777777777777777777777777';
-    return await rpc.devInspectMoveCall(callerAddress, moveCall)
+    return rpc.devInspectMoveCall(callerAddress, moveCall)
     .then((resp: any) => {
         //                  Sui/Ethos || Suiet
         const effects = (resp.effects || resp.EffectsCert?.effects?.effects) as TransactionEffects;
         if (effects.status.status == 'success') {
-            const returnValue: Array<any> = resp.results.Ok[0][1].returnValues[0]; // grab the 1st and only tuple
+            const returnValue: any[] = resp.results.Ok[0][1].returnValues[0]; // grab the 1st and only tuple
             const valueType: string = returnValue[1];
             const valueData = Uint8Array.from(returnValue[0]);
-            const profileAddreses: Array<string> = bcs.de(valueType, valueData, 'hex');
+            const profileAddreses: string[] = bcs.de(valueType, valueData, 'hex');
             return profileAddreses; // TODO transform into Map<string, string>
         } else {
             return effects.status.error;
         }
+    })
+    .catch((error: any) => {
+        return error.message;
+    });
+}
+
+// export type PolymediaProfile = {
+//     id: string,
+//     name: string,
+//     image: string,
+//     description: string,
+// };
+export type GetProfileObjectsArgs = {
+    profileObjectIds: string[];
+}
+export function getProfileObjects({
+        profileObjectIds,
+    }: GetProfileObjectsArgs): Promise<SuiObjectRef[]|string> {
+    return rpc.getObjectBatch(profileObjectIds)
+    .then((objects: GetObjectDataResponse[]) => {
+        const profiles: SuiObjectRef[] = [];
+        for (const obj of objects)
+            if (obj.status == 'Exists')
+                profiles.push(obj.details as SuiObjectRef);
+        return profiles;
     })
     .catch((error: any) => {
         return error.message;
@@ -58,12 +91,12 @@ export type CreateRegistryArgs = {
     registryName: string;
     packageId?: string;
 }
-export async function createRegistry({
+export function createRegistry({
         wallet,
         registryName,
         packageId = POLYMEDIA_PROFILE_PACKAGE_ID,
     } : CreateRegistryArgs): Promise<OwnedObjectRef|string> {
-    return await wallet.signAndExecuteTransaction({
+    return wallet.signAndExecuteTransaction({
         kind: 'moveCall',
         data: {
             packageObjectId: packageId,
@@ -101,14 +134,14 @@ export type CreateProfileArgs = {
     packageId?: string;
     registryId?: string,
 }
-export async function createProfile({
+export function createProfile({
         wallet,
         name,
         image = '',
         description = '',
         packageId = POLYMEDIA_PROFILE_PACKAGE_ID,
         registryId = POLYMEDIA_PROFILE_REGISTRY_ID
-    } : CreateProfileArgs): Promise<Array<OwnedObjectRef>|string> {
+    } : CreateProfileArgs): Promise<OwnedObjectRef[]|string> {
     return wallet.signAndExecuteTransaction({
         kind: 'moveCall',
         data: {
