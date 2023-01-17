@@ -1,4 +1,4 @@
-import { JsonRpcProvider, Network, SignableTransaction } from '@mysten/sui.js';
+import { JsonRpcProvider, Network, SignableTransaction, OwnedObjectRef, TransactionEffects } from '@mysten/sui.js';
 import { BCS, getSuiMoveConfig } from '@mysten/bcs';
 
 export const POLYMEDIA_PROFILE_PACKAGE_ID = '0xb836580486fd2b50405bd7f2fc0909c4da8edb8b';
@@ -61,8 +61,8 @@ export async function createRegistry({
         wallet,
         registryName,
         packageId = POLYMEDIA_PROFILE_PACKAGE_ID,
-    } : CreateRegistryArgs): Promise<any> {
-    return wallet.signAndExecuteTransaction({
+    } : CreateRegistryArgs): Promise<OwnedObjectRef|string> {
+    return await wallet.signAndExecuteTransaction({
         kind: 'moveCall',
         data: {
             packageObjectId: packageId,
@@ -74,7 +74,23 @@ export async function createRegistry({
             ],
             gasBudget: 1000,
         }
+    }).then((resp: any) => {
+        //                  Sui/Ethos || Suiet
+        const effects = (resp.effects || resp.EffectsCert?.effects?.effects) as TransactionEffects;
+        if (effects.status.status == 'success') {
+            if (effects.created) {
+                return effects.created[0] as OwnedObjectRef;
+            } else {
+                return "transaction was successful, but new object is missing."
+            }
+        } else {
+            return effects.status.error;
+        }
+    })
+    .catch((error: any) => {
+        return error.message;
     });
+
 }
 
 export type CreateProfileArgs = {

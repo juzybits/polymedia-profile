@@ -15,7 +15,7 @@ export function RegistryNew() {
 
     const { status, wallet } = ethos.useWallet();
 
-    const onSubmitCreateRegistry = (e: SyntheticEvent) => {
+    const onSubmitCreateRegistry = async (e: SyntheticEvent) => {
         e.preventDefault();
         const isConnected = status=='connected' && wallet && wallet.address;
         if (!isConnected) {
@@ -24,26 +24,17 @@ export function RegistryNew() {
         }
         setWaiting(true);
         console.debug(`[onSubmitCreateRegistry] Attempting to create registry with name: ${inputName}`);
-        createRegistry({
+        const result = await createRegistry({
             wallet: wallet,
             registryName: inputName
-        })
-        .then((resp: any) => {
-            const effects = resp.effects || resp.EffectsCert?.effects?.effects; // Sui/Ethos || Suiet
-            if (effects.status.status == 'success') {
-                console.debug('[onSubmitCreateRegistry] Success:', resp);
-                const newObjId = effects.created[0].reference.objectId;
-                console.debug('[onSubmitCreateRegistry] New object ID:', newObjId);
-            } else {
-                setError(effects.status.error);
-            }
-        })
-        .catch((error: any) => {
-            setError(error.message);
-        })
-        .finally(() => {
-            setWaiting(false);
         });
+        if (typeof result == 'string') {
+            setError(result);
+        } else { // OwnedObjectRef
+            const newObjId = result.reference.objectId;
+            console.debug('[onSubmitCreateRegistry] New object ID:', newObjId);
+        }
+        setWaiting(false);
     };
 
     return <div id='page' className='page-registry-new'>
