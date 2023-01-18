@@ -18,16 +18,12 @@ export const POLYMEDIA_PROFILE_REGISTRY_ID = '0x566b219a1e913f952dc1390417c5958b
 const rpc = new JsonRpcProvider(Network.DEVNET);
 const bcs = new BCS(getSuiMoveConfig());
 
-export type FindProfileObjectIdsArgs = {
-    lookupAddresses: string[];
-    packageId?: string;
-    registryId?: string;
-}
 export function findProfileObjectIds({
         lookupAddresses,
         packageId = POLYMEDIA_PROFILE_PACKAGE_ID,
         registryId = POLYMEDIA_PROFILE_REGISTRY_ID
-    }: FindProfileObjectIdsArgs): Promise<string[]> {
+    }: FindProfileObjectIdsArgs): Promise<string[]>
+{
     const moveCall = {
         packageObjectId: packageId,
         module: 'profile',
@@ -58,44 +54,27 @@ export function findProfileObjectIds({
     });
 }
 
-// export type PolymediaProfile = {
-//     id: string,
-//     name: string,
-//     image: string,
-//     description: string,
-// };
-export type GetProfileObjectsArgs = {
-    profileObjectIds: string[];
-}
 export function getProfileObjects({
         profileObjectIds,
-    }: GetProfileObjectsArgs): Promise<SuiObjectRef[]> {
-    return rpc.getObjectBatch(profileObjectIds)
-    .then((objects: GetObjectDataResponse[]) => {
+    }: GetProfileObjectsArgs): Promise<SuiObjectRef[]>
+{
+    return rpc.getObjectBatch(
+        profileObjectIds
+    ).then((objects: GetObjectDataResponse[]) => {
         const profiles: SuiObjectRef[] = [];
         for (const obj of objects)
             if (obj.status == 'Exists')
                 profiles.push(obj.details as SuiObjectRef);
         return profiles;
-    })
-    .catch((error: any) => {
-        throw error;
     });
 }
 
-export type WalletArg = {
-    signAndExecuteTransaction: (transaction: SignableTransaction) => Promise<any>,
-}
-export type CreateRegistryArgs = {
-    wallet: WalletArg,
-    registryName: string;
-    packageId?: string;
-}
 export function createRegistry({
         wallet,
         registryName,
         packageId = POLYMEDIA_PROFILE_PACKAGE_ID,
-    } : CreateRegistryArgs): Promise<OwnedObjectRef> {
+    } : CreateRegistryArgs): Promise<OwnedObjectRef>
+{
     return wallet.signAndExecuteTransaction({
         kind: 'moveCall',
         data: {
@@ -108,7 +87,8 @@ export function createRegistry({
             ],
             gasBudget: 1000,
         }
-    }).then((resp: any) => {
+    })
+    .then((resp: any) => {
         //                  Sui/Ethos || Suiet
         const effects = (resp.effects || resp.EffectsCert?.effects?.effects) as TransactionEffects;
         if (effects.status.status == 'success') {
@@ -126,14 +106,6 @@ export function createRegistry({
     });
 }
 
-export type CreateProfileArgs = {
-    wallet: WalletArg,
-    name: string,
-    image?: string,
-    description?: string,
-    packageId?: string;
-    registryId?: string,
-}
 export function createProfile({
         wallet,
         name,
@@ -141,7 +113,8 @@ export function createProfile({
         description = '',
         packageId = POLYMEDIA_PROFILE_PACKAGE_ID,
         registryId = POLYMEDIA_PROFILE_REGISTRY_ID
-    } : CreateProfileArgs): Promise<OwnedObjectRef[]> {
+    } : CreateProfileArgs): Promise<OwnedObjectRef[]>
+{
     return wallet.signAndExecuteTransaction({
         kind: 'moveCall',
         data: {
@@ -173,4 +146,42 @@ export function createProfile({
     .catch((error: any) => {
         throw error;
     });
+}
+
+/* Types */
+
+// export type PolymediaProfile = {
+//     id: string,
+//     name: string,
+//     image: string,
+//     description: string,
+// };
+
+type WalletArg = {
+    signAndExecuteTransaction: (transaction: SignableTransaction) => Promise<any>,
+}
+
+type FindProfileObjectIdsArgs = {
+    lookupAddresses: string[];
+    packageId?: string;
+    registryId?: string;
+}
+
+type GetProfileObjectsArgs = {
+    profileObjectIds: string[];
+}
+
+type CreateRegistryArgs = {
+    wallet: WalletArg,
+    registryName: string;
+    packageId?: string;
+}
+
+type CreateProfileArgs = {
+    wallet: WalletArg,
+    name: string,
+    image?: string,
+    description?: string,
+    packageId?: string;
+    registryId?: string,
 }
