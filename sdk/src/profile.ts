@@ -27,7 +27,7 @@ export function findProfileObjectIds({
         lookupAddresses,
         packageId = POLYMEDIA_PROFILE_PACKAGE_ID,
         registryId = POLYMEDIA_PROFILE_REGISTRY_ID
-    }: FindProfileObjectIdsArgs): Promise<string[]|string> {
+    }: FindProfileObjectIdsArgs): Promise<string[]> {
     const moveCall = {
         packageObjectId: packageId,
         module: 'profile',
@@ -50,11 +50,11 @@ export function findProfileObjectIds({
             const profileAddreses: string[] = bcs.de(valueType, valueData, 'hex');
             return profileAddreses; // TODO transform into Map<string, string>
         } else {
-            return effects.status.error;
+            throw new Error(effects.status.error);
         }
     })
     .catch((error: any) => {
-        return error.message;
+        throw error;
     });
 }
 
@@ -69,7 +69,7 @@ export type GetProfileObjectsArgs = {
 }
 export function getProfileObjects({
         profileObjectIds,
-    }: GetProfileObjectsArgs): Promise<SuiObjectRef[]|string> {
+    }: GetProfileObjectsArgs): Promise<SuiObjectRef[]> {
     return rpc.getObjectBatch(profileObjectIds)
     .then((objects: GetObjectDataResponse[]) => {
         const profiles: SuiObjectRef[] = [];
@@ -79,7 +79,7 @@ export function getProfileObjects({
         return profiles;
     })
     .catch((error: any) => {
-        return error.message;
+        throw error;
     });
 }
 
@@ -95,7 +95,7 @@ export function createRegistry({
         wallet,
         registryName,
         packageId = POLYMEDIA_PROFILE_PACKAGE_ID,
-    } : CreateRegistryArgs): Promise<OwnedObjectRef|string> {
+    } : CreateRegistryArgs): Promise<OwnedObjectRef> {
     return wallet.signAndExecuteTransaction({
         kind: 'moveCall',
         data: {
@@ -115,14 +115,14 @@ export function createRegistry({
             if (effects.created) {
                 return effects.created[0] as OwnedObjectRef;
             } else {
-                return "transaction was successful, but new object is missing."
+                throw new Error("transaction was successful, but new object is missing.");
             }
         } else {
-            return effects.status.error;
+            throw new Error(effects.status.error);
         }
     })
     .catch((error: any) => {
-        return error.message;
+        throw error;
     });
 }
 
@@ -141,7 +141,7 @@ export function createProfile({
         description = '',
         packageId = POLYMEDIA_PROFILE_PACKAGE_ID,
         registryId = POLYMEDIA_PROFILE_REGISTRY_ID
-    } : CreateProfileArgs): Promise<OwnedObjectRef[]|string> {
+    } : CreateProfileArgs): Promise<OwnedObjectRef[]> {
     return wallet.signAndExecuteTransaction({
         kind: 'moveCall',
         data: {
@@ -167,10 +167,10 @@ export function createProfile({
                 effects.created[1] as OwnedObjectRef,
             ];
         } else {
-            return effects.status.error;
+            throw new Error(effects.status.error);
         }
     })
     .catch((error: any) => {
-        return error.message;
+        throw error;
     });
 }

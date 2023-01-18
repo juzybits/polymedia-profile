@@ -22,17 +22,17 @@ export function RegistryNew() {
             ethos.showSignInModal();
             return;
         }
-        setWaiting(true);
         console.debug(`[onSubmitCreateRegistry] Attempting to create registry with name: ${inputName}`);
-        const result = await createRegistry({
-            wallet: wallet,
-            registryName: inputName
-        });
-        if (typeof result == 'string') {
-            setError(result);
-        } else { // OwnedObjectRef
+        setWaiting(true);
+        try {
+            const result = await createRegistry({
+                wallet: wallet,
+                registryName: inputName
+            });
             const newObjId = result.reference.objectId;
             console.debug('[onSubmitCreateRegistry] New object ID:', newObjId);
+        } catch(error: any) {
+            setError(error.message);
         }
         setWaiting(false);
     };

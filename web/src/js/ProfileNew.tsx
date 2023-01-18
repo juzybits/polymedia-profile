@@ -24,19 +24,19 @@ export function ProfileNew() {
             ethos.showSignInModal();
             return;
         }
-        setWaiting(true);
         console.debug(`[onSubmitCreateProfile] Attempting to create profile: ${inputName}`);
-        const result = await createProfile({
-            wallet: wallet,
-            name: inputName,
-            image: inputImage,
-            description: inputDescription,
-        });
-        if (typeof result == 'string') {
-            setError(result);
-        } else { // Array<OwnedObjectRef>
+        setWaiting(true);
+        try {
+            const result = await createProfile({
+                wallet: wallet,
+                name: inputName,
+                image: inputImage,
+                description: inputDescription,
+            });
             console.debug('[onSubmitCreateProfile] New object ID 0:', result[0].reference.objectId);
             console.debug('[onSubmitCreateProfile] New object ID 1:', result[1].reference.objectId);
+        } catch(error: any) {
+            setError(error.message);
         }
         setWaiting(false);
     };
