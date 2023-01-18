@@ -22,8 +22,9 @@ export function findProfileObjectIds({
         lookupAddresses,
         packageId = POLYMEDIA_PROFILE_PACKAGE_ID,
         registryId = POLYMEDIA_PROFILE_REGISTRY_ID
-    }: FindProfileObjectIdsArgs): Promise<string[]>
+    }: FindProfileObjectIdsArgs): Promise<Map<string,string>>
 {
+    lookupAddresses = [...new Set(lookupAddresses)]; // deduplicate
     const moveCall = {
         packageObjectId: packageId,
         module: 'profile',
@@ -40,11 +41,24 @@ export function findProfileObjectIds({
         //                  Sui/Ethos || Suiet
         const effects = (resp.effects || resp.EffectsCert?.effects?.effects) as TransactionEffects;
         if (effects.status.status == 'success') {
+            // Deserialize the returned value into an array of addresses
             const returnValue: any[] = resp.results.Ok[0][1].returnValues[0]; // grab the 1st and only tuple
             const valueType: string = returnValue[1];
             const valueData = Uint8Array.from(returnValue[0]);
             const profileAddreses: string[] = bcs.de(valueType, valueData, 'hex');
-            return profileAddreses; // TODO transform into Map<string, string>
+
+            // Create a Map where the keys are lookupAddresses and the values are profileAddreses
+            const notFoundAddress = '0000000000000000000000000000000000000000';
+            const length = lookupAddresses.length; // same as profileAddreses.length
+            const result = new Map<string, string>();
+            for(let i = 0; i < length; i++) {
+                const lookupAddr = lookupAddresses[i];
+                const profileAddr = profileAddreses[i];
+                if (profileAddr != notFoundAddress) {
+                    result.set(lookupAddr, profileAddr);
+                }
+            }
+            return result;
         } else {
             throw new Error(effects.status.error);
         }
