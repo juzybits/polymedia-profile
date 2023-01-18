@@ -18,6 +18,37 @@ export const POLYMEDIA_PROFILE_REGISTRY_ID = '0x566b219a1e913f952dc1390417c5958b
 const rpc = new JsonRpcProvider(Network.DEVNET);
 const bcs = new BCS(getSuiMoveConfig());
 
+type GetObjectsArgs = {
+    objectIds: string[];
+}
+export function getObjects({
+        objectIds,
+    }: GetObjectsArgs): Promise<SuiObjectRef[]>
+{
+    return rpc.getObjectBatch(
+        objectIds
+    ).then((objects: GetObjectDataResponse[]) => {
+        const profiles: SuiObjectRef[] = [];
+        for (const obj of objects)
+            if (obj.status == 'Exists')
+                profiles.push(obj.details as SuiObjectRef);
+        return profiles;
+    });
+}
+
+// export type PolymediaProfile = {
+//     id: string,
+//     name: string,
+//     image: string,
+//     description: string,
+// };
+// export function parseProfileObjects({
+
+type FindProfileObjectIdsArgs = {
+    lookupAddresses: string[];
+    packageId?: string;
+    registryId?: string;
+}
 export function findProfileObjectIds({
         lookupAddresses,
         packageId = POLYMEDIA_PROFILE_PACKAGE_ID,
@@ -68,21 +99,14 @@ export function findProfileObjectIds({
     });
 }
 
-export function getProfileObjects({
-        profileObjectIds,
-    }: GetProfileObjectsArgs): Promise<SuiObjectRef[]>
-{
-    return rpc.getObjectBatch(
-        profileObjectIds
-    ).then((objects: GetObjectDataResponse[]) => {
-        const profiles: SuiObjectRef[] = [];
-        for (const obj of objects)
-            if (obj.status == 'Exists')
-                profiles.push(obj.details as SuiObjectRef);
-        return profiles;
-    });
+type WalletArg = {
+    signAndExecuteTransaction: (transaction: SignableTransaction) => Promise<any>,
 }
-
+type CreateRegistryArgs = {
+    wallet: WalletArg,
+    registryName: string;
+    packageId?: string;
+}
 export function createRegistry({
         wallet,
         registryName,
@@ -106,10 +130,11 @@ export function createRegistry({
         //                  Sui/Ethos || Suiet
         const effects = (resp.effects || resp.EffectsCert?.effects?.effects) as TransactionEffects;
         if (effects.status.status == 'success') {
-            if (effects.created) {
+            if (effects.created?.length === 1) {
                 return effects.created[0] as OwnedObjectRef;
             } else {
-                throw new Error("transaction was successful, but new object is missing.");
+                throw new Error("transaction was successful, but new object is missing. Response: "
+                    + JSON.stringify(resp));
             }
         } else {
             throw new Error(effects.status.error);
@@ -120,6 +145,14 @@ export function createRegistry({
     });
 }
 
+type CreateProfileArgs = {
+    wallet: WalletArg,
+    name: string,
+    image?: string,
+    description?: string,
+    packageId?: string;
+    registryId?: string,
+}
 export function createProfile({
         wallet,
         name,
@@ -146,13 +179,19 @@ export function createProfile({
         }
     })
     .then((resp: any) => {
-        const effects = resp.effects || resp.EffectsCert?.effects?.effects; // Sui/Ethos || Suiet
+        //                  Sui/Ethos || Suiet
+        const effects = (resp.effects || resp.EffectsCert?.effects?.effects) as TransactionEffects;
         if (effects.status.status == 'success') {
-            console.debug('[onSubmitCreateProfile] Success:', resp);
-            return [ // `sui::dynamic_field::Field` and `polymedia_profile::profile::Profile`
-                effects.created[0] as OwnedObjectRef,
-                effects.created[1] as OwnedObjectRef,
-            ];
+            if (effects.created?.length === 2) {
+                console.debug('[onSubmitCreateProfile] Success:', resp);
+                return [ // `sui::dynamic_field::Field` and `polymedia_profile::profile::Profile`
+                    effects.created[0] as OwnedObjectRef,
+                    effects.created[1] as OwnedObjectRef,
+                ];
+            } else {
+                throw new Error("transaction was successful, but object count is off. Response: "
+                    + JSON.stringify(resp));
+            }
         } else {
             throw new Error(effects.status.error);
         }
@@ -160,42 +199,4 @@ export function createProfile({
     .catch((error: any) => {
         throw error;
     });
-}
-
-/* Types */
-
-// export type PolymediaProfile = {
-//     id: string,
-//     name: string,
-//     image: string,
-//     description: string,
-// };
-
-type WalletArg = {
-    signAndExecuteTransaction: (transaction: SignableTransaction) => Promise<any>,
-}
-
-type FindProfileObjectIdsArgs = {
-    lookupAddresses: string[];
-    packageId?: string;
-    registryId?: string;
-}
-
-type GetProfileObjectsArgs = {
-    profileObjectIds: string[];
-}
-
-type CreateRegistryArgs = {
-    wallet: WalletArg,
-    registryName: string;
-    packageId?: string;
-}
-
-type CreateProfileArgs = {
-    wallet: WalletArg,
-    name: string,
-    image?: string,
-    description?: string,
-    packageId?: string;
-    registryId?: string,
 }
