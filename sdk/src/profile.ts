@@ -5,14 +5,14 @@ import {
     Network,
     OwnedObjectRef,
     SignableTransaction,
-    SuiObjectRef,
+    SuiObject,
+    SuiMoveObject,
     TransactionEffects,
 } from '@mysten/sui.js';
 
 export const POLYMEDIA_PROFILE_PACKAGE_ID = '0x7ad330b6f772a09744a94b801eea873e102979b8';
 export const POLYMEDIA_PROFILE_REGISTRY_ID = '0x1372bff754b692c6cdd31e92685ce3bd233a580f';
 
-// TODO: getProfiles() : Promise<Profile[]>>
 // TODO: ProfileCache to only fetch new addresses
 
 const rpc = new JsonRpcProvider(Network.DEVNET);
@@ -21,28 +21,56 @@ const bcs = new BCS(getSuiMoveConfig());
 type GetObjectsArgs = {
     objectIds: string[];
 }
-export function getObjects({
+function getObjects({
         objectIds,
-    }: GetObjectsArgs): Promise<SuiObjectRef[]>
+    }: GetObjectsArgs): Promise<SuiObject[]>
 {
     return rpc.getObjectBatch(
         objectIds
     ).then((objects: GetObjectDataResponse[]) => {
-        const profiles: SuiObjectRef[] = [];
+        const profiles: SuiObject[] = [];
         for (const obj of objects)
             if (obj.status == 'Exists')
-                profiles.push(obj.details as SuiObjectRef);
+                profiles.push(obj.details as SuiObject);
         return profiles;
     });
 }
 
-// export type PolymediaProfile = {
-//     id: string,
-//     name: string,
-//     image: string,
-//     description: string,
-// };
-// export function parseProfileObjects({
+export type PolymediaProfile = {
+    id: string,
+    name: string,
+    image: string,
+    description: string,
+    suiObject: SuiObject,
+};
+type GetProfileObjectsArgs = {
+    objectIds: string[],
+}
+export function getProfileObjects({
+        objectIds,
+    }: GetProfileObjectsArgs): Promise<PolymediaProfile[]>
+{
+    return getObjects({
+        objectIds
+    })
+    .then((objectRefs: SuiObject[]) => {
+        const profiles: PolymediaProfile[] = [];
+        for (const objRef of objectRefs) {
+            const objData = objRef.data as SuiMoveObject;
+            profiles.push({
+                id: objData.fields.id.id,
+                name: objData.fields.name,
+                image: objData.fields.image,
+                description: objData.fields.description,
+                suiObject: objRef,
+            });
+        }
+        return profiles;
+    })
+    .catch((error: any) => {
+        throw error;
+    });
+}
 
 type FindProfileObjectIdsArgs = {
     lookupAddresses: string[];
