@@ -20,7 +20,7 @@
     "license": "Apache-2.0",
     "dependencies": {
         "@mysten/bcs": "^0.5.0",
-        "@mysten/sui.js": "^0.22.0"
+        "@mysten/sui.js": "^0.23.0"
     },
     "devDependencies": {
         "typescript": "^4.9.4"

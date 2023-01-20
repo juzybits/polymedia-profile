@@ -9,8 +9,8 @@ import {
     TransactionEffects,
 } from '@mysten/sui.js';
 
-export const POLYMEDIA_PROFILE_PACKAGE_ID = '0xb836580486fd2b50405bd7f2fc0909c4da8edb8b';
-export const POLYMEDIA_PROFILE_REGISTRY_ID = '0x566b219a1e913f952dc1390417c5958b1935b92b';
+export const POLYMEDIA_PROFILE_PACKAGE_ID = '0x7ad330b6f772a09744a94b801eea873e102979b8';
+export const POLYMEDIA_PROFILE_REGISTRY_ID = '0x1372bff754b692c6cdd31e92685ce3bd233a580f';
 
 // TODO: getProfiles() : Promise<Profile[]>>
 // TODO: ProfileCache to only fetch new addresses
