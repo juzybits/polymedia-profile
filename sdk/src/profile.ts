@@ -13,7 +13,51 @@ import {
 export const POLYMEDIA_PROFILE_PACKAGE_ID = '0x7ad330b6f772a09744a94b801eea873e102979b8';
 export const POLYMEDIA_PROFILE_REGISTRY_ID = '0x1372bff754b692c6cdd31e92685ce3bd233a580f';
 
-// TODO: ProfileCache to only fetch new addresses
+export class ProfileStore {
+    private cache: Map<string, PolymediaProfile|null> = new Map();
+
+    public async getProfiles(lookupAddresses: string[]): Promise<Map<string, PolymediaProfile>> {
+        const result = new Map<string, PolymediaProfile>();
+        const newLookupAddresses = new Set<string>(); // unseen addresses (i.e. not cached)
+
+        // Check if addresses are already in cache and add them to the returned map
+        for (const addr of lookupAddresses) {
+            if (this.cache.has(addr)) {
+                const cachedProfile = this.cache.get(addr);
+                if (cachedProfile) {
+                    result.set(addr, cachedProfile);
+                }
+            } else { // address not seen before so we need to look it up
+                newLookupAddresses.add(addr);
+            }
+        }
+        if (newLookupAddresses.size === 0) return result;
+
+        // Find the remaining profile object IDs
+        const newObjectIds = await findProfileObjectIds({
+            lookupAddresses: [...newLookupAddresses]
+        });
+
+        // Add missing addresses to the cache
+        for (const addr of newLookupAddresses) {
+            if (!newObjectIds.has(addr)) {
+                this.cache.set(addr, null);
+            }
+        }
+        if (newObjectIds.size === 0) return result;
+
+        // Retrieve the remaining profile objects
+        const profileObjects = await getProfileObjects({ objectIds: [...newObjectIds.values()] });
+
+        // Add the remaining profile objects to the returned map and cache
+        for (const profile of profileObjects) {
+            result.set(profile.owner, profile);
+            this.cache.set(profile.owner, profile);
+        }
+
+        return result;
+    }
+}
 
 const rpc = new JsonRpcProvider(Network.DEVNET);
 const bcs = new BCS(getSuiMoveConfig());
@@ -41,8 +85,9 @@ export type PolymediaProfile = {
     name: string,
     image: string,
     description: string,
+    owner: string,
     suiObject: SuiObject,
-};
+}
 type GetProfileObjectsArgs = {
     objectIds: string[],
 }
@@ -53,16 +98,18 @@ export function getProfileObjects({
     return getObjects({
         objectIds
     })
-    .then((objectRefs: SuiObject[]) => {
+    .then((objects: SuiObject[]) => {
         const profiles: PolymediaProfile[] = [];
-        for (const objRef of objectRefs) {
-            const objData = objRef.data as SuiMoveObject;
+        for (const obj of objects) {
+            const objData = obj.data as SuiMoveObject;
+            const objOwner = obj.owner as { AddressOwner: string };
             profiles.push({
                 id: objData.fields.id.id,
                 name: objData.fields.name,
                 image: objData.fields.image,
                 description: objData.fields.description,
-                suiObject: objRef,
+                owner: objOwner.AddressOwner,
+                suiObject: obj,
             });
         }
         return profiles;
