@@ -3,21 +3,21 @@
 
 
 "@babel/runtime@^7.17.2":
-  version "7.20.7"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.20.7.tgz#fcb41a5a70550e04a7b708037c7c32f7f356d8fd"
-  integrity sha512-UF0tvkUtxwAgZ5W/KrkHf0Rn0fdnLDU9ScxBrEVNUprE/MzirjK4MJUX1/BVDv00Sv8cljtukVK1aky++X1SjQ==
+  version "7.20.13"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.20.13.tgz#7055ab8a7cff2b8f6058bf6ae45ff84ad2aded4b"
+  integrity sha512-gt3PKXs0DBoL9xCvOIIZ2NEqAGZqHjAnmVbfQtB620V0uReIQutpel14KcneZuer7UioY8ALKZ7iocavvzTNFA==
   dependencies:
     regenerator-runtime "^0.13.11"
 
-"@mysten/bcs@0.5.0", "@mysten/bcs@^0.5.0":
+"@mysten/bcs@0.5.0", "@mysten/bcs@latest":
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/@mysten/bcs/-/bcs-0.5.0.tgz#d2570971e3d9121b83091ced38db13e907ab4198"
   integrity sha512-FjGnXZfR4dY01Q1l3xjgaU+ruIlVomXZk8vzgsQXPFOv7O4pNiOOpJyMEMUnWcyUiktk4R9MxoJJrygOtdxaUw==
 
-"@mysten/sui.js@^0.23.0":
-  version "0.23.0"
-  resolved "https://registry.yarnpkg.com/@mysten/sui.js/-/sui.js-0.23.0.tgz#81540e2f6d29a662ff29e1ed44195d0b2b165b17"
-  integrity sha512-UeDTYm8czV955AKJ4MXCtax8A3F0lrPPNl4PzIkfK9FvprwAFKtILh/nsYdqvilyFSf6ySMJe+RafyWJlSCjHw==
+"@mysten/sui.js@latest":
+  version "0.24.0"
+  resolved "https://registry.yarnpkg.com/@mysten/sui.js/-/sui.js-0.24.0.tgz#2cd58864c2e65358c437ae78aff04170ebf565a0"
+  integrity sha512-9mq6VQkey2n4vZgnBKnK2wQHVwz/cB8AzKEYtcLqiPyH4+Pncq6WRMkkzK0sKd43RTt8imFHQiF40+F3iDhymQ==
   dependencies:
     "@mysten/bcs" "0.5.0"
     "@noble/hashes" "^1.1.5"
@@ -248,7 +248,7 @@ tweetnacl@^1.0.3:
   resolved "https://registry.yarnpkg.com/tweetnacl/-/tweetnacl-1.0.3.tgz#ac0af71680458d8a6378d0d0d050ab1407d35596"
   integrity sha512-6rt+RN7aOi1nGMyC4Xa5DdYiukl2UWCbcJft7YhxReBGQD7OAM8Pbxw6YMo4r2diNEA8FEmu32YOn9rhaiE5yw==
 
-typescript@^4.9.4:
+typescript@4:
   version "4.9.4"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.9.4.tgz#a2a3d2756c079abda241d75f149df9d561091e78"
   integrity sha512-Uz+dTXYzxXXbsFpM86Wh3dKCxrQqUcVMxwU54orwlJjOpO3ao8L7j5lH+dWfTwgCwIuM9GQ2kvVotzYJMXTBZg==

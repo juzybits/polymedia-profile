@@ -38,7 +38,7 @@ export function RegistryNew() {
     };
 
     const devFun = async () => {
-        const resp = await getProfileObjects({ profileObjectIds: [
+        const resp = await getProfileObjects({ objectIds: [
             // '0x02952db874daab29b12cf0fbf1baade3e0195382',
             // '0x2e9684c3fedd4a7447ff5282910946a506a0259f',
             // '0x0e5ebc6d9fa2d69ece881a06e735a223120e9ab8',
@@ -63,7 +63,7 @@ export function RegistryNew() {
                         onChange={e => setInputName(e.target.value)}
                     />
                 </div>
-                <button type='submit'className={waiting ? 'primary waiting' : 'primary'} disabled={waiting}
+                <button type='submit' className={waiting ? 'primary waiting' : 'primary'} disabled={waiting}
                     >CREATE</button>
             </form>
 

@@ -7,6 +7,8 @@ module polymedia_profile::profile
     use sui::transfer;
     use sui::tx_context::{Self, TxContext};
 
+    // TODO: funtions to add dynamic fields and objects in a generic way
+
     struct Registry has key, store {
         id: UID,
         name: String,

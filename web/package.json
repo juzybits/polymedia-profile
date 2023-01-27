@@ -3,19 +3,19 @@
     "author": "juzybits <https://twitter.com/juzybits>",
     "private": true,
     "dependencies": {
-        "@mysten/sui.js": "0.23.0",
-        "ethos-connect": "0.0.69",
+        "@mysten/sui.js": "latest",
+        "ethos-connect": "latest",
         "react": "18",
         "react-dom": "18",
-        "react-router-dom": "6.7.0"
+        "react-router-dom": "6"
     },
     "devDependencies": {
-        "@parcel/transformer-less": "2.8.3",
-        "@types/react": "18.0.27",
-        "@types/react-dom": "18",
-        "buffer": "5",
-        "parcel": "2.8.3",
-        "process": "0",
+        "@parcel/transformer-less": "latest",
+        "@types/react": "latest",
+        "@types/react-dom": "latest",
+        "buffer": "^5.5.0",
+        "parcel": "latest",
+        "process": "latest",
         "react-devtools": "latest"
     },
     "scripts": {

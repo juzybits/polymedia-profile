@@ -10,13 +10,13 @@ import {
     TransactionEffects,
 } from '@mysten/sui.js';
 
-export const POLYMEDIA_PROFILE_PACKAGE_ID = '0x7ad330b6f772a09744a94b801eea873e102979b8';
-export const POLYMEDIA_PROFILE_REGISTRY_ID = '0x1372bff754b692c6cdd31e92685ce3bd233a580f';
+export const POLYMEDIA_PROFILE_PACKAGE_ID = '0xb1e1ad2a66201471c48ff21290f2f07ab5b33021';
+export const POLYMEDIA_PROFILE_REGISTRY_ID = '0x4caab31a633523e9afb8ce5c2460be9320a9b320';
 
-export class ProfileStore {
+export class ProfileSearch {
     private cache: Map<string, PolymediaProfile|null> = new Map();
 
-    public async getProfiles(lookupAddresses: string[]): Promise<Map<string, PolymediaProfile>> {
+    public async getProfiles(lookupAddresses: Iterable<string>): Promise<Map<string, PolymediaProfile>> {
         const result = new Map<string, PolymediaProfile>();
         const newLookupAddresses = new Set<string>(); // unseen addresses (i.e. not cached)
 
