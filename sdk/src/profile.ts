@@ -11,7 +11,7 @@ import {
 } from '@mysten/sui.js';
 
 export const POLYMEDIA_PROFILE_PACKAGE_ID = '0xb1e1ad2a66201471c48ff21290f2f07ab5b33021';
-export const POLYMEDIA_PROFILE_REGISTRY_ID = '0x4caab31a633523e9afb8ce5c2460be9320a9b320';
+export const POLYMEDIA_PROFILE_REGISTRY_ID = '0x631d78b0feba1c265a79c20a8f1e5b711437db2e';
 
 export class ProfileSearch {
     private cache: Map<string, PolymediaProfile|null> = new Map();
@@ -71,12 +71,12 @@ function getObjects({
 {
     return rpc.getObjectBatch(
         objectIds
-    ).then((objects: GetObjectDataResponse[]) => {
-        const profiles: SuiObject[] = [];
-        for (const obj of objects)
+    ).then((objDataResps: GetObjectDataResponse[]) => {
+        const suiObjects: SuiObject[] = [];
+        for (const obj of objDataResps)
             if (obj.status == 'Exists')
-                profiles.push(obj.details as SuiObject);
-        return profiles;
+                suiObjects.push(obj.details as SuiObject);
+        return suiObjects;
     });
 }
 
@@ -228,16 +228,17 @@ type CreateProfileArgs = {
     packageId?: string;
     registryId?: string,
 }
-export function createProfile({
+export async function createProfile({
         wallet,
         name,
         image = '',
         description = '',
         packageId = POLYMEDIA_PROFILE_PACKAGE_ID,
         registryId = POLYMEDIA_PROFILE_REGISTRY_ID
-    } : CreateProfileArgs): Promise<OwnedObjectRef[]>
+    } : CreateProfileArgs): Promise<(SuiObject|null)[]>
 {
-    return wallet.signAndExecuteTransaction({
+    // Creates 2 objects: the profile (owned by the caller) and a dynamic field (inside the registry's table)
+    const resp = await wallet.signAndExecuteTransaction({
         kind: 'moveCall',
         data: {
             packageObjectId: packageId,
@@ -252,26 +253,33 @@ export function createProfile({
             ],
             gasBudget: 1000,
         }
-    })
-    .then((resp: any) => {
-        //                  Sui/Ethos || Suiet
-        const effects = (resp.effects || resp.EffectsCert?.effects?.effects) as TransactionEffects;
-        if (effects.status.status == 'success') {
-            if (effects.created?.length === 2) {
-                console.debug('[onSubmitCreateProfile] Success:', resp);
-                return [ // `sui::dynamic_field::Field` and `polymedia_profile::profile::Profile`
-                    effects.created[0] as OwnedObjectRef,
-                    effects.created[1] as OwnedObjectRef,
-                ];
-            } else {
-                throw new Error("transaction was successful, but object count is off. Response: "
-                    + JSON.stringify(resp));
-            }
-        } else {
-            throw new Error(effects.status.error);
-        }
-    })
-    .catch((error: any) => {
-        throw error;
     });
+
+    // Verify the transaction results
+    const effects = (resp.effects || resp.EffectsCert?.effects?.effects) as TransactionEffects; // Sui/Ethos || Suiet
+    if (effects.status.status !== 'success') {
+        throw new Error(effects.status.error);
+    }
+    if (effects.created?.length !== 2) {
+        throw new Error("transaction was successful, but object count is off. Response: " + JSON.stringify(resp));
+    }
+
+    // Fetch and return both objects
+    const createdIds = effects.created.map((suiObj: any) => suiObj.reference.objectId);
+    const suiObjects: SuiObject[] = await getObjects({objectIds: createdIds});
+    let profileObj = null;
+    let dynamicFieldObj = null;
+    for (const suiObj of suiObjects) {
+        const objType = (suiObj.data as SuiMoveObject).type;
+        if (objType.endsWith('::profile::Profile')) {
+            profileObj = suiObj;
+        } else
+        if (objType.includes('::dynamic_field::Field')) {
+            dynamicFieldObj = suiObj;
+        }
+    }
+    return [ // TODO: just return profileObj as a PolymediaProfile
+        profileObj, // polymedia_profile::profile::Profile
+        dynamicFieldObj, // sui::dynamic_field::Field
+    ];
 }
