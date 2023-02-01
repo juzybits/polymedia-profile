@@ -2,16 +2,20 @@ import { BCS, getSuiMoveConfig } from '@mysten/bcs';
 import {
     GetObjectDataResponse,
     JsonRpcProvider,
+    MoveCallTransaction,
     Network,
     OwnedObjectRef,
     SignableTransaction,
-    SuiObject,
     SuiMoveObject,
+    SuiObject,
     TransactionEffects,
+    UnserializedSignableTransaction,
 } from '@mysten/sui.js';
 
-export const POLYMEDIA_PROFILE_PACKAGE_ID = '0xb1e1ad2a66201471c48ff21290f2f07ab5b33021';
-export const POLYMEDIA_PROFILE_REGISTRY_ID = '0x631d78b0feba1c265a79c20a8f1e5b711437db2e';
+// TODO DEV and DEVNET via ProfileManager
+
+export const POLYMEDIA_PROFILE_PACKAGE_ID = '0x1f836d19359a04a385ecf801dcbcc7c40a627c05';
+export const POLYMEDIA_PROFILE_REGISTRY_ID = '0xb57d6fd470865b014b8de6ea9b6b95e2c185393a';
 
 export class ProfileSearch {
     private cache: Map<string, PolymediaProfile|null> = new Map();
@@ -131,18 +135,21 @@ export function findProfileObjectIds({
     }: FindProfileObjectIdsArgs): Promise<Map<string,string>>
 {
     lookupAddresses = [...new Set(lookupAddresses)]; // deduplicate
-    const moveCall = {
-        packageObjectId: packageId,
-        module: 'profile',
-        function: 'get_profiles',
-        typeArguments: [],
-        arguments: [
-            registryId,
-            lookupAddresses,
-        ],
-    };
     const callerAddress = '0x7777777777777777777777777777777777777777';
-    return rpc.devInspectMoveCall(callerAddress, moveCall)
+    const signableTxn = {
+        kind: 'moveCall',
+        data: {
+            packageObjectId: packageId,
+            module: 'profile',
+            function: 'get_profiles',
+            typeArguments: [],
+            arguments: [
+                registryId,
+                lookupAddresses,
+            ],
+        } as MoveCallTransaction,
+    } as UnserializedSignableTransaction;
+    return rpc.devInspectTransaction(callerAddress, signableTxn)
     .then((resp: any) => {
         //                  Sui/Ethos || Suiet
         const effects = (resp.effects || resp.EffectsCert?.effects?.effects) as TransactionEffects;
