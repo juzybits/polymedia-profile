@@ -49,6 +49,9 @@ export class ProfileManager {
         }
     }
 
+    public getPackageId(): string { return this.packageId; }
+    public getRegistryId(): string { return this.registryId; }
+
     public async getProfiles(lookupAddresses: Iterable<string>): Promise<Map<string, PolymediaProfile>> {
         const result = new Map<string, PolymediaProfile>();
         const newLookupAddresses = new Set<string>(); // unseen addresses (i.e. not cached)
@@ -67,10 +70,7 @@ export class ProfileManager {
         if (newLookupAddresses.size === 0) return result;
 
         // Find the remaining profile object IDs
-        const newObjectIds = await findProfileObjectIds({
-            rpc: this.rpc,
-            packageId: this.packageId,
-            registryId: this.registryId,
+        const newObjectIds = await this.findProfileObjectIds({
             lookupAddresses: [...newLookupAddresses]
         });
 
@@ -83,8 +83,7 @@ export class ProfileManager {
         if (newObjectIds.size === 0) return result;
 
         // Retrieve the remaining profile objects
-        const profileObjects = await getProfileObjects({
-            rpc: this.rpc,
+        const profileObjects = await this.getProfileObjects({
             objectIds: [...newObjectIds.values()]
         });
 
@@ -95,6 +94,58 @@ export class ProfileManager {
         }
 
         return result;
+    }
+
+    public getProfileObjects({ objectIds }: {
+        objectIds: string[]
+    }): Promise<PolymediaProfile[]>
+    {
+        return getProfileObjects({
+            rpc: this.rpc,
+            objectIds,
+        });
+    }
+
+    public findProfileObjectIds({ lookupAddresses }: {
+        lookupAddresses: string[]
+    }): Promise<Map<string,string>>
+    {
+        return findProfileObjectIds({
+            rpc: this.rpc,
+            packageId: this.packageId,
+            registryId: this.registryId,
+            lookupAddresses,
+        });
+    }
+
+    public createRegistry({ wallet, registryName }: {
+        wallet: WalletArg,
+        registryName: string,
+    }): Promise<OwnedObjectRef>
+    {
+        return createRegistry({
+            wallet,
+            packageId: this.packageId,
+            registryName,
+        });
+    }
+
+    public createProfile({ wallet, name, image='', description='' }: {
+        wallet: WalletArg,
+        name: string,
+        image?: string,
+        description?: string,
+    }): Promise<(SuiObject|null)[]>
+    {
+        return createProfile({
+            rpc: this.rpc,
+            wallet,
+            packageId: this.packageId,
+            registryId: this.registryId,
+            name,
+            image,
+            description,
+        });
     }
 }
 
@@ -264,8 +315,8 @@ export async function createProfile({
     packageId: string,
     registryId: string,
     name: string,
-    image: string,
-    description: string,
+    image?: string,
+    description?: string,
 }): Promise<(SuiObject|null)[]>
 {
     // Creates 2 objects: the profile (owned by the caller) and a dynamic field (inside the registry's table)
