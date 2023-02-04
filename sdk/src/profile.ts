@@ -12,13 +12,42 @@ import {
     UnserializedSignableTransaction,
 } from '@mysten/sui.js';
 
-// TODO DEV and DEVNET via ProfileManager
+const RPC_DEVNET = new JsonRpcProvider(Network.DEVNET);
+export const POLYMEDIA_PROFILE_PACKAGE_ID_DEVNET = '0x1f836d19359a04a385ecf801dcbcc7c40a627c05';
+export const POLYMEDIA_PROFILE_REGISTRY_ID_DEVNET = '0xb57d6fd470865b014b8de6ea9b6b95e2c185393a';
 
-export const POLYMEDIA_PROFILE_PACKAGE_ID = '0x1f836d19359a04a385ecf801dcbcc7c40a627c05';
-export const POLYMEDIA_PROFILE_REGISTRY_ID = '0xb57d6fd470865b014b8de6ea9b6b95e2c185393a';
+const RPC_TESTNET = new JsonRpcProvider('https://fullnode.testnet.sui.io:443');
+export const POLYMEDIA_PROFILE_PACKAGE_ID_TESTNET = '0x123';
+export const POLYMEDIA_PROFILE_REGISTRY_ID_TESTNET = '0x123';
 
-export class ProfileSearch {
+export type PolymediaProfile = {
+    id: string,
+    name: string,
+    image: string,
+    description: string,
+    owner: string,
+    suiObject: SuiObject,
+}
+
+export class ProfileManager {
     private cache: Map<string, PolymediaProfile|null> = new Map();
+    private rpc: JsonRpcProvider;
+    private packageId: string;
+    private registryId: string;
+
+    constructor(network: string, packageId?: string, registryId?: string) {
+        if (network === 'devnet') {
+            this.rpc = RPC_DEVNET;
+            this.packageId = packageId || POLYMEDIA_PROFILE_PACKAGE_ID_DEVNET;
+            this.registryId = registryId || POLYMEDIA_PROFILE_REGISTRY_ID_DEVNET;
+        } else if (network === 'testnet') {
+            this.rpc = RPC_TESTNET;
+            this.packageId = packageId || POLYMEDIA_PROFILE_PACKAGE_ID_TESTNET;
+            this.registryId = registryId || POLYMEDIA_PROFILE_REGISTRY_ID_TESTNET;
+        } else {
+            throw new Error('Network not recognized: ' + network);
+        }
+    }
 
     public async getProfiles(lookupAddresses: Iterable<string>): Promise<Map<string, PolymediaProfile>> {
         const result = new Map<string, PolymediaProfile>();
@@ -39,6 +68,9 @@ export class ProfileSearch {
 
         // Find the remaining profile object IDs
         const newObjectIds = await findProfileObjectIds({
+            rpc: this.rpc,
+            packageId: this.packageId,
+            registryId: this.registryId,
             lookupAddresses: [...newLookupAddresses]
         });
 
@@ -51,7 +83,10 @@ export class ProfileSearch {
         if (newObjectIds.size === 0) return result;
 
         // Retrieve the remaining profile objects
-        const profileObjects = await getProfileObjects({ objectIds: [...newObjectIds.values()] });
+        const profileObjects = await getProfileObjects({
+            rpc: this.rpc,
+            objectIds: [...newObjectIds.values()]
+        });
 
         // Add the remaining profile objects to the returned map and cache
         for (const profile of profileObjects) {
@@ -63,15 +98,10 @@ export class ProfileSearch {
     }
 }
 
-const rpc = new JsonRpcProvider(Network.DEVNET);
-const bcs = new BCS(getSuiMoveConfig());
-
-type GetObjectsArgs = {
-    objectIds: string[];
-}
-function getObjects({
-        objectIds,
-    }: GetObjectsArgs): Promise<SuiObject[]>
+function getObjects({ rpc, objectIds }: {
+    rpc: JsonRpcProvider,
+    objectIds: string[],
+}): Promise<SuiObject[]>
 {
     return rpc.getObjectBatch(
         objectIds
@@ -84,23 +114,13 @@ function getObjects({
     });
 }
 
-export type PolymediaProfile = {
-    id: string,
-    name: string,
-    image: string,
-    description: string,
-    owner: string,
-    suiObject: SuiObject,
-}
-type GetProfileObjectsArgs = {
+export function getProfileObjects({ rpc, objectIds }: {
+    rpc: JsonRpcProvider,
     objectIds: string[],
-}
-export function getProfileObjects({
-        objectIds,
-    }: GetProfileObjectsArgs): Promise<PolymediaProfile[]>
+}): Promise<PolymediaProfile[]>
 {
     return getObjects({
-        objectIds
+        rpc, objectIds
     })
     .then((objects: SuiObject[]) => {
         const profiles: PolymediaProfile[] = [];
@@ -123,19 +143,22 @@ export function getProfileObjects({
     });
 }
 
-type FindProfileObjectIdsArgs = {
-    lookupAddresses: string[];
-    packageId?: string;
-    registryId?: string;
-}
+const bcs = new BCS(getSuiMoveConfig());
 export function findProfileObjectIds({
-        lookupAddresses,
-        packageId = POLYMEDIA_PROFILE_PACKAGE_ID,
-        registryId = POLYMEDIA_PROFILE_REGISTRY_ID
-    }: FindProfileObjectIdsArgs): Promise<Map<string,string>>
+    rpc,
+    packageId,
+    registryId,
+    lookupAddresses,
+}: {
+    rpc: JsonRpcProvider,
+    packageId: string,
+    registryId: string,
+    lookupAddresses: string[],
+}): Promise<Map<string,string>>
 {
     lookupAddresses = [...new Set(lookupAddresses)]; // deduplicate
     const callerAddress = '0x7777777777777777777777777777777777777777';
+
     const signableTxn = {
         kind: 'moveCall',
         data: {
@@ -149,6 +172,7 @@ export function findProfileObjectIds({
             ],
         } as MoveCallTransaction,
     } as UnserializedSignableTransaction;
+
     return rpc.devInspectTransaction(callerAddress, signableTxn)
     .then((resp: any) => {
         //                  Sui/Ethos || Suiet
@@ -184,16 +208,15 @@ export function findProfileObjectIds({
 type WalletArg = {
     signAndExecuteTransaction: (transaction: SignableTransaction) => Promise<any>,
 }
-type CreateRegistryArgs = {
-    wallet: WalletArg,
-    registryName: string;
-    packageId?: string;
-}
 export function createRegistry({
-        wallet,
-        registryName,
-        packageId = POLYMEDIA_PROFILE_PACKAGE_ID,
-    } : CreateRegistryArgs): Promise<OwnedObjectRef>
+    wallet,
+    packageId,
+    registryName,
+} : {
+    wallet: WalletArg,
+    packageId: string,
+    registryName: string,
+}): Promise<OwnedObjectRef>
 {
     return wallet.signAndExecuteTransaction({
         kind: 'moveCall',
@@ -227,22 +250,23 @@ export function createRegistry({
     });
 }
 
-type CreateProfileArgs = {
-    wallet: WalletArg,
-    name: string,
-    image?: string,
-    description?: string,
-    packageId?: string;
-    registryId?: string,
-}
 export async function createProfile({
-        wallet,
-        name,
-        image = '',
-        description = '',
-        packageId = POLYMEDIA_PROFILE_PACKAGE_ID,
-        registryId = POLYMEDIA_PROFILE_REGISTRY_ID
-    } : CreateProfileArgs): Promise<(SuiObject|null)[]>
+    rpc,
+    wallet,
+    packageId,
+    registryId,
+    name,
+    image = '',
+    description = '',
+} : {
+    rpc: JsonRpcProvider,
+    wallet: WalletArg,
+    packageId: string,
+    registryId: string,
+    name: string,
+    image: string,
+    description: string,
+}): Promise<(SuiObject|null)[]>
 {
     // Creates 2 objects: the profile (owned by the caller) and a dynamic field (inside the registry's table)
     const resp = await wallet.signAndExecuteTransaction({
@@ -273,7 +297,7 @@ export async function createProfile({
 
     // Fetch and return both objects
     const createdIds = effects.created.map((suiObj: any) => suiObj.reference.objectId);
-    const suiObjects: SuiObject[] = await getObjects({objectIds: createdIds});
+    const suiObjects: SuiObject[] = await getObjects({rpc, objectIds: createdIds});
     let profileObj = null;
     let dynamicFieldObj = null;
     for (const suiObj of suiObjects) {
