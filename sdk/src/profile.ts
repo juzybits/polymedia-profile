@@ -1,3 +1,7 @@
+// TODO: split large batches into 50 lookup addresses per request
+// TODO: store in local storage for fast initial load, then replace with 1st request
+// TODO: noCache option
+
 import { BCS, getSuiMoveConfig } from '@mysten/bcs';
 import {
     GetObjectDataResponse,
@@ -27,6 +31,10 @@ export type PolymediaProfile = {
     description: string,
     owner: string,
     suiObject: SuiObject,
+}
+
+type WalletArg = {
+    signAndExecuteTransaction: (transaction: SignableTransaction) => Promise<any>,
 }
 
 export class ProfileManager {
@@ -96,16 +104,6 @@ export class ProfileManager {
         return result;
     }
 
-    public getProfileObjects({ objectIds }: {
-        objectIds: string[]
-    }): Promise<PolymediaProfile[]>
-    {
-        return getProfileObjects({
-            rpc: this.rpc,
-            objectIds,
-        });
-    }
-
     public findProfileObjectIds({ lookupAddresses }: {
         lookupAddresses: string[]
     }): Promise<Map<string,string>>
@@ -115,6 +113,16 @@ export class ProfileManager {
             packageId: this.packageId,
             registryId: this.registryId,
             lookupAddresses,
+        });
+    }
+
+    public getProfileObjects({ objectIds }: {
+        objectIds: string[]
+    }): Promise<PolymediaProfile[]>
+    {
+        return getProfileObjects({
+            rpc: this.rpc,
+            objectIds,
         });
     }
 
@@ -165,37 +173,8 @@ function getObjects({ rpc, objectIds }: {
     });
 }
 
-export function getProfileObjects({ rpc, objectIds }: {
-    rpc: JsonRpcProvider,
-    objectIds: string[],
-}): Promise<PolymediaProfile[]>
-{
-    return getObjects({
-        rpc, objectIds
-    })
-    .then((objects: SuiObject[]) => {
-        const profiles: PolymediaProfile[] = [];
-        for (const obj of objects) {
-            const objData = obj.data as SuiMoveObject;
-            const objOwner = obj.owner as { AddressOwner: string };
-            profiles.push({
-                id: objData.fields.id.id,
-                name: objData.fields.name,
-                image: objData.fields.image,
-                description: objData.fields.description,
-                owner: objOwner.AddressOwner,
-                suiObject: obj,
-            });
-        }
-        return profiles;
-    })
-    .catch((error: any) => {
-        throw error;
-    });
-}
-
-const bcs = new BCS(getSuiMoveConfig());
-export function findProfileObjectIds({
+const bcs = new BCS( getSuiMoveConfig() );
+function findProfileObjectIds({
     rpc,
     packageId,
     registryId,
@@ -256,10 +235,36 @@ export function findProfileObjectIds({
     });
 }
 
-type WalletArg = {
-    signAndExecuteTransaction: (transaction: SignableTransaction) => Promise<any>,
+function getProfileObjects({ rpc, objectIds }: {
+    rpc: JsonRpcProvider,
+    objectIds: string[],
+}): Promise<PolymediaProfile[]>
+{
+    return getObjects({
+        rpc, objectIds
+    })
+    .then((objects: SuiObject[]) => {
+        const profiles: PolymediaProfile[] = [];
+        for (const obj of objects) {
+            const objData = obj.data as SuiMoveObject;
+            const objOwner = obj.owner as { AddressOwner: string };
+            profiles.push({
+                id: objData.fields.id.id,
+                name: objData.fields.name,
+                image: objData.fields.image,
+                description: objData.fields.description,
+                owner: objOwner.AddressOwner,
+                suiObject: obj,
+            });
+        }
+        return profiles;
+    })
+    .catch((error: any) => {
+        throw error;
+    });
 }
-export function createRegistry({
+
+function createRegistry({
     wallet,
     packageId,
     registryName,
@@ -301,7 +306,7 @@ export function createRegistry({
     });
 }
 
-export async function createProfile({
+async function createProfile({
     rpc,
     wallet,
     packageId,
