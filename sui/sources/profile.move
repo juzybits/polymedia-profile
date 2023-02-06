@@ -56,26 +56,29 @@ module polymedia_profile::profile
         // TODO: emit event
     }
 
+    struct LookupResult {
+        lookup_addr: address,
+        profile_addr: address,
+    }
+
     public fun get_profiles(
         registry: &Registry,
         lookup_addresses: vector<address>,
-    ): vector<address>
+    ): vector<LookupResult>
     {
-        let not_found_addr = @0x0;
-        let profile_addresses = vector::empty<address>();
+        let results = vector::empty<LookupResult>();
         let length = vector::length(&lookup_addresses);
         let index = 0;
         while ( index < length ) {
             let lookup_addr = *vector::borrow(&lookup_addresses, index);
             if ( table::contains(&registry.profiles, lookup_addr) ) {
                 let profile_addr = *table::borrow(&registry.profiles, lookup_addr);
-                vector::push_back(&mut profile_addresses, profile_addr);
-            } else {
-                vector::push_back(&mut profile_addresses, not_found_addr);
+                let result = LookupResult { lookup_addr, profile_addr };
+                vector::push_back(&mut results, result);
             };
             index = index + 1
         };
-        return profile_addresses
+        return results
     }
 
     // public fun get_profile_info(); // TODO

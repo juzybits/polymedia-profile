@@ -17,8 +17,8 @@ import {
 } from '@mysten/sui.js';
 
 const RPC_DEVNET = new JsonRpcProvider(Network.DEVNET);
-export const POLYMEDIA_PROFILE_PACKAGE_ID_DEVNET = '0x1f836d19359a04a385ecf801dcbcc7c40a627c05';
-export const POLYMEDIA_PROFILE_REGISTRY_ID_DEVNET = '0xb57d6fd470865b014b8de6ea9b6b95e2c185393a';
+export const POLYMEDIA_PROFILE_PACKAGE_ID_DEVNET = '0x13e2578af35a3ec8111791b654a0e3288cab149c';
+export const POLYMEDIA_PROFILE_REGISTRY_ID_DEVNET = '0xbdeb7f0fe6c020c0a861ed206c4a38d52e3f2c1b';
 
 const RPC_TESTNET = new JsonRpcProvider('https://fullnode.testnet.sui.io:443');
 export const POLYMEDIA_PROFILE_PACKAGE_ID_TESTNET = '0x123';
@@ -173,7 +173,14 @@ function getObjects({ rpc, objectIds }: {
     });
 }
 
+// Register a custom struct type for Sui 'Binary Canonical (de)Serialization'
 const bcs = new BCS( getSuiMoveConfig() );
+const LookupResult = {
+    lookupAddr: BCS.ADDRESS,
+    profileAddr: BCS.ADDRESS,
+};
+bcs.registerStructType(POLYMEDIA_PROFILE_PACKAGE_ID_DEVNET + '::profile::LookupResult', LookupResult);
+bcs.registerStructType(POLYMEDIA_PROFILE_PACKAGE_ID_TESTNET + '::profile::LookupResult', LookupResult);
 function findProfileObjectIds({
     rpc,
     packageId,
@@ -208,24 +215,17 @@ function findProfileObjectIds({
         //                  Sui/Ethos || Suiet
         const effects = (resp.effects || resp.EffectsCert?.effects?.effects) as TransactionEffects;
         if (effects.status.status == 'success') {
-            // Deserialize the returned value into an array of addresses
+            // Deserialize the returned value into an array of LookupResult objects
             const returnValue: any[] = resp.results.Ok[0][1].returnValues[0]; // grab the 1st and only tuple
             const valueType: string = returnValue[1];
             const valueData = Uint8Array.from(returnValue[0]);
-            const profileAddreses: string[] = bcs.de(valueType, valueData, 'hex');
-
-            // Create a Map where the keys are lookupAddresses and the values are profileAddreses
-            const notFoundAddress = '0000000000000000000000000000000000000000';
-            const length = lookupAddresses.length; // same as profileAddreses.length
-            const result = new Map<string, string>();
-            for(let i = 0; i < length; i++) {
-                const lookupAddr = lookupAddresses[i];
-                const profileAddr = profileAddreses[i];
-                if (profileAddr != notFoundAddress) {
-                    result.set(lookupAddr, profileAddr);
-                }
+            const lookupResults: Array<typeof LookupResult> = bcs.de(valueType, valueData, 'hex');
+            // Pack the results into a Map
+            const results = new Map<string, string>();
+            for (const result of lookupResults) {
+                results.set('0x'+result.lookupAddr, '0x'+result.profileAddr);
             }
-            return result;
+            return results;
         } else {
             throw new Error(effects.status.error);
         }
