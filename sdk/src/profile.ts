@@ -11,6 +11,7 @@ import {
     OwnedObjectRef,
     SignableTransaction,
     SuiMoveObject,
+    SuiAddress,
     SuiObject,
     TransactionEffects,
     UnserializedSignableTransaction,
@@ -25,11 +26,11 @@ export const POLYMEDIA_PROFILE_PACKAGE_ID_TESTNET = '0x123';
 export const POLYMEDIA_PROFILE_REGISTRY_ID_TESTNET = '0x123';
 
 export type PolymediaProfile = {
-    id: string,
+    id: SuiAddress,
     name: string,
     image: string,
     description: string,
-    owner: string,
+    owner: SuiAddress,
     suiObject: SuiObject,
 }
 
@@ -38,12 +39,12 @@ type WalletArg = {
 }
 
 export class ProfileManager {
-    private cache: Map<string, PolymediaProfile|null> = new Map();
+    private cache: Map<SuiAddress, PolymediaProfile|null> = new Map();
     private rpc: JsonRpcProvider;
-    private packageId: string;
-    private registryId: string;
+    private packageId: SuiAddress;
+    private registryId: SuiAddress;
 
-    constructor(network: string, packageId?: string, registryId?: string) {
+    constructor(network: string, packageId?: SuiAddress, registryId?: SuiAddress) {
         if (network === 'devnet') {
             this.rpc = RPC_DEVNET;
             this.packageId = packageId || POLYMEDIA_PROFILE_PACKAGE_ID_DEVNET;
@@ -57,12 +58,12 @@ export class ProfileManager {
         }
     }
 
-    public getPackageId(): string { return this.packageId; }
-    public getRegistryId(): string { return this.registryId; }
+    public getPackageId(): SuiAddress { return this.packageId; }
+    public getRegistryId(): SuiAddress { return this.registryId; }
 
-    public async getProfiles(lookupAddresses: Iterable<string>): Promise<Map<string, PolymediaProfile>> {
-        const result = new Map<string, PolymediaProfile>();
-        const newLookupAddresses = new Set<string>(); // unseen addresses (i.e. not cached)
+    public async getProfiles(lookupAddresses: Iterable<SuiAddress>): Promise<Map<SuiAddress, PolymediaProfile>> {
+        const result = new Map<SuiAddress, PolymediaProfile>();
+        const newLookupAddresses = new Set<SuiAddress>(); // unseen addresses (i.e. not cached)
 
         // Check if addresses are already in cache and add them to the returned map
         for (const addr of lookupAddresses) {
@@ -105,8 +106,8 @@ export class ProfileManager {
     }
 
     public findProfileObjectIds({ lookupAddresses }: {
-        lookupAddresses: string[]
-    }): Promise<Map<string,string>>
+        lookupAddresses: SuiAddress[]
+    }): Promise<Map<SuiAddress,SuiAddress>>
     {
         return findProfileObjectIds({
             rpc: this.rpc,
@@ -117,7 +118,7 @@ export class ProfileManager {
     }
 
     public getProfileObjects({ objectIds }: {
-        objectIds: string[]
+        objectIds: SuiAddress[]
     }): Promise<PolymediaProfile[]>
     {
         return getProfileObjects({
@@ -143,7 +144,7 @@ export class ProfileManager {
         name: string,
         image?: string,
         description?: string,
-    }): Promise<string>
+    }): Promise<SuiAddress>
     {
         return createProfile({
             wallet,
@@ -158,7 +159,7 @@ export class ProfileManager {
 
 function getObjects({ rpc, objectIds }: {
     rpc: JsonRpcProvider,
-    objectIds: string[],
+    objectIds: SuiAddress[],
 }): Promise<SuiObject[]>
 {
     return rpc.getObjectBatch(
@@ -187,10 +188,10 @@ function findProfileObjectIds({
     lookupAddresses,
 }: {
     rpc: JsonRpcProvider,
-    packageId: string,
-    registryId: string,
-    lookupAddresses: string[],
-}): Promise<Map<string,string>>
+    packageId: SuiAddress,
+    registryId: SuiAddress,
+    lookupAddresses: SuiAddress[],
+}): Promise<Map<SuiAddress,SuiAddress>>
 {
     lookupAddresses = [...new Set(lookupAddresses)]; // deduplicate
     const callerAddress = '0x7777777777777777777777777777777777777777';
@@ -220,7 +221,7 @@ function findProfileObjectIds({
             const valueData = Uint8Array.from(returnValue[0]);
             const lookupResults: Array<typeof LookupResult> = bcs.de(valueType, valueData, 'hex');
             // Pack the results into a Map
-            const results = new Map<string, string>();
+            const results = new Map<SuiAddress, SuiAddress>();
             for (const result of lookupResults) {
                 results.set('0x'+result.lookupAddr, '0x'+result.profileAddr);
             }
@@ -236,7 +237,7 @@ function findProfileObjectIds({
 
 function getProfileObjects({ rpc, objectIds }: {
     rpc: JsonRpcProvider,
-    objectIds: string[],
+    objectIds: SuiAddress[],
 }): Promise<PolymediaProfile[]>
 {
     return getObjects({
@@ -246,7 +247,7 @@ function getProfileObjects({ rpc, objectIds }: {
         const profiles: PolymediaProfile[] = [];
         for (const obj of objects) {
             const objData = obj.data as SuiMoveObject;
-            const objOwner = obj.owner as { AddressOwner: string };
+            const objOwner = obj.owner as { AddressOwner: SuiAddress };
             profiles.push({
                 id: objData.fields.id.id,
                 name: objData.fields.name,
@@ -269,7 +270,7 @@ function createRegistry({
     registryName,
 } : {
     wallet: WalletArg,
-    packageId: string,
+    packageId: SuiAddress,
     registryName: string,
 }): Promise<OwnedObjectRef>
 {
@@ -313,12 +314,12 @@ async function createProfile({
     description = '',
 } : {
     wallet: WalletArg,
-    packageId: string,
-    registryId: string,
+    packageId: SuiAddress,
+    registryId: SuiAddress,
     name: string,
     image?: string,
     description?: string,
-}): Promise<string>
+}): Promise<SuiAddress>
 {
     // Creates 2 objects: the profile (owned by the caller) and a dynamic field (inside the registry's table)
     const resp = await wallet.signAndExecuteTransaction({
