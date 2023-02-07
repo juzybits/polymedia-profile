@@ -1,6 +1,5 @@
 // TODO: split large batches into 50 lookup addresses per request
 // TODO: store in local storage for fast initial load, then replace with 1st request
-// TODO: noCache option
 
 import { BCS, getSuiMoveConfig } from '@mysten/bcs';
 import {
@@ -61,13 +60,17 @@ export class ProfileManager {
     public getPackageId(): SuiAddress { return this.packageId; }
     public getRegistryId(): SuiAddress { return this.registryId; }
 
-    public async getProfiles(lookupAddresses: Iterable<SuiAddress>): Promise<Map<SuiAddress, PolymediaProfile>> {
+    public async getProfiles({ lookupAddresses, useCache=false }: {
+        lookupAddresses: Iterable<SuiAddress>,
+        useCache?: boolean,
+    }): Promise<Map<SuiAddress, PolymediaProfile>>
+    {
         const result = new Map<SuiAddress, PolymediaProfile>();
         const newLookupAddresses = new Set<SuiAddress>(); // unseen addresses (i.e. not cached)
 
         // Check if addresses are already in cache and add them to the returned map
         for (const addr of lookupAddresses) {
-            if (this.cache.has(addr)) {
+            if (useCache && this.cache.has(addr)) {
                 const cachedProfile = this.cache.get(addr);
                 if (cachedProfile) {
                     result.set(addr, cachedProfile);
@@ -79,7 +82,7 @@ export class ProfileManager {
         if (newLookupAddresses.size === 0) return result;
 
         // Find the remaining profile object IDs
-        const newObjectIds = await this.findProfileObjectIds({
+        const newObjectIds = await this.fetchProfileObjectIds({
             lookupAddresses: [...newLookupAddresses]
         });
 
@@ -92,7 +95,7 @@ export class ProfileManager {
         if (newObjectIds.size === 0) return result;
 
         // Retrieve the remaining profile objects
-        const profileObjects = await this.getProfileObjects({
+        const profileObjects = await this.fetchProfileObjects({
             objectIds: [...newObjectIds.values()]
         });
 
@@ -103,28 +106,6 @@ export class ProfileManager {
         }
 
         return result;
-    }
-
-    public findProfileObjectIds({ lookupAddresses }: {
-        lookupAddresses: SuiAddress[]
-    }): Promise<Map<SuiAddress,SuiAddress>>
-    {
-        return findProfileObjectIds({
-            rpc: this.rpc,
-            packageId: this.packageId,
-            registryId: this.registryId,
-            lookupAddresses,
-        });
-    }
-
-    public getProfileObjects({ objectIds }: {
-        objectIds: SuiAddress[]
-    }): Promise<PolymediaProfile[]>
-    {
-        return getProfileObjects({
-            rpc: this.rpc,
-            objectIds,
-        });
     }
 
     public createRegistry({ wallet, registryName }: {
@@ -155,9 +136,32 @@ export class ProfileManager {
             description,
         });
     }
+
+    private fetchProfileObjectIds({ lookupAddresses }: {
+        lookupAddresses: SuiAddress[]
+    }): Promise<Map<SuiAddress,SuiAddress>>
+    {
+        return fetchProfileObjectIds({
+            rpc: this.rpc,
+            packageId: this.packageId,
+            registryId: this.registryId,
+            lookupAddresses,
+        });
+    }
+
+    private fetchProfileObjects({ objectIds }: {
+        objectIds: SuiAddress[]
+    }): Promise<PolymediaProfile[]>
+    {
+        return fetchProfileObjects({
+            rpc: this.rpc,
+            objectIds,
+        });
+    }
 }
 
-function getObjects({ rpc, objectIds }: {
+/// Generic function to fetch Sui objects
+function fetchObjects({ rpc, objectIds }: {
     rpc: JsonRpcProvider,
     objectIds: SuiAddress[],
 }): Promise<SuiObject[]>
@@ -181,7 +185,10 @@ const LookupResult = {
 };
 bcs.registerStructType(POLYMEDIA_PROFILE_PACKAGE_ID_DEVNET + '::profile::LookupResult', LookupResult);
 bcs.registerStructType(POLYMEDIA_PROFILE_PACKAGE_ID_TESTNET + '::profile::LookupResult', LookupResult);
-function findProfileObjectIds({
+
+/// Given one or more Sui addresses, find their associated profile object IDs.
+/// Addresses that don't have a profile won't be included in the returned Map.
+function fetchProfileObjectIds({
     rpc,
     packageId,
     registryId,
@@ -235,12 +242,13 @@ function findProfileObjectIds({
     });
 }
 
-function getProfileObjects({ rpc, objectIds }: {
+/// Fetch one or more Sui objects build PolymediaProfile objects out of them
+function fetchProfileObjects({ rpc, objectIds }: {
     rpc: JsonRpcProvider,
     objectIds: SuiAddress[],
 }): Promise<PolymediaProfile[]>
 {
-    return getObjects({
+    return fetchObjects({
         rpc, objectIds
     })
     .then((objects: SuiObject[]) => {
