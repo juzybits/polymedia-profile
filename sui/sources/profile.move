@@ -2,7 +2,8 @@ module polymedia_profile::profile
 {
     use std::string::{Self, String};
     use std::vector;
-    use sui::object::{Self, UID};
+    use sui::event;
+    use sui::object::{Self, ID, UID};
     use sui::table::{Self, Table};
     use sui::transfer;
     use sui::tx_context::{Self, TxContext};
@@ -22,17 +23,30 @@ module polymedia_profile::profile
         description: String,
     }
 
+    struct EventCreateRegistry has copy, drop {
+        registry_id: ID,
+    }
+
+    struct EventCreateProfile has copy, drop {
+        profile_id: ID,
+        registry_id: ID,
+    }
+
     public entry fun create_registry(
         name: vector<u8>,
         ctx: &mut TxContext,
     ) {
+        let registry_uid = object::new(ctx);
+        let registry_id = object::uid_to_inner(&registry_uid);
+
         let registry = Registry {
-            id: object::new(ctx),
+            id: registry_uid,
             name: string::utf8(name),
             profiles: table::new(ctx),
         };
         transfer::share_object(registry);
-        // TODO: emit event
+
+        event::emit(EventCreateRegistry { registry_id });
     }
 
     public entry fun create_profile(
@@ -43,17 +57,23 @@ module polymedia_profile::profile
         ctx: &mut TxContext,
     ) {
         let profile_uid = object::new(ctx);
+        let profile_id = object::uid_to_inner(&profile_uid);
         let profile_addr = object::uid_to_address(&profile_uid);
+        let sender_addr = tx_context::sender(ctx);
+
         let profile = Profile {
             id: profile_uid,
             name: string::utf8(name),
             image: string::utf8(image),
             description: string::utf8(description),
         };
-        let sender_addr = tx_context::sender(ctx);
         table::add(&mut registry.profiles, sender_addr, profile_addr);
         transfer::transfer(profile, sender_addr);
-        // TODO: emit event
+
+        event::emit(EventCreateProfile {
+            profile_id,
+            registry_id: object::id(registry),
+        });
     }
 
     struct LookupResult {
