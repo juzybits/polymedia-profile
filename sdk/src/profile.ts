@@ -33,9 +33,7 @@ export type PolymediaProfile = {
     suiObject: SuiObject,
 }
 
-type WalletArg = {
-    signAndExecuteTransaction: (transaction: SignableTransaction) => Promise<any>,
-}
+type SignAndExecuteTransactionArg = (transaction: SignableTransaction) => Promise<any>;
 
 export class ProfileManager {
     private cache: Map<SuiAddress, PolymediaProfile|null> = new Map();
@@ -108,27 +106,27 @@ export class ProfileManager {
         return result;
     }
 
-    public createRegistry({ wallet, registryName }: {
-        wallet: WalletArg,
+    public createRegistry({ signAndExecuteTransaction, registryName }: {
+        signAndExecuteTransaction: SignAndExecuteTransactionArg,
         registryName: string,
     }): Promise<OwnedObjectRef>
     {
         return createRegistry({
-            wallet,
+            signAndExecuteTransaction,
             packageId: this.packageId,
             registryName,
         });
     }
 
-    public createProfile({ wallet, name, image='', description='' }: {
-        wallet: WalletArg,
+    public createProfile({ signAndExecuteTransaction, name, image='', description='' }: {
+        signAndExecuteTransaction: SignAndExecuteTransactionArg,
         name: string,
         image?: string,
         description?: string,
     }): Promise<SuiAddress>
     {
         return createProfile({
-            wallet,
+            signAndExecuteTransaction,
             packageId: this.packageId,
             registryId: this.registryId,
             name,
@@ -273,16 +271,16 @@ function fetchProfileObjects({ rpc, objectIds }: {
 }
 
 function createRegistry({
-    wallet,
+    signAndExecuteTransaction,
     packageId,
     registryName,
 } : {
-    wallet: WalletArg,
+    signAndExecuteTransaction: SignAndExecuteTransactionArg,
     packageId: SuiAddress,
     registryName: string,
 }): Promise<OwnedObjectRef>
 {
-    return wallet.signAndExecuteTransaction({
+    return signAndExecuteTransaction({
         kind: 'moveCall',
         data: {
             packageObjectId: packageId,
@@ -314,14 +312,14 @@ function createRegistry({
 }
 
 async function createProfile({
-    wallet,
+    signAndExecuteTransaction,
     packageId,
     registryId,
     name,
     image = '',
     description = '',
 } : {
-    wallet: WalletArg,
+    signAndExecuteTransaction: SignAndExecuteTransactionArg,
     packageId: SuiAddress,
     registryId: SuiAddress,
     name: string,
@@ -330,7 +328,7 @@ async function createProfile({
 }): Promise<SuiAddress>
 {
     // Creates 2 objects: the profile (owned by the caller) and a dynamic field (inside the registry's table)
-    const resp = await wallet.signAndExecuteTransaction({
+    const resp = await signAndExecuteTransaction({
         kind: 'moveCall',
         data: {
             packageObjectId: packageId,
