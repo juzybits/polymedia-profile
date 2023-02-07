@@ -17,8 +17,8 @@ import {
 } from '@mysten/sui.js';
 
 const RPC_DEVNET = new JsonRpcProvider(Network.DEVNET);
-export const POLYMEDIA_PROFILE_PACKAGE_ID_DEVNET = '0x13e2578af35a3ec8111791b654a0e3288cab149c';
-export const POLYMEDIA_PROFILE_REGISTRY_ID_DEVNET = '0xbdeb7f0fe6c020c0a861ed206c4a38d52e3f2c1b';
+export const POLYMEDIA_PROFILE_PACKAGE_ID_DEVNET = '0xee46d8bbaa8c03e030888c4ca7ea551ce79d49b3';
+export const POLYMEDIA_PROFILE_REGISTRY_ID_DEVNET = '0x78095df93ed9fe821840ef96771ffec484ffca18';
 
 const RPC_TESTNET = new JsonRpcProvider('https://fullnode.testnet.sui.io:443');
 export const POLYMEDIA_PROFILE_PACKAGE_ID_TESTNET = '0x123';
@@ -143,10 +143,9 @@ export class ProfileManager {
         name: string,
         image?: string,
         description?: string,
-    }): Promise<(SuiObject|null)[]>
+    }): Promise<string>
     {
         return createProfile({
-            rpc: this.rpc,
             wallet,
             packageId: this.packageId,
             registryId: this.registryId,
@@ -290,12 +289,11 @@ function createRegistry({
     .then((resp: any) => {
         //                  Sui/Ethos || Suiet
         const effects = (resp.effects || resp.EffectsCert?.effects?.effects) as TransactionEffects;
-        if (effects.status.status == 'success') {
+        if (effects.status.status === 'success') {
             if (effects.created?.length === 1) {
                 return effects.created[0] as OwnedObjectRef;
-            } else {
-                throw new Error("transaction was successful, but new object is missing. Response: "
-                    + JSON.stringify(resp));
+            } else { // Should never happen
+                throw new Error('New registry object missing from response: ' + JSON.stringify(resp));
             }
         } else {
             throw new Error(effects.status.error);
@@ -307,7 +305,6 @@ function createRegistry({
 }
 
 async function createProfile({
-    rpc,
     wallet,
     packageId,
     registryId,
@@ -315,14 +312,13 @@ async function createProfile({
     image = '',
     description = '',
 } : {
-    rpc: JsonRpcProvider,
     wallet: WalletArg,
     packageId: string,
     registryId: string,
     name: string,
     image?: string,
     description?: string,
-}): Promise<(SuiObject|null)[]>
+}): Promise<string>
 {
     // Creates 2 objects: the profile (owned by the caller) and a dynamic field (inside the registry's table)
     const resp = await wallet.signAndExecuteTransaction({
@@ -343,30 +339,17 @@ async function createProfile({
     });
 
     // Verify the transaction results
-    const effects = (resp.effects || resp.EffectsCert?.effects?.effects) as TransactionEffects; // Sui/Ethos || Suiet
+    //                  Sui/Ethos || Suiet
+    const effects = (resp.effects || resp.EffectsCert?.effects?.effects) as TransactionEffects;
     if (effects.status.status !== 'success') {
         throw new Error(effects.status.error);
     }
-    if (effects.created?.length !== 2) {
-        throw new Error("transaction was successful, but object count is off. Response: " + JSON.stringify(resp));
-    }
-
-    // Fetch and return both objects
-    const createdIds = effects.created.map((suiObj: any) => suiObj.reference.objectId);
-    const suiObjects: SuiObject[] = await getObjects({rpc, objectIds: createdIds});
-    let profileObj = null;
-    let dynamicFieldObj = null;
-    for (const suiObj of suiObjects) {
-        const objType = (suiObj.data as SuiMoveObject).type;
-        if (objType.endsWith('::profile::Profile')) {
-            profileObj = suiObj;
-        } else
-        if (objType.includes('::dynamic_field::Field')) {
-            dynamicFieldObj = suiObj;
+    // Extract the new profile object ID from the 'EventCreateProfile' event
+    for (const event of effects.events||[]) {
+        if ('moveEvent' in event) {
+            return event.moveEvent.fields.profile_id;
         }
     }
-    return [ // TODO: just return profileObj as a PolymediaProfile
-        profileObj, // polymedia_profile::profile::Profile
-        dynamicFieldObj, // sui::dynamic_field::Field
-    ];
+    // Should never happen:
+    throw new Error("Transaction was successful, but can't find the new profile object ID in the response: " + JSON.stringify(resp));
 }
