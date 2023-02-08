@@ -1,6 +1,3 @@
-// TODO: split large batches into 50 lookup addresses per request
-// TODO: store in local storage for fast initial load, then replace with 1st request
-
 import { BCS, getSuiMoveConfig } from '@mysten/bcs';
 import {
     GetObjectDataResponse,
@@ -58,26 +55,27 @@ export class ProfileManager {
     public getPackageId(): SuiAddress { return this.packageId; }
     public getRegistryId(): SuiAddress { return this.registryId; }
 
-    public async getProfiles({ lookupAddresses, useCache=false }: {
+    public async getProfiles({ lookupAddresses, useCache=true }: {
         lookupAddresses: Iterable<SuiAddress>,
         useCache?: boolean,
-    }): Promise<Map<SuiAddress, PolymediaProfile>>
+    }): Promise<Map<SuiAddress, PolymediaProfile|null>>
     {
-        const result = new Map<SuiAddress, PolymediaProfile>();
+        const result = new Map<SuiAddress, PolymediaProfile|null>();
         const newLookupAddresses = new Set<SuiAddress>(); // unseen addresses (i.e. not cached)
 
         // Check if addresses are already in cache and add them to the returned map
         for (const addr of lookupAddresses) {
             if (useCache && this.cache.has(addr)) {
-                const cachedProfile = this.cache.get(addr);
-                if (cachedProfile) {
-                    result.set(addr, cachedProfile);
-                }
+                const cachedProfile = this.cache.get(addr) || null;
+                result.set(addr, cachedProfile);
             } else { // address not seen before so we need to look it up
                 newLookupAddresses.add(addr);
             }
         }
-        if (newLookupAddresses.size === 0) return result;
+
+        if (newLookupAddresses.size === 0) {
+            return result;
+        }
 
         // Find the remaining profile object IDs
         const newObjectIds = await this.fetchProfileObjectIds({
@@ -135,16 +133,25 @@ export class ProfileManager {
         });
     }
 
-    private fetchProfileObjectIds({ lookupAddresses }: {
+    private async fetchProfileObjectIds({ lookupAddresses }: {
         lookupAddresses: SuiAddress[]
     }): Promise<Map<SuiAddress,SuiAddress>>
     {
-        return fetchProfileObjectIds({
-            rpc: this.rpc,
-            packageId: this.packageId,
-            registryId: this.registryId,
-            lookupAddresses,
+        const results = new Map<SuiAddress, SuiAddress>();
+        const addressBatches = chunkArray(lookupAddresses, 50);
+        const promises = addressBatches.map(async batch => {
+            const lookupResults = await fetchProfileObjectIds({
+                rpc: this.rpc,
+                packageId: this.packageId,
+                registryId: this.registryId,
+                lookupAddresses: batch,
+            });
+            for (const result of lookupResults) {
+                results.set('0x'+result.lookupAddr, '0x'+result.profileAddr);
+            }
         });
+        await Promise.all(promises);
+        return results;
     }
 
     private fetchProfileObjects({ objectIds }: {
@@ -175,6 +182,14 @@ function fetchObjects({ rpc, objectIds }: {
     });
 }
 
+function chunkArray<T>(elements: T[], chunkSize: number): T[][] {
+    const result = [];
+    for (let i = 0; i < elements.length; i += chunkSize) {
+        result.push(elements.slice(i, i + chunkSize));
+    }
+    return result;
+}
+
 // Register a custom struct type for Sui 'Binary Canonical (de)Serialization'
 const bcs = new BCS( getSuiMoveConfig() );
 const LookupResult = {
@@ -183,7 +198,7 @@ const LookupResult = {
 };
 bcs.registerStructType(POLYMEDIA_PROFILE_PACKAGE_ID_DEVNET + '::profile::LookupResult', LookupResult);
 bcs.registerStructType(POLYMEDIA_PROFILE_PACKAGE_ID_TESTNET + '::profile::LookupResult', LookupResult);
-
+type TypeOfLookupResult = typeof LookupResult;
 /// Given one or more Sui addresses, find their associated profile object IDs.
 /// Addresses that don't have a profile won't be included in the returned Map.
 function fetchProfileObjectIds({
@@ -196,9 +211,8 @@ function fetchProfileObjectIds({
     packageId: SuiAddress,
     registryId: SuiAddress,
     lookupAddresses: SuiAddress[],
-}): Promise<Map<SuiAddress,SuiAddress>>
+}): Promise<Array<TypeOfLookupResult>>
 {
-    lookupAddresses = [...new Set(lookupAddresses)]; // deduplicate
     const callerAddress = '0x7777777777777777777777777777777777777777';
 
     const signableTxn = {
@@ -224,13 +238,8 @@ function fetchProfileObjectIds({
             const returnValue: any[] = resp.results.Ok[0][1].returnValues[0]; // grab the 1st and only tuple
             const valueType: string = returnValue[1];
             const valueData = Uint8Array.from(returnValue[0]);
-            const lookupResults: Array<typeof LookupResult> = bcs.de(valueType, valueData, 'hex');
-            // Pack the results into a Map
-            const results = new Map<SuiAddress, SuiAddress>();
-            for (const result of lookupResults) {
-                results.set('0x'+result.lookupAddr, '0x'+result.profileAddr);
-            }
-            return results;
+            const lookupResults: Array<TypeOfLookupResult> = bcs.de(valueType, valueData, 'hex');
+            return lookupResults;
         } else {
             throw new Error(effects.status.error);
         }
