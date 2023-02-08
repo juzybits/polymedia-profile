@@ -21,6 +21,9 @@ const RPC_TESTNET = new JsonRpcProvider('https://fullnode.testnet.sui.io:443');
 export const POLYMEDIA_PROFILE_PACKAGE_ID_TESTNET = '0x123';
 export const POLYMEDIA_PROFILE_REGISTRY_ID_TESTNET = '0x123';
 
+/**
+ * Represents a `polymedia_profile::profile::Profile` Sui object
+ */
 export type PolymediaProfile = {
     id: SuiAddress,
     name: string,
@@ -30,8 +33,9 @@ export type PolymediaProfile = {
     suiObject: SuiObject,
 }
 
-type SignAndExecuteTransactionArg = (transaction: SignableTransaction) => Promise<any>;
-
+/**
+ * Helps you interact with the `polymedia_profile` Sui package
+ */
 export class ProfileManager {
     private cache: Map<SuiAddress, PolymediaProfile|null> = new Map();
     private rpc: JsonRpcProvider;
@@ -109,7 +113,7 @@ export class ProfileManager {
         registryName: string,
     }): Promise<OwnedObjectRef>
     {
-        return createRegistry({
+        return sui_createRegistry({
             signAndExecuteTransaction,
             packageId: this.packageId,
             registryName,
@@ -123,7 +127,7 @@ export class ProfileManager {
         description?: string,
     }): Promise<SuiAddress>
     {
-        return createProfile({
+        return sui_createProfile({
             signAndExecuteTransaction,
             packageId: this.packageId,
             registryId: this.registryId,
@@ -140,7 +144,7 @@ export class ProfileManager {
         const results = new Map<SuiAddress, SuiAddress>();
         const addressBatches = chunkArray(lookupAddresses, 50);
         const promises = addressBatches.map(async batch => {
-            const lookupResults = await fetchProfileObjectIds({
+            const lookupResults = await sui_fetchProfileObjectIds({
                 rpc: this.rpc,
                 packageId: this.packageId,
                 registryId: this.registryId,
@@ -158,14 +162,20 @@ export class ProfileManager {
         objectIds: SuiAddress[]
     }): Promise<PolymediaProfile[]>
     {
-        return fetchProfileObjects({
+        return sui_fetchProfileObjects({
             rpc: this.rpc,
             objectIds,
         });
     }
 }
 
-/// Generic function to fetch Sui objects
+type SignAndExecuteTransactionArg = (transaction: SignableTransaction) => Promise<any>;
+
+/* Sui RPC calls and signed transactions */
+
+/**
+ * Generic function to fetch Sui objects
+ */
 function fetchObjects({ rpc, objectIds }: {
     rpc: JsonRpcProvider,
     objectIds: SuiAddress[],
@@ -182,14 +192,6 @@ function fetchObjects({ rpc, objectIds }: {
     });
 }
 
-function chunkArray<T>(elements: T[], chunkSize: number): T[][] {
-    const result = [];
-    for (let i = 0; i < elements.length; i += chunkSize) {
-        result.push(elements.slice(i, i + chunkSize));
-    }
-    return result;
-}
-
 // Register a custom struct type for Sui 'Binary Canonical (de)Serialization'
 const bcs = new BCS( getSuiMoveConfig() );
 const LookupResult = {
@@ -199,9 +201,12 @@ const LookupResult = {
 bcs.registerStructType(POLYMEDIA_PROFILE_PACKAGE_ID_DEVNET + '::profile::LookupResult', LookupResult);
 bcs.registerStructType(POLYMEDIA_PROFILE_PACKAGE_ID_TESTNET + '::profile::LookupResult', LookupResult);
 type TypeOfLookupResult = typeof LookupResult;
-/// Given one or more Sui addresses, find their associated profile object IDs.
-/// Addresses that don't have a profile won't be included in the returned Map.
-function fetchProfileObjectIds({
+
+/**
+ * Given one or more Sui addresses, find their associated profile object IDs.
+ * Addresses that don't have a profile won't be included in the returned Map.
+ */
+function sui_fetchProfileObjectIds({
     rpc,
     packageId,
     registryId,
@@ -249,8 +254,10 @@ function fetchProfileObjectIds({
     });
 }
 
-/// Fetch one or more Sui objects build PolymediaProfile objects out of them
-function fetchProfileObjects({ rpc, objectIds }: {
+/**
+ * Fetch one or more Sui objects and return them as PolymediaProfile instances
+ */
+function sui_fetchProfileObjects({ rpc, objectIds }: {
     rpc: JsonRpcProvider,
     objectIds: SuiAddress[],
 }): Promise<PolymediaProfile[]>
@@ -279,7 +286,7 @@ function fetchProfileObjects({ rpc, objectIds }: {
     });
 }
 
-function createRegistry({
+function sui_createRegistry({
     signAndExecuteTransaction,
     packageId,
     registryName,
@@ -320,7 +327,7 @@ function createRegistry({
     });
 }
 
-async function createProfile({
+async function sui_createProfile({
     signAndExecuteTransaction,
     packageId,
     registryId,
@@ -368,4 +375,14 @@ async function createProfile({
     }
     // Should never happen:
     throw new Error("Transaction was successful, but can't find the new profile object ID in the response: " + JSON.stringify(resp));
+}
+
+/* Convenience functions */
+
+function chunkArray<T>(elements: T[], chunkSize: number): T[][] {
+    const result = [];
+    for (let i = 0; i < elements.length; i += chunkSize) {
+        result.push(elements.slice(i, i + chunkSize));
+    }
+    return result;
 }
