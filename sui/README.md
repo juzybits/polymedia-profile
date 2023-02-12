@@ -18,7 +18,7 @@ sui client publish --verify-dependencies --gas-budget 30000
 ## How to use from `sui console`
 #### Create a registry
 ```
-call --package PACKAGE_ID --gas-budget 1000 --module profile --function create_registry --args 'polymedia'
+call --package PACKAGE_ID --gas-budget 1000 --module profile --function create_registry --args 'polymedia-main'
 ```
 #### Create a profile
 ```
