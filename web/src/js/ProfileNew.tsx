@@ -1,13 +1,16 @@
 import { useEffect, useState, SyntheticEvent } from 'react';
+import { useOutletContext } from 'react-router-dom';
 import { ethos } from 'ethos-connect';
+import { ProfileManager } from '@polymedia/profile-sdk';
 
-import { createProfile } from '@polymedia/profile-sdk';
 import '../css/ProfileNew.less';
 
 export function ProfileNew() {
     useEffect(() => {
         document.title = 'Polymedia Profile - New Profile';
     }, []);
+
+    const [profileManager]: ProfileManager[] = useOutletContext();
 
     const [inputName, setInputName] = useState('');
     const [inputImage, setInputImage] = useState('');
@@ -27,14 +30,13 @@ export function ProfileNew() {
         console.debug(`[onSubmitCreateProfile] Attempting to create profile: ${inputName}`);
         setWaiting(true);
         try {
-            const result = await createProfile({
-                wallet: wallet,
+            const profileObjectId = await profileManager.createProfile({
+                signAndExecuteTransaction: wallet.signAndExecuteTransaction,
                 name: inputName,
                 image: inputImage,
                 description: inputDescription,
             });
-            console.debug('[onSubmitCreateProfile] New object ID 0:', result[0].reference.objectId);
-            console.debug('[onSubmitCreateProfile] New object ID 1:', result[1].reference.objectId);
+            console.debug('[onSubmitCreateProfile] New object ID:', profileObjectId);
         } catch(error: any) {
             setError(error.message);
         }

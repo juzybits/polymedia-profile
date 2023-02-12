@@ -1,13 +1,16 @@
 import { useEffect, useState, SyntheticEvent } from 'react';
+import { useOutletContext } from 'react-router-dom';
 import { ethos } from 'ethos-connect';
+import { ProfileManager } from '@polymedia/profile-sdk';
 
-import { createRegistry, getProfileObjects } from '@polymedia/profile-sdk';
 import '../css/RegistryNew.less';
 
 export function RegistryNew() {
     useEffect(() => {
         document.title = 'Polymedia Profile - New Registry';
     }, []);
+
+    const [profileManager]: ProfileManager[] = useOutletContext();
 
     const [inputName, setInputName] = useState('');
     const [waiting, setWaiting] = useState(false);
@@ -25,12 +28,11 @@ export function RegistryNew() {
         console.debug(`[onSubmitCreateRegistry] Attempting to create registry with name: ${inputName}`);
         setWaiting(true);
         try {
-            const result = await createRegistry({
-                wallet: wallet,
+            const registryObject = await profileManager.createRegistry({
+                signAndExecuteTransaction: wallet.signAndExecuteTransaction,
                 registryName: inputName
             });
-            const newObjId = result.reference.objectId;
-            console.debug('[onSubmitCreateRegistry] New object ID:', newObjId);
+            console.debug('[onSubmitCreateRegistry] New registry:', registryObject);
         } catch(error: any) {
             setError(error.message);
         }
@@ -38,14 +40,14 @@ export function RegistryNew() {
     };
 
     const devFun = async () => {
-        const resp = await getProfileObjects({ objectIds: [
+        // const resp = await getProfileObjects({ objectIds: [
             // '0x02952db874daab29b12cf0fbf1baade3e0195382',
             // '0x2e9684c3fedd4a7447ff5282910946a506a0259f',
             // '0x0e5ebc6d9fa2d69ece881a06e735a223120e9ab8',
             // '0x0e5ebc6d9fa2d69ece881a06e735a223120e9000',
-            '0xd0b748ef385265fba6d19124edd7dd51043f243e',
-        ]});
-        console.log(resp);
+        //     '0xd0b748ef385265fba6d19124edd7dd51043f243e',
+        // ]});
+        // console.log(resp);
     };
 
     return <div id='page' className='page-registry-new'>

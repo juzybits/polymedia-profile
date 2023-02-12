@@ -1,11 +1,15 @@
+import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { EthosConnectProvider } from 'ethos-connect';
+import { ProfileManager } from '@polymedia/profile-sdk';
 
 import { Nav } from './Nav';
 import imgLogo from '../img/logo.png';
 
 export function App()
 {
+    const [profileManager] = useState( new ProfileManager('devnet') );
+
     return <EthosConnectProvider
         ethosConfiguration={{hideEmailSignIn: true}}
         dappName='Polymedia Profile'
@@ -13,6 +17,6 @@ export function App()
         connectMessage='Polymedia Profile'
         >
         <Nav />
-        <Outlet context={[]} />
+        <Outlet context={[profileManager]} />
     </EthosConnectProvider>;
 }
