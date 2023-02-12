@@ -142,6 +142,9 @@ export class ProfileManager {
     }): Promise<Map<SuiAddress,SuiAddress>>
     {
         const results = new Map<SuiAddress, SuiAddress>();
+        // Mock results while rpc.devInspectTransaction() is broken. TODO: remove
+        results.set('0xa7e545af841aa71190621f5d48a7de163f12a0fa', '0xb9ea6cc7fc4149aa18bf6582cece8fd74e171a31');
+        return results;
         const addressBatches = chunkArray(lookupAddresses, 50);
         console.debug(`[fetchProfileObjectIds] looking for ${lookupAddresses.length} addresses in ${addressBatches.length} batches`);
         const promises = addressBatches.map(async batch => {
