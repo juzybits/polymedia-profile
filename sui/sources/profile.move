@@ -2,6 +2,8 @@ module polymedia_profile::profile
 {
     use std::string::{Self, String};
     use std::vector;
+    use sui::dynamic_field;
+    use sui::dynamic_object_field;
     use sui::event;
     use sui::object::{Self, ID, UID};
     use sui::table::{Self, Table};
@@ -118,5 +120,21 @@ module polymedia_profile::profile
             index = index + 1
         };
         return results
+    }
+
+    public fun add_dynamic_field<Name: copy + drop + store, Value: store>(
+        profile: &mut Profile,
+        name: Name,
+        value: Value,
+    ) {
+        dynamic_field::add(&mut profile.id, name, value);
+    }
+
+    public fun add_dynamic_object_field<Name: copy + drop + store, Value: key + store>(
+        profile: &mut Profile,
+        name: Name,
+        value: Value,
+    ) {
+        dynamic_object_field::add(&mut profile.id, name, value);
     }
 }

@@ -14,8 +14,8 @@ import {
 } from '@mysten/sui.js';
 
 const RPC_DEVNET = new JsonRpcProvider(Network.DEVNET);
-export const POLYMEDIA_PROFILE_PACKAGE_ID_DEVNET = '0xd73f55252057c36ca4bd7be24d18bcc0f91cfd8d';
-export const POLYMEDIA_PROFILE_REGISTRY_ID_DEVNET = '0xbcb936c89adeface58b98bf9cfb180142158908b';
+export const POLYMEDIA_PROFILE_PACKAGE_ID_DEVNET = '0xf8766e02ae349b9e3021bf09e3cc361641961c8d';
+export const POLYMEDIA_PROFILE_REGISTRY_ID_DEVNET = '0x8c7c01c9da3f4575eb19ffbc822b2d08a52345ff';
 
 const RPC_TESTNET = new JsonRpcProvider('https://fullnode.testnet.sui.io:443');
 export const POLYMEDIA_PROFILE_PACKAGE_ID_TESTNET = '0x123';
@@ -143,7 +143,7 @@ export class ProfileManager {
     {
         const results = new Map<SuiAddress, SuiAddress>();
         // Mock results while rpc.devInspectTransaction() is broken. TODO: remove
-        results.set('0xa7e545af841aa71190621f5d48a7de163f12a0fa', '0xbab0d5bf9a1ba66a34a32eff256d9c0d0d93558c');
+        results.set('0xa7e545af841aa71190621f5d48a7de163f12a0fa', '0x474c255390bea5549121c58b9b6fc560daf89207');
         return results;
         const addressBatches = chunkArray(lookupAddresses, 50);
         console.debug(`[fetchProfileObjectIds] looking for ${lookupAddresses.length} addresses in ${addressBatches.length} batches`);
