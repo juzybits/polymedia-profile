@@ -8,8 +8,6 @@ module polymedia_profile::profile
     use sui::transfer;
     use sui::tx_context::{Self, TxContext};
 
-    // TODO: funtions to add dynamic fields and objects in a generic way
-
     struct Registry has key, store {
         id: UID,
         name: String,
@@ -76,6 +74,18 @@ module polymedia_profile::profile
         });
     }
 
+    public entry fun edit_profile(
+        profile: &mut Profile,
+        name: vector<u8>,
+        image: vector<u8>,
+        description: vector<u8>,
+        _ctx: &mut TxContext,
+    ) {
+        profile.name = string::utf8(name);
+        profile.image = string::utf8(image);
+        profile.description = string::utf8(description);
+    }
+
     struct LookupResult {
         lookup_addr: address,
         profile_addr: address,
@@ -100,6 +110,4 @@ module polymedia_profile::profile
         };
         return results
     }
-
-    // public fun get_profile_info(); // TODO
 }
