@@ -33,7 +33,7 @@ export function ProfileNew() {
             const profileObjectId = await profileManager.createProfile({
                 signAndExecuteTransaction: wallet.signAndExecuteTransaction,
                 name: inputName,
-                image: inputImage,
+                url: inputImage,
                 description: inputDescription,
             });
             console.debug('[onSubmitCreateProfile] New object ID:', profileObjectId);

@@ -7,6 +7,9 @@ module polymedia_profile::profile
     use sui::table::{Self, Table};
     use sui::transfer;
     use sui::tx_context::{Self, TxContext};
+    use sui::url::{Self, Url};
+
+    /* Structs */
 
     struct Registry has key, store {
         id: UID,
@@ -17,9 +20,11 @@ module polymedia_profile::profile
     struct Profile has key, store {
         id: UID,
         name: String,
-        image: String,
+        url: Url, // image URL
         description: String,
     }
+
+    /* Events */
 
     struct EventCreateRegistry has copy, drop {
         registry_id: ID,
@@ -29,6 +34,8 @@ module polymedia_profile::profile
         profile_id: ID,
         registry_id: ID,
     }
+
+    /* Entry functions */
 
     public entry fun create_registry(
         name: vector<u8>,
@@ -50,7 +57,7 @@ module polymedia_profile::profile
     public entry fun create_profile(
         registry: &mut Registry,
         name: vector<u8>,
-        image: vector<u8>,
+        url: vector<u8>,
         description: vector<u8>,
         ctx: &mut TxContext,
     ) {
@@ -62,7 +69,7 @@ module polymedia_profile::profile
         let profile = Profile {
             id: profile_uid,
             name: string::utf8(name),
-            image: string::utf8(image),
+            url: url::new_unsafe_from_bytes(url),
             description: string::utf8(description),
         };
         table::add(&mut registry.profiles, sender_addr, profile_addr);
@@ -77,12 +84,12 @@ module polymedia_profile::profile
     public entry fun edit_profile(
         profile: &mut Profile,
         name: vector<u8>,
-        image: vector<u8>,
+        url: vector<u8>,
         description: vector<u8>,
         _ctx: &mut TxContext,
     ) {
         profile.name = string::utf8(name);
-        profile.image = string::utf8(image);
+        profile.url = url::new_unsafe_from_bytes(url);
         profile.description = string::utf8(description);
     }
 
@@ -90,6 +97,8 @@ module polymedia_profile::profile
         lookup_addr: address,
         profile_addr: address,
     }
+
+    /* Regular functions */
 
     public fun get_profiles(
         registry: &Registry,

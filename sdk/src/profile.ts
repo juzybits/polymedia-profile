@@ -14,8 +14,8 @@ import {
 } from '@mysten/sui.js';
 
 const RPC_DEVNET = new JsonRpcProvider(Network.DEVNET);
-export const POLYMEDIA_PROFILE_PACKAGE_ID_DEVNET = '0xa05151d74102061f2dbbbdc2d19eae1f366bb032';
-export const POLYMEDIA_PROFILE_REGISTRY_ID_DEVNET = '0xd0c08a8eca159049cba40fad31cee7198848205d';
+export const POLYMEDIA_PROFILE_PACKAGE_ID_DEVNET = '0xd73f55252057c36ca4bd7be24d18bcc0f91cfd8d';
+export const POLYMEDIA_PROFILE_REGISTRY_ID_DEVNET = '0xbcb936c89adeface58b98bf9cfb180142158908b';
 
 const RPC_TESTNET = new JsonRpcProvider('https://fullnode.testnet.sui.io:443');
 export const POLYMEDIA_PROFILE_PACKAGE_ID_TESTNET = '0x123';
@@ -27,7 +27,7 @@ export const POLYMEDIA_PROFILE_REGISTRY_ID_TESTNET = '0x123';
 export type PolymediaProfile = {
     id: SuiAddress,
     name: string,
-    image: string,
+    url: string, // image URL
     description: string,
     owner: SuiAddress,
     suiObject: SuiObject,
@@ -120,10 +120,10 @@ export class ProfileManager {
         });
     }
 
-    public createProfile({ signAndExecuteTransaction, name, image='', description='' }: {
+    public createProfile({ signAndExecuteTransaction, name, url='', description='' }: {
         signAndExecuteTransaction: SignAndExecuteTransactionArg,
         name: string,
-        image?: string,
+        url?: string,
         description?: string,
     }): Promise<SuiAddress>
     {
@@ -132,7 +132,7 @@ export class ProfileManager {
             packageId: this.#packageId,
             registryId: this.#registryId,
             name,
-            image,
+            url,
             description,
         });
     }
@@ -143,7 +143,7 @@ export class ProfileManager {
     {
         const results = new Map<SuiAddress, SuiAddress>();
         // Mock results while rpc.devInspectTransaction() is broken. TODO: remove
-        results.set('0xa7e545af841aa71190621f5d48a7de163f12a0fa', '0xb9ea6cc7fc4149aa18bf6582cece8fd74e171a31');
+        results.set('0xa7e545af841aa71190621f5d48a7de163f12a0fa', '0xbab0d5bf9a1ba66a34a32eff256d9c0d0d93558c');
         return results;
         const addressBatches = chunkArray(lookupAddresses, 50);
         console.debug(`[fetchProfileObjectIds] looking for ${lookupAddresses.length} addresses in ${addressBatches.length} batches`);
@@ -277,7 +277,7 @@ function sui_fetchProfileObjects({ rpc, objectIds }: {
             profiles.push({
                 id: objData.fields.id.id,
                 name: objData.fields.name,
-                image: objData.fields.image,
+                url: objData.fields.url,
                 description: objData.fields.description,
                 owner: objOwner.AddressOwner,
                 suiObject: obj,
@@ -336,14 +336,14 @@ async function sui_createProfile({
     packageId,
     registryId,
     name,
-    image = '',
+    url = '',
     description = '',
 } : {
     signAndExecuteTransaction: SignAndExecuteTransactionArg,
     packageId: SuiAddress,
     registryId: SuiAddress,
     name: string,
-    image?: string,
+    url?: string,
     description?: string,
 }): Promise<SuiAddress>
 {
@@ -358,7 +358,7 @@ async function sui_createProfile({
             arguments: [
                 registryId,
                 name,
-                image,
+                url,
                 description,
             ],
             gasBudget: 1000,
