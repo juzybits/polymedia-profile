@@ -13,13 +13,13 @@ module polymedia_profile::profile
 
     /* Structs */
 
-    struct Registry has key, store {
+    struct Registry has key {
         id: UID,
         name: String,
         profiles: Table<address, address>,
     }
 
-    struct Profile has key, store {
+    struct Profile has key {
         id: UID,
         name: String,
         url: Url, // image URL

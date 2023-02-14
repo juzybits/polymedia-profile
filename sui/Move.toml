@@ -7,4 +7,4 @@ authors = ["juzybits <https://twitter.com/juzybits>"]
 Sui = { local = "../../sui/crates/sui-framework" }
 
 [addresses]
-polymedia_profile = "0xf8766e02ae349b9e3021bf09e3cc361641961c8d"
+polymedia_profile = "0x0"
