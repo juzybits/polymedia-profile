@@ -26,6 +26,11 @@ module polymedia_profile::profile
         description: String,
     }
 
+    struct LookupResult {
+        lookup_addr: address,
+        profile_addr: address,
+    }
+
     /* Events */
 
     struct EventCreateRegistry has copy, drop {
@@ -95,11 +100,6 @@ module polymedia_profile::profile
         profile.description = string::utf8(description);
     }
 
-    struct LookupResult {
-        lookup_addr: address,
-        profile_addr: address,
-    }
-
     /* Regular functions */
 
     public fun get_profiles(
@@ -122,7 +122,7 @@ module polymedia_profile::profile
         return results
     }
 
-    public fun add_dynamic_field<Name: copy + drop + store, Value: store>(
+    public fun set_dynamic_field<Name: copy + drop + store, Value: store>(
         profile: &mut Profile,
         name: Name,
         value: Value,
@@ -130,7 +130,7 @@ module polymedia_profile::profile
         dynamic_field::add(&mut profile.id, name, value);
     }
 
-    public fun add_dynamic_object_field<Name: copy + drop + store, Value: key + store>(
+    public fun set_dynamic_object_field<Name: copy + drop + store, Value: key + store>(
         profile: &mut Profile,
         name: Name,
         value: Value,

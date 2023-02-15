@@ -14,8 +14,8 @@ import {
 } from '@mysten/sui.js';
 
 const RPC_DEVNET = new JsonRpcProvider(Network.DEVNET);
-export const POLYMEDIA_PROFILE_PACKAGE_ID_DEVNET = '0xc19237968e143807c700e51d3e51476258a1058b';
-export const POLYMEDIA_PROFILE_REGISTRY_ID_DEVNET = '0x048c1dfff857535f93b4b9e38a251a6caad04e93';
+export const POLYMEDIA_PROFILE_PACKAGE_ID_DEVNET = '0x9067335eb86bfb9825e9f12a6275a6053c2fe86b';
+export const POLYMEDIA_PROFILE_REGISTRY_ID_DEVNET = '0x8ea126d3bab77aa041afa23d2812a35f671a17ae';
 
 const RPC_TESTNET = new JsonRpcProvider('https://fullnode.testnet.sui.io:443');
 export const POLYMEDIA_PROFILE_PACKAGE_ID_TESTNET = '0x123';
@@ -58,6 +58,9 @@ export class ProfileManager {
 
     public getPackageId(): SuiAddress { return this.#packageId; }
     public getRegistryId(): SuiAddress { return this.#registryId; }
+
+    // public async getProfile(...
+    // public async hasProfile(...
 
     public async getProfiles({ lookupAddresses, useCache=true }: {
         lookupAddresses: Iterable<SuiAddress>,
@@ -144,16 +147,6 @@ export class ProfileManager {
     }): Promise<Map<SuiAddress,SuiAddress>>
     {
         const results = new Map<SuiAddress, SuiAddress>();
-
-        // Mock results while rpc.devInspectTransaction() is broken. TODO: remove
-        if (lookupAddresses.includes('0x27fa03c24d939874291f8af90d3f668c802f1e28')) // sui
-            results.set('0x27fa03c24d939874291f8af90d3f668c802f1e28', '0xfba85d01e8f3f375e9aba51565ae29b8e1f00c39');
-        if (lookupAddresses.includes('0x0b0c6120e7a5898ce3f0404bfc5dbe0721aa5058')) // suiet 1
-            results.set('0x0b0c6120e7a5898ce3f0404bfc5dbe0721aa5058', '0x879ba1da76298ad20def285d919ce3bd3fac90b7');
-        if (lookupAddresses.includes('0x635263017580c8a68e72cc5745e2e58ff71aac38')) // ethos 1
-            results.set('0x635263017580c8a68e72cc5745e2e58ff71aac38', '0xee48e24f1863a8adb415b3407390d7fd74eec5f4');
-        return results;
-
         const addressBatches = chunkArray(lookupAddresses, 50);
         console.debug(`[fetchProfileObjectIds] looking for ${lookupAddresses.length} addresses in ${addressBatches.length} batches`);
         const promises = addressBatches.map(async batch => {
