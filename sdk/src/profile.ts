@@ -89,6 +89,7 @@ export class ProfileManager {
         // Add missing addresses to the cache
         for (const addr of newLookupAddresses) {
             if (!newObjectIds.has(addr)) {
+                result.set(addr, null);
                 this.#cache.set(addr, null);
             }
         }
