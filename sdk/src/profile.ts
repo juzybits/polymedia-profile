@@ -59,9 +59,6 @@ export class ProfileManager {
     public getPackageId(): SuiAddress { return this.#packageId; }
     public getRegistryId(): SuiAddress { return this.#registryId; }
 
-    // public async getProfile(...
-    // public async hasProfile(...
-
     public async getProfiles({ lookupAddresses, useCache=true }: {
         lookupAddresses: Iterable<SuiAddress>,
         useCache?: boolean,
@@ -111,6 +108,25 @@ export class ProfileManager {
         }
 
         return result;
+    }
+
+    public async getProfile({ lookupAddress, useCache=true }: {
+        lookupAddress: SuiAddress,
+        useCache?: boolean,
+    }): Promise<PolymediaProfile|null>
+    {
+        const lookupAddresses = [lookupAddress];
+        const profiles = await this.getProfiles({lookupAddresses, useCache});
+        return profiles.get(lookupAddress) || null;
+    }
+
+    public async hasProfile({ lookupAddress, useCache=true }: {
+        lookupAddress: SuiAddress,
+        useCache?: boolean,
+    }): Promise<boolean>
+    {
+        const profile = await this.getProfile({lookupAddress, useCache});
+        return profile !== null;
     }
 
     public createRegistry({ signAndExecuteTransaction, registryName }: {
