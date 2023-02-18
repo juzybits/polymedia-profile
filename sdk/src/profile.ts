@@ -328,7 +328,7 @@ function sui_createRegistry({
             arguments: [
                 registryName,
             ],
-            gasBudget: 1000,
+            gasBudget: 10000,
         }
     })
     .then((resp: any) => {
@@ -379,7 +379,7 @@ async function sui_createProfile({
                 url,
                 description,
             ],
-            gasBudget: 1000,
+            gasBudget: 10000,
         }
     });
 
