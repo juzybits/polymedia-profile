@@ -1,8 +1,8 @@
 import { useEffect, useState, SyntheticEvent } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { useWalletKit } from '@mysten/wallet-kit';
-import { ProfileManager } from '@polymedia/profile-sdk';
 
+import { OutletContext } from './App';
 import '../css/ProfileNew.less';
 
 export function ProfileNew() {
@@ -12,7 +12,7 @@ export function ProfileNew() {
 
     const { currentAccount, signAndExecuteTransaction } = useWalletKit();
 
-    const [profileManager, openConnectModal]: any = useOutletContext();
+    const { profileManager, openConnectModal } = useOutletContext<OutletContext>();
 
     const [inputName, setInputName] = useState('');
     const [inputImage, setInputImage] = useState('');
@@ -30,7 +30,7 @@ export function ProfileNew() {
         console.debug(`[onSubmitCreateProfile] Attempting to create profile: ${inputName}`);
         setWaiting(true);
         try {
-            const profileObjectId = await (profileManager as ProfileManager).createProfile({
+            const profileObjectId = await profileManager.createProfile({
                 signAndExecuteTransaction,
                 name: inputName,
                 url: inputImage,

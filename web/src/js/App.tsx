@@ -5,6 +5,11 @@ import { ProfileManager } from '@polymedia/profile-sdk';
 
 import { Nav } from './Nav';
 
+export type OutletContext = {
+    profileManager: ProfileManager;
+    openConnectModal: () => void;
+};
+
 export function App()
 {
     const [profileManager] = useState( new ProfileManager({network: 'devnet'}) );
@@ -14,12 +19,17 @@ export function App()
         setShowConnectModal(true);
     }
 
+    const outletContext: OutletContext = {
+        profileManager,
+        openConnectModal: () => setShowConnectModal(true)
+    };
+
     return <WalletKitProvider>
         <ConnectModal
             open={showConnectModal}
             onClose={() => setShowConnectModal(false)}
         />
         <Nav openConnectModal={openConnectModal} />
-        <Outlet context={[profileManager, openConnectModal]} />
+        <Outlet context={outletContext} />
     </WalletKitProvider>;
 }

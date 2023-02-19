@@ -1,8 +1,8 @@
 import { useEffect, useState, SyntheticEvent } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { useWalletKit } from '@mysten/wallet-kit';
-import { ProfileManager } from '@polymedia/profile-sdk';
 
+import { OutletContext } from './App';
 import '../css/RegistryNew.less';
 
 export function RegistryNew() {
@@ -12,7 +12,7 @@ export function RegistryNew() {
 
     const { currentAccount, signAndExecuteTransaction } = useWalletKit();
 
-    const [profileManager, openConnectModal]: any = useOutletContext();
+    const { profileManager, openConnectModal } = useOutletContext<OutletContext>();
 
     const [inputName, setInputName] = useState('');
     const [waiting, setWaiting] = useState(false);
@@ -28,7 +28,7 @@ export function RegistryNew() {
         console.debug(`[onSubmitCreateRegistry] Attempting to create registry with name: ${inputName}`);
         setWaiting(true);
         try {
-            const registryObject = await (profileManager as ProfileManager).createRegistry({
+            const registryObject = await profileManager.createRegistry({
                 signAndExecuteTransaction,
                 registryName: inputName
             });
