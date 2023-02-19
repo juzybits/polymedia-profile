@@ -24,6 +24,7 @@ module polymedia_profile::profile
         name: String,
         url: Url, // image URL
         description: String,
+        registries: vector<address>,
     }
 
     struct LookupResult {
@@ -71,13 +72,17 @@ module polymedia_profile::profile
         let profile_uid = object::new(ctx);
         let profile_id = object::uid_to_inner(&profile_uid);
         let profile_addr = object::uid_to_address(&profile_uid);
+        let registry_addr = object::id_address(registry);
         let sender_addr = tx_context::sender(ctx);
 
+        let registries = vector::empty<address>();
+        vector::push_back(&mut registries, registry_addr);
         let profile = Profile {
             id: profile_uid,
             name: string::utf8(name),
             url: url::new_unsafe_from_bytes(url),
             description: string::utf8(description),
+            registries,
         };
         table::add(&mut registry.profiles, sender_addr, profile_addr);
         transfer::transfer(profile, sender_addr);
