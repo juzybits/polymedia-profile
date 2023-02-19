@@ -1,18 +1,19 @@
 /// Navigation bar
 
-import { ethos } from 'ethos-connect';
+import { useWalletKit } from '@mysten/wallet-kit';
 import '../css/Nav.less';
 
-export function Nav() {
-    const { status, wallet } = ethos.useWallet();
+export function Nav({openConnectModal}: {
+    openConnectModal: () => void,
+}) {
+    const { currentAccount, disconnect } = useWalletKit();
 
     return <header id='nav'>
-
         <div id='nav-btn-user' className='nav-btn'>
         {
-            (wallet && wallet.address && status=='connected')
-            ? <span id='nav-btn-disconnect' onClick={wallet.disconnect}>{'@' + wallet.address.slice(2, 6)}</span>
-            : <span id='nav-btn-connect' onClick={ethos.showSignInModal}>LOG IN</span>
+            (currentAccount)
+            ? <span id='nav-btn-disconnect' onClick={disconnect}>{'@' + currentAccount.slice(2, 6)}</span>
+            : <span id='nav-btn-connect' onClick={openConnectModal}>LOG IN</span>
         }
         </div>
 

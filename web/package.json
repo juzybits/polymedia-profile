@@ -4,7 +4,7 @@
     "private": true,
     "dependencies": {
         "@mysten/sui.js": "latest",
-        "ethos-connect": "latest",
+        "@mysten/wallet-kit": "latest",
         "react": "18",
         "react-dom": "18",
         "react-router-dom": "6"

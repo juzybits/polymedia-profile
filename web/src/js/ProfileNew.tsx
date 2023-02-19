@@ -1,6 +1,6 @@
 import { useEffect, useState, SyntheticEvent } from 'react';
 import { useOutletContext } from 'react-router-dom';
-import { ethos } from 'ethos-connect';
+import { useWalletKit } from '@mysten/wallet-kit';
 import { ProfileManager } from '@polymedia/profile-sdk';
 
 import '../css/ProfileNew.less';
@@ -10,7 +10,9 @@ export function ProfileNew() {
         document.title = 'Polymedia Profile - New Profile';
     }, []);
 
-    const [profileManager]: ProfileManager[] = useOutletContext();
+    const { currentAccount, signAndExecuteTransaction } = useWalletKit();
+
+    const [profileManager, openConnectModal]: any = useOutletContext();
 
     const [inputName, setInputName] = useState('');
     const [inputImage, setInputImage] = useState('');
@@ -18,20 +20,18 @@ export function ProfileNew() {
     const [waiting, setWaiting] = useState(false);
     const [error, setError] = useState('');
 
-    const { status, wallet } = ethos.useWallet();
 
     const onSubmitCreateProfile = async (e: SyntheticEvent) => {
         e.preventDefault();
-        const isConnected = status=='connected' && wallet && wallet.address;
-        if (!isConnected) {
-            ethos.showSignInModal();
+        if (!currentAccount) {
+            openConnectModal();
             return;
         }
         console.debug(`[onSubmitCreateProfile] Attempting to create profile: ${inputName}`);
         setWaiting(true);
         try {
-            const profileObjectId = await profileManager.createProfile({
-                signAndExecuteTransaction: wallet.signAndExecuteTransaction,
+            const profileObjectId = await (profileManager as ProfileManager).createProfile({
+                signAndExecuteTransaction,
                 name: inputName,
                 url: inputImage,
                 description: inputDescription,

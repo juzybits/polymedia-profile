@@ -1,6 +1,6 @@
 import { useEffect, useState, SyntheticEvent } from 'react';
 import { useOutletContext } from 'react-router-dom';
-import { ethos } from 'ethos-connect';
+import { useWalletKit } from '@mysten/wallet-kit';
 import { ProfileManager } from '@polymedia/profile-sdk';
 
 import '../css/RegistryNew.less';
@@ -10,26 +10,26 @@ export function RegistryNew() {
         document.title = 'Polymedia Profile - New Registry';
     }, []);
 
-    const [profileManager]: ProfileManager[] = useOutletContext();
+    const { currentAccount, signAndExecuteTransaction } = useWalletKit();
+
+    const [profileManager, openConnectModal]: any = useOutletContext();
 
     const [inputName, setInputName] = useState('');
     const [waiting, setWaiting] = useState(false);
     const [error, setError] = useState('');
 
-    const { status, wallet } = ethos.useWallet();
 
     const onSubmitCreateRegistry = async (e: SyntheticEvent) => {
         e.preventDefault();
-        const isConnected = status=='connected' && wallet && wallet.address;
-        if (!isConnected) {
-            ethos.showSignInModal();
+        if (!currentAccount) {
+            openConnectModal();
             return;
         }
         console.debug(`[onSubmitCreateRegistry] Attempting to create registry with name: ${inputName}`);
         setWaiting(true);
         try {
-            const registryObject = await profileManager.createRegistry({
-                signAndExecuteTransaction: wallet.signAndExecuteTransaction,
+            const registryObject = await (profileManager as ProfileManager).createRegistry({
+                signAndExecuteTransaction,
                 registryName: inputName
             });
             console.debug('[onSubmitCreateRegistry] New registry:', registryObject);
