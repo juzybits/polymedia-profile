@@ -383,7 +383,7 @@ async function sui_createProfile({
                 url,
                 description,
             ],
-            gasBudget: 10000,
+            gasBudget: 100000,
         }
     });
 

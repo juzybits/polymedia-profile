@@ -176,6 +176,7 @@ module polymedia_profile::profile
         name: Name,
         value: Value,
     ) {
+        // TODO: replace existing
         dynamic_field::add(&mut profile.id, name, value);
     }
 
@@ -184,6 +185,9 @@ module polymedia_profile::profile
         name: Name,
         value: Value,
     ) {
+        // TODO: replace existing
         dynamic_object_field::add(&mut profile.id, name, value);
     }
+
+    // TODO: delete_ fields
 }
