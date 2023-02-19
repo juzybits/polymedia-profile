@@ -4,6 +4,7 @@ import { ConnectModal, WalletKitProvider } from '@mysten/wallet-kit';
 import { ProfileManager } from '@polymedia/profile-sdk';
 
 import { Nav } from './Nav';
+import '../css/App.less';
 
 export type OutletContext = {
     profileManager: ProfileManager;

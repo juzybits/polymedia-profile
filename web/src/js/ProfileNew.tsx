@@ -18,8 +18,7 @@ export function ProfileNew() {
     const [inputImage, setInputImage] = useState('');
     const [inputDescription, setInputDescription] = useState('');
     const [waiting, setWaiting] = useState(false);
-    const [error, setError] = useState('');
-
+    const [error, setSuiError] = useState('');
 
     const onSubmitCreateProfile = async (e: SyntheticEvent) => {
         e.preventDefault();
@@ -38,7 +37,7 @@ export function ProfileNew() {
             });
             console.debug('[onSubmitCreateProfile] New object ID:', profileObjectId);
         } catch(error: any) {
-            setError(error.message);
+            setSuiError(error.message);
         }
         setWaiting(false);
     };

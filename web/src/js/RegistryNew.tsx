@@ -16,8 +16,7 @@ export function RegistryNew() {
 
     const [inputName, setInputName] = useState('');
     const [waiting, setWaiting] = useState(false);
-    const [error, setError] = useState('');
-
+    const [suiError, setSuiError] = useState('');
 
     const onSubmitCreateRegistry = async (e: SyntheticEvent) => {
         e.preventDefault();
@@ -34,20 +33,9 @@ export function RegistryNew() {
             });
             console.debug('[onSubmitCreateRegistry] New registry:', registryObject);
         } catch(error: any) {
-            setError(error.message);
+            setSuiError(error.message);
         }
         setWaiting(false);
-    };
-
-    const devFun = async () => {
-        // const resp = await getProfileObjects({ objectIds: [
-            // '0x02952db874daab29b12cf0fbf1baade3e0195382',
-            // '0x2e9684c3fedd4a7447ff5282910946a506a0259f',
-            // '0x0e5ebc6d9fa2d69ece881a06e735a223120e9ab8',
-            // '0x0e5ebc6d9fa2d69ece881a06e735a223120e9000',
-        //     '0xd0b748ef385265fba6d19124edd7dd51043f243e',
-        // ]});
-        // console.log(resp);
     };
 
     return <div id='page' className='page-registry-new'>
@@ -69,9 +57,8 @@ export function RegistryNew() {
                     >CREATE</button>
             </form>
 
-            { error && <div className='error'>{error}</div> }
+            { suiError && <div className='error'>{suiError}</div> }
         </div> {/* end of .new-content */}
-        <button onClick={devFun}>dev fun</button>
 
     </div> {/* end of .new-wrapper */}
     </div>; // end of #page
