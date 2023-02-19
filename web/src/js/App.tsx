@@ -7,7 +7,7 @@ import { Nav } from './Nav';
 
 export function App()
 {
-    const [profileManager] = useState( new ProfileManager('devnet') );
+    const [profileManager] = useState( new ProfileManager({network: 'devnet'}) );
     const [showConnectModal, setShowConnectModal] = useState(false);
 
     const openConnectModal = (): void => {

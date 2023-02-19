@@ -42,7 +42,11 @@ export class ProfileManager {
     #packageId: SuiAddress;
     #registryId: SuiAddress;
 
-    constructor(network: string, packageId?: SuiAddress, registryId?: SuiAddress) {
+    constructor({ network, packageId, registryId }: {
+        network: string,
+        packageId?: SuiAddress,
+        registryId?: SuiAddress
+    }) {
         if (network === 'devnet') {
             this.#rpc = RPC_DEVNET;
             this.#packageId = packageId || POLYMEDIA_PROFILE_PACKAGE_ID_DEVNET;
