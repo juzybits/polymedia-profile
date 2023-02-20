@@ -44,10 +44,13 @@ export function Nav({openConnectModal}: {
                     PAGES
                 </div>
                 <div className='nav-page-link'>
-                    <Link to='/registry/new' onClick={closeMobileNav}>/registry/new</Link>
+                    <Link to='/profile/edit' onClick={closeMobileNav}>Edit Profile</Link>
                 </div>
                 <div className='nav-page-link'>
-                    <Link to='/profile/new' onClick={closeMobileNav}>/profile/new</Link>
+                    <Link to='/profile/new' onClick={closeMobileNav}>New Profile</Link>
+                </div>
+                <div className='nav-page-link'>
+                    <Link to='/registry/new' onClick={closeMobileNav}>New Registry</Link>
                 </div>
             </div>
 

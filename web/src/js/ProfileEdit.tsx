@@ -4,9 +4,9 @@ import { useWalletKit } from '@mysten/wallet-kit';
 
 import { OutletContext } from './App';
 
-export function ProfileNew() {
+export function ProfileEdit() {
     useEffect(() => {
-        document.title = 'Polymedia Profile - New Profile';
+        document.title = 'Polymedia Profile - Edit Profile';
     }, []);
 
     const { currentAccount, signAndExecuteTransaction } = useWalletKit();
@@ -19,31 +19,31 @@ export function ProfileNew() {
     const [waiting, setWaiting] = useState(false);
     const [error, setSuiError] = useState('');
 
-    const onSubmitCreateProfile = async (e: SyntheticEvent) => {
+    const onSubmitEditProfile = async (e: SyntheticEvent) => {
         e.preventDefault();
         if (!currentAccount) {
             openConnectModal();
             return;
         }
-        console.debug(`[onSubmitCreateProfile] Attempting to create profile: ${inputName}`);
+        console.debug(`[onSubmitEditProfile] Attempting to create profile: ${inputName}`);
         setWaiting(true);
         try {
-            const profileObjectId = await profileManager.createProfile({
+            const profileObjectId = await profileManager.createProfile({ // TODO editProfile
                 signAndExecuteTransaction,
                 name: inputName,
                 url: inputImage,
                 description: inputDescription,
             });
-            console.debug('[onSubmitCreateProfile] New object ID:', profileObjectId);
+            console.debug('[onSubmitEditProfile] New object ID:', profileObjectId);
         } catch(error: any) {
             setSuiError(error.message);
         }
         setWaiting(false);
     };
 
-    return <div id='page' className='page-profile-new'>
-        <h1>NEW PROFILE</h1>
-        <form className='form' onSubmit={onSubmitCreateProfile}>
+    return <div id='page' className='page-profile-edit'>
+        <h1>EDIT PROFILE</h1>
+        <form className='form' onSubmit={onSubmitEditProfile}>
             <div className='form-field'>
                 <label>Name</label>
                 <input value={inputName} type='text' required maxLength={60}
