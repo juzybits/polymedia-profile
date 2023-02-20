@@ -1,9 +1,7 @@
 /// Navigation bar
 
 import { useState } from 'react';
-
 import { Link } from 'react-router-dom';
-
 import { useWalletKit } from '@mysten/wallet-kit';
 
 import imgLogo from '../img/logo.png';
@@ -33,9 +31,13 @@ export function Nav({openConnectModal}: {
         <div id='nav-sections-wrap' className={showMobileNav ? 'open' : ''}>
             <div id='nav-wallet' className='nav-section'>
             {
-                (currentAccount)
-                ? <span id='nav-btn' className='disconnect' onClick={disconnect}>{'@' + currentAccount.slice(2, 6)}</span>
-                : <span id='nav-btn' className='connect' onClick={openConnectModal}>LOG IN</span>
+                !currentAccount
+                ? <span id='nav-btn' className='connect' onClick={openConnectModal}>
+                    LOG IN
+                  </span>
+                : <span id='nav-btn' className='disconnect' onClick={disconnect}>
+                    {'@' + currentAccount.slice(2, 6)}
+                  </span>
             }
             </div>
 

@@ -2,22 +2,23 @@ import { useEffect, useState, SyntheticEvent } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { useWalletKit } from '@mysten/wallet-kit';
 
-import { OutletContext } from './App';
+import { AppContext } from './App';
 
-export function ProfileEdit() {
-    useEffect(() => {
-        document.title = 'Polymedia Profile - Edit Profile';
-    }, []);
-
+export const ProfileEdit: React.FC = () =>
+{
     const { currentAccount, signAndExecuteTransaction } = useWalletKit();
 
-    const { profileManager, openConnectModal } = useOutletContext<OutletContext>();
+    const { profileManager, openConnectModal } = useOutletContext<AppContext>();
 
     const [inputName, setInputName] = useState('');
     const [inputImage, setInputImage] = useState('');
     const [inputDescription, setInputDescription] = useState('');
     const [waiting, setWaiting] = useState(false);
     const [error, setSuiError] = useState('');
+
+    useEffect(() => {
+        document.title = 'Polymedia Profile - Edit Profile';
+    }, []);
 
     const onSubmitEditProfile = async (e: SyntheticEvent) => {
         e.preventDefault();
@@ -28,7 +29,7 @@ export function ProfileEdit() {
         console.debug(`[onSubmitEditProfile] Attempting to create profile: ${inputName}`);
         setWaiting(true);
         try {
-            const profileObjectId = await profileManager.createProfile({ // TODO editProfile
+            const profileObjectId = await profileManager.editProfile({
                 signAndExecuteTransaction,
                 name: inputName,
                 url: inputImage,

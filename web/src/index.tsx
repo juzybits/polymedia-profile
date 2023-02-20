@@ -1,6 +1,6 @@
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { App } from './js/App';
+import { AppWrap } from './js/App';
 import { Home } from './js/Home';
 import { ProfileEdit } from './js/ProfileEdit';
 import { ProfileNew } from './js/ProfileNew';
@@ -12,7 +12,7 @@ ReactDOM
     .render(
         <BrowserRouter>
         <Routes>
-            <Route path='/' element={<App />} >
+            <Route path='/' element={<AppWrap />} >
                 <Route index element={<Home />} />
                 <Route path='registry/new' element={<RegistryNew />} />
                 {/*<Route path='registry/view/:uid' element={<ProfileView />} />*/}

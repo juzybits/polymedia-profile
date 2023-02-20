@@ -2,7 +2,7 @@ import { useEffect, useState, SyntheticEvent } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { useWalletKit } from '@mysten/wallet-kit';
 
-import { OutletContext } from './App';
+import { AppContext } from './App';
 
 export function ProfileNew() {
     useEffect(() => {
@@ -11,7 +11,7 @@ export function ProfileNew() {
 
     const { currentAccount, signAndExecuteTransaction } = useWalletKit();
 
-    const { profileManager, openConnectModal } = useOutletContext<OutletContext>();
+    const { profileManager, openConnectModal } = useOutletContext<AppContext>();
 
     const [inputName, setInputName] = useState('');
     const [inputImage, setInputImage] = useState('');
