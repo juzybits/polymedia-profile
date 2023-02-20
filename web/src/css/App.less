@@ -1,6 +1,4 @@
 :root {
-    --bg-body: #202226;
-    --text-color: rgb(224, 224, 224);
 }
 
 html, body, p, h1, h2, h3, h4, h5, input, button, div, textarea {
@@ -9,15 +7,25 @@ html, body, p, h1, h2, h3, h4, h5, input, button, div, textarea {
 }
 
 body {
-    background-color: var(--bg-body);
-    color: var(--text-color);
+    font-size: 1.2rem;
     font-family: sans-serif;
+    background-color: #202226;
+    color: rgb(224, 224, 224);
 }
 
-ul.tmp-list {
-    font-size: 1.5em;
-    line-height: 2em;
-    a {
-        color: cyan;
+a {
+    color: #79eeff;
+    text-decoration: none;
+    &:hover {
+        color: #a8faff;
+        text-decoration: underline;
+        cursor: pointer;
+    }
+}
+
+#layout {
+    display: flex;
+    #page {
+        padding: 1em;
     }
 }

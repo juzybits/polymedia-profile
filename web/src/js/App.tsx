@@ -26,11 +26,13 @@ export function App()
     };
 
     return <WalletKitProvider>
-        <ConnectModal
-            open={showConnectModal}
-            onClose={() => setShowConnectModal(false)}
-        />
+    <ConnectModal
+        open={showConnectModal}
+        onClose={() => setShowConnectModal(false)}
+    />
+    <div id='layout'>
         <Nav openConnectModal={openConnectModal} />
         <Outlet context={outletContext} />
+    </div>
     </WalletKitProvider>;
 }
