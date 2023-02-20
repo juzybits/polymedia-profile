@@ -1,5 +1,4 @@
-:root {
-}
+@import './variables.less';
 
 html, body, p, h1, h2, h3, h4, h5, input, button, div, textarea {
     padding: 0;
@@ -25,7 +24,12 @@ a {
 
 #layout {
     display: flex;
+    flex-flow: row;
+    @media (max-width: @mobile-width) {
+        flex-flow: column;
+    }
     #page {
         padding: 1em;
     }
 }
+

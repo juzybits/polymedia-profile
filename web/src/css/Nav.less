@@ -1,4 +1,7 @@
+@import './variables.less';
+
 #nav {
+    user-select: none;
     padding: 0 1em;
     .nav-section {
         border-bottom: 1px solid #333;
@@ -36,10 +39,39 @@
 
 #nav-pages {
     .nav-page-link {
+        line-height: 1.5em;
     }
 }
 
 #nav-socials {
     .nav-social-link {
+    }
+}
+
+#mobile-menu-btn-wrap {
+    display: none;
+}
+
+@media (max-width: @mobile-width) {
+    #mobile-menu-btn-wrap {
+        display: block;
+        line-height: 1em;
+        margin: 1em 1em 0 0;
+        padding: 0.2em 0;
+        position: fixed;
+        right: 0;
+        top: 0;
+        &:hover {
+            cursor: pointer;
+        }
+        #mobile-menu-btn {
+            font-size: 2.2em;
+        }
+    }
+    #nav-sections-wrap {
+        display: none;
+        &.open {
+            display: block;
+        }
     }
 }
