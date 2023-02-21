@@ -27,6 +27,7 @@ export function RegistryNew() {
         setWaiting(true);
         try {
             const registryObject = await profileManager.createRegistry({
+                // @ts-ignore
                 signAndExecuteTransaction,
                 registryName: inputName
             });

@@ -1,13 +1,16 @@
 import { BCS, getSuiMoveConfig } from '@mysten/bcs';
 import {
+    DevInspectResults,
+    ExecuteTransactionRequestType,
     GetObjectDataResponse,
     JsonRpcProvider,
     MoveCallTransaction,
     Network,
     OwnedObjectRef,
     SignableTransaction,
-    SuiMoveObject,
     SuiAddress,
+    SuiExecuteTransactionResponse,
+    SuiMoveObject,
     SuiObject,
     TransactionEffects,
     UnserializedSignableTransaction,
@@ -32,6 +35,11 @@ export type PolymediaProfile = {
     owner: SuiAddress,
     suiObject: SuiObject,
 }
+
+type SuiSignAndExecuteTransactionMethod = (
+    transaction: SignableTransaction,
+    requestType?: ExecuteTransactionRequestType,
+) => Promise<SuiExecuteTransactionResponse>;
 
 /**
  * Helps you interact with the `polymedia_profile` Sui package
@@ -134,7 +142,7 @@ export class ProfileManager {
     }
 
     public createRegistry({ signAndExecuteTransaction, registryName }: {
-        signAndExecuteTransaction: SignAndExecuteTransactionArg,
+        signAndExecuteTransaction: SuiSignAndExecuteTransactionMethod,
         registryName: string,
     }): Promise<OwnedObjectRef>
     {
@@ -146,7 +154,7 @@ export class ProfileManager {
     }
 
     public createProfile({ signAndExecuteTransaction, name, url='', description='' }: {
-        signAndExecuteTransaction: SignAndExecuteTransactionArg,
+        signAndExecuteTransaction: SuiSignAndExecuteTransactionMethod,
         name: string,
         url?: string,
         description?: string,
@@ -159,6 +167,28 @@ export class ProfileManager {
             name,
             url,
             description,
+        });
+    }
+
+    public editProfile({ signAndExecuteTransaction, profile, name, url='', description='' }: {
+        signAndExecuteTransaction: SuiSignAndExecuteTransactionMethod,
+        profile: PolymediaProfile,
+        name: string,
+        url?: string,
+        description?: string,
+    }): Promise<SuiExecuteTransactionResponse>
+    {
+        return sui_editProfile({
+            signAndExecuteTransaction,
+            profileId: profile.id,
+            packageId: this.#packageId,
+            name,
+            url,
+            description,
+        })
+        .then(resp => {
+            this.#cache.delete(profile.owner);
+            return resp;
         });
     }
 
@@ -194,8 +224,6 @@ export class ProfileManager {
         });
     }
 }
-
-type SignAndExecuteTransactionArg = (transaction: SignableTransaction) => Promise<any>;
 
 /* Sui RPC calls and signed transactions */
 
@@ -261,18 +289,17 @@ function sui_fetchProfileObjectIds({
     } as UnserializedSignableTransaction;
 
     return rpc.devInspectTransaction(callerAddress, signableTxn)
-    .then((resp: any) => {
-        //                  Sui/Ethos || Suiet
-        const effects = (resp.effects || resp.EffectsCert?.effects?.effects) as TransactionEffects;
-        if (effects.status.status == 'success') {
+    .then((resp: DevInspectResults) => {
+        if (resp.effects.status.status == 'success') {
             // Deserialize the returned value into an array of LookupResult objects
+            // @ts-ignore
             const returnValue: any[] = resp.results.Ok[0][1].returnValues[0]; // grab the 1st and only tuple
             const valueType: string = returnValue[1];
             const valueData = Uint8Array.from(returnValue[0]);
             const lookupResults: Array<TypeOfLookupResult> = bcs.de(valueType, valueData, 'hex');
             return lookupResults;
         } else {
-            throw new Error(effects.status.error);
+            throw new Error(resp.effects.status.error);
         }
     })
     .catch((error: any) => {
@@ -317,7 +344,7 @@ function sui_createRegistry({
     packageId,
     registryName,
 } : {
-    signAndExecuteTransaction: SignAndExecuteTransactionArg,
+    signAndExecuteTransaction: SuiSignAndExecuteTransactionMethod,
     packageId: SuiAddress,
     registryName: string,
 }): Promise<OwnedObjectRef>
@@ -335,7 +362,8 @@ function sui_createRegistry({
             gasBudget: 10000,
         }
     })
-    .then((resp: any) => {
+    .then(resp => {
+        // @ts-ignore
         //                  Sui/Ethos || Suiet
         const effects = (resp.effects || resp.EffectsCert?.effects?.effects) as TransactionEffects;
         if (effects.status.status === 'success') {
@@ -361,7 +389,7 @@ async function sui_createProfile({
     url = '',
     description = '',
 } : {
-    signAndExecuteTransaction: SignAndExecuteTransactionArg,
+    signAndExecuteTransaction: SuiSignAndExecuteTransactionMethod,
     packageId: SuiAddress,
     registryId: SuiAddress,
     name: string,
@@ -387,6 +415,7 @@ async function sui_createProfile({
         }
     });
 
+    // @ts-ignore
     // Verify the transaction results
     //                  Sui/Ethos || Suiet
     const effects = (resp.effects || resp.EffectsCert?.effects?.effects) as TransactionEffects;
@@ -401,6 +430,49 @@ async function sui_createProfile({
     }
     // Should never happen:
     throw new Error("Transaction was successful, but can't find the new profile object ID in the response: " + JSON.stringify(resp));
+}
+
+async function sui_editProfile({
+    signAndExecuteTransaction,
+    profileId,
+    packageId,
+    name,
+    url = '',
+    description = '',
+} : {
+    signAndExecuteTransaction: SuiSignAndExecuteTransactionMethod,
+    profileId: SuiAddress,
+    packageId: SuiAddress,
+    name: string,
+    url?: string,
+    description?: string,
+}): Promise<SuiExecuteTransactionResponse>
+{
+    const resp = await signAndExecuteTransaction({
+        kind: 'moveCall',
+        data: {
+            packageObjectId: packageId,
+            module: 'profile',
+            function: 'edit_profile',
+            typeArguments: [],
+            arguments: [
+                profileId,
+                name,
+                url,
+                description,
+            ],
+            gasBudget: 100000,
+        }
+    });
+
+    // @ts-ignore
+    // Verify the transaction results
+    //                  Sui/Ethos || Suiet
+    const effects = (resp.effects || resp.EffectsCert?.effects?.effects) as TransactionEffects;
+    if (effects.status.status !== 'success') {
+        throw new Error(effects.status.error);
+    }
+    return resp;
 }
 
 /* Convenience functions */

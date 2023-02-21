@@ -29,6 +29,7 @@ export function ProfileNew() {
         setWaiting(true);
         try {
             const profileObjectId = await profileManager.createProfile({
+                // @ts-ignore
                 signAndExecuteTransaction,
                 name: inputName,
                 url: inputImage,
