@@ -1,15 +1,27 @@
 @import './variables.less';
 
+html {
+    font-size: 130%;
+}
+
 html, body, p, h1, h2, h3, h4, h5, input, button, div, textarea {
-    padding: 0;
+    font-family: 'Exo 2', sans-serif;
+    font-variation-settings: 'wght' 300;
     margin: 0;
+    padding: 0;
 }
 
 body {
-    font-size: 1.2rem;
-    font-family: sans-serif;
     background-color: #202226;
     color: rgb(224, 224, 224);
+}
+
+h1 {
+    font-variation-settings: 'wght' 350;
+}
+
+b {
+    font-variation-settings: 'wght' 500;
 }
 
 a {
@@ -25,11 +37,72 @@ a {
 #layout {
     display: flex;
     flex-flow: row;
+    width: 100%;
     @media (max-width: @mobile-width) {
         flex-flow: column;
     }
     #page {
+        max-width: 600px;
+        @media (max-width: @mobile-width) {
+            max-width: none;
+        }
         padding: 1em;
+        flex-grow: 1;
     }
 }
 
+input, textarea, button, .btn {
+    border-radius: 0.5em;
+}
+
+.form {
+    .form-field {
+        label, input {
+            display: block;
+        }
+        label {
+            margin: 0.8em 0 0.2em 0.1em;
+        }
+        input, textarea {
+            border: 0;
+            padding: 0.5em 0.8em;
+            width: 100%;
+            box-sizing: border-box;
+            font-size: 0.85em;
+            font-variation-settings: 'wght' 350;
+        }
+    }
+    button {
+        margin-top: 1.4em;
+    }
+}
+
+
+.waiting {
+    color: #bbb;
+    background-color: #777;
+    &:hover {
+        cursor: wait;
+    }
+}
+
+button, .btn {
+    font-variation-settings: 'wght' 600;
+    background-color: #008bff;
+    border: 0;
+    color: white;
+    font-size: 1em;
+    padding: 0.5em 0.8em;
+    &:hover {
+        background-color: #00aaff;
+        cursor: pointer;
+        text-decoration: none;
+    }
+    &.waiting {
+        .waiting();
+    }
+}
+
+.error {
+    overflow-wrap: anywhere;
+}

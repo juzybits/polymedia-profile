@@ -100,13 +100,13 @@ export const ProfileEdit: React.FC = () =>
             </div>
             <div className='form-field'>
                 <label>Description</label>
-                <input value={inputDescription} type='text' maxLength={1000}
+                <textarea value={inputDescription} maxLength={1000}
                     className={waiting ? 'waiting' : ''} disabled={waiting}
-                    spellCheck='false' autoCorrect='off' autoComplete='off'
+                    spellCheck='true' autoCorrect='off' autoComplete='off'
                     onChange={e => setInputDescription(e.target.value)}
                 />
             </div>
-            <button type='submit'className={waiting ? 'primary waiting' : 'primary'} disabled={waiting}
+            <button type='submit'className={waiting ? 'waiting' : ''} disabled={waiting}
                 >UPDATE</button>
         </form>;
     }

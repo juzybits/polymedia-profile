@@ -975,9 +975,9 @@
     "@wallet-standard/wallet" "^1.0.1"
 
 "@wallet-standard/features@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@wallet-standard/features/-/features-1.0.1.tgz#9aab662ebc5394ec2463e5c8f67b8bbf30fef1b2"
-  integrity sha512-B/WzRpoEiGQ+kwL/AuzqzNjrGvdL5J2OXiXHkDGONsNbKdtTpExU+ttZKQwSP/EvPl8+ZZ/4OO/Bz4YkigtQDg==
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@wallet-standard/features/-/features-1.0.3.tgz#c992876c5e4f7a0672f8869c4146c87e0dfe48c8"
+  integrity sha512-m8475I6W5LTatTZuUz5JJNK42wFRgkJTB0I9tkruMwfqBF2UN2eomkYNVf9RbrsROelCRzSFmugqjKZBFaubsA==
   dependencies:
     "@wallet-standard/base" "^1.0.1"
 
@@ -1468,9 +1468,9 @@ duplexer3@^0.1.4:
   integrity sha512-1A8za6ws41LQgv9HrE/66jyC5yuSjQ3L/KOpFtoBilsAK2iA2wuS5rTt1OCzIvtS2V7nVmedsUU+DGRcjBmOYA==
 
 electron-to-chromium@^1.4.284:
-  version "1.4.303"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.303.tgz#6c598653c52b2554f768d98374803236b8f022a8"
-  integrity sha512-XaqiQhVsGO5ymf/Lg6XEGpv2h8b5AFqQDQ9fQckolNP2VtD2VL1pn1TIx1SSYsf0srfXVi2Sm7n/K3slJSX3ig==
+  version "1.4.305"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.305.tgz#e4dfe3e06ab783f33171f9bde9e8ed092510fcd0"
+  integrity sha512-WETy6tG0CT5gm1O+xCbyapWNsCcmIvrn4NHViIGYo2AT8FV2qUCXdaB+WqYxSv/vS5mFqhBYnfZAAkVArjBmUg==
 
 electron@^11.1.0:
   version "11.5.0"
