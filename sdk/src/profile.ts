@@ -17,8 +17,8 @@ import {
 } from '@mysten/sui.js';
 
 const RPC_DEVNET = new JsonRpcProvider(Network.DEVNET);
-export const POLYMEDIA_PROFILE_PACKAGE_ID_DEVNET = '0x2beb7a236ae8b9257114a219d81e998c9b1c96b8';
-export const POLYMEDIA_PROFILE_REGISTRY_ID_DEVNET = '0x2ae98a431cfa04834bf864b37bdfe5f41a15e208';
+export const POLYMEDIA_PROFILE_PACKAGE_ID_DEVNET = '0xd80bc36eef268d15f9888711fd6cd68d11fe6f59';
+export const POLYMEDIA_PROFILE_REGISTRY_ID_DEVNET = '0xaee180adbdd2cb389671ebfca93c89b841dad214';
 
 const RPC_TESTNET = new JsonRpcProvider('https://fullnode.testnet.sui.io:443');
 export const POLYMEDIA_PROFILE_PACKAGE_ID_TESTNET = '0x123';

@@ -3,23 +3,25 @@
 
 
 "@babel/runtime@^7.17.2":
-  version "7.20.13"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.20.13.tgz#7055ab8a7cff2b8f6058bf6ae45ff84ad2aded4b"
-  integrity sha512-gt3PKXs0DBoL9xCvOIIZ2NEqAGZqHjAnmVbfQtB620V0uReIQutpel14KcneZuer7UioY8ALKZ7iocavvzTNFA==
+  version "7.21.0"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.21.0.tgz#5b55c9d394e5fcf304909a8b00c07dc217b56673"
+  integrity sha512-xwII0//EObnq89Ji5AKYQaRYiW/nZ3llSv29d49IuxPhKbtJoLP+9QUUZ4nVragQVtaVGeZrpB+ZtG/Pdy/POw==
   dependencies:
     regenerator-runtime "^0.13.11"
 
-"@mysten/bcs@0.5.0", "@mysten/bcs@latest":
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/@mysten/bcs/-/bcs-0.5.0.tgz#d2570971e3d9121b83091ced38db13e907ab4198"
-  integrity sha512-FjGnXZfR4dY01Q1l3xjgaU+ruIlVomXZk8vzgsQXPFOv7O4pNiOOpJyMEMUnWcyUiktk4R9MxoJJrygOtdxaUw==
+"@mysten/bcs@0.6.0", "@mysten/bcs@latest":
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/@mysten/bcs/-/bcs-0.6.0.tgz#a7c19a1fce441b5b1c2c9abade588542b723cd38"
+  integrity sha512-kw5GVjtonq7+CU8M2E2N3ndvWhSltDsMzXjy6WECAib1kr+FL9wn7dTmsw84QQjRslspKt1BGhNb+/CpLZp1cQ==
+  dependencies:
+    bs58 "^5.0.0"
 
 "@mysten/sui.js@latest":
-  version "0.27.0"
-  resolved "https://registry.yarnpkg.com/@mysten/sui.js/-/sui.js-0.27.0.tgz#62648e56bdb2f5721acdb8a138082904c605b5a8"
-  integrity sha512-bY118XshIzVSflhcWn6PbaIoxKHilDyJJ7j9n8AeU0XqahsGg9bgEXbiqBcERIdNMXeVLWdTcM8qZFKhvdKVsw==
+  version "0.28.0"
+  resolved "https://registry.yarnpkg.com/@mysten/sui.js/-/sui.js-0.28.0.tgz#492903b1545ae9c92bf2cefa328f514e7ae55c08"
+  integrity sha512-JYqsmwBvYcyi7SXME3hlPbY0AfJvoxpoUXJqOFQB+olIAqpXUOfYp5ARTSKsA8X847JuH/1Ol5jh2uaG41MjdA==
   dependencies:
-    "@mysten/bcs" "0.5.0"
+    "@mysten/bcs" "0.6.0"
     "@noble/hashes" "^1.1.5"
     "@noble/secp256k1" "^1.7.0"
     "@scure/bip32" "^1.1.1"
