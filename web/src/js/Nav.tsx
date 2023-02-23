@@ -42,18 +42,21 @@ export function Nav({openConnectModal}: {
             </div>
 
             <div id='nav-pages' className='nav-section'>
-                <div className='nav-section-title'>
-                    PAGES
+                {/*<div className='nav-section-title'>
+                    ACTIONS
+                </div>*/}
+                <div className='nav-page-link'>
+                    <Link to='/' onClick={closeMobileNav}>HOME</Link>
                 </div>
                 <div className='nav-page-link'>
-                    <Link to='/profile/edit' onClick={closeMobileNav}>Edit Profile</Link>
+                    <Link to='/profile/edit' onClick={closeMobileNav}>PROFILE</Link>
                 </div>
-                <div className='nav-page-link'>
+                {/*<div className='nav-page-link'>
                     <Link to='/profile/new' onClick={closeMobileNav}>New Profile</Link>
                 </div>
                 <div className='nav-page-link'>
                     <Link to='/registry/new' onClick={closeMobileNav}>New Registry</Link>
-                </div>
+                </div>*/}
             </div>
 
             <div id='nav-socials' className='nav-section'>
@@ -61,13 +64,10 @@ export function Nav({openConnectModal}: {
                     SOCIALS
                 </div>
                 <div className='nav-social-link'>
-                    <a href='https://polymedia.app/' target='_blank'>About</a>
+                    <a href='https://twitter.com/polymedia_app' target='_blank'>Twitter</a>
                 </div>
                 <div className='nav-social-link'>
                     <a href='https://discord.gg/3ZaE69Eq78' target='_blank'>Discord</a>
-                </div>
-                <div className='nav-social-link'>
-                    <a href='https://twitter.com/polymedia_app' target='_blank'>Twitter</a>
                 </div>
             </div>
         </div>

@@ -78,6 +78,9 @@ export const ProfileEdit: React.FC = () =>
     else if (profile === null) {
         view = <div>
             You don't have a profile. Do you want to create it?
+            <br/>
+            <br/>
+            <button onClick={openConnectModal}>CREATE PROFILE</button>
         </div>;
     }
     else {
