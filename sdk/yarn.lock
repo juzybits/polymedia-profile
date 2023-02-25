@@ -9,25 +9,24 @@
   dependencies:
     regenerator-runtime "^0.13.11"
 
-"@mysten/bcs@0.6.0", "@mysten/bcs@latest":
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/@mysten/bcs/-/bcs-0.6.0.tgz#a7c19a1fce441b5b1c2c9abade588542b723cd38"
-  integrity sha512-kw5GVjtonq7+CU8M2E2N3ndvWhSltDsMzXjy6WECAib1kr+FL9wn7dTmsw84QQjRslspKt1BGhNb+/CpLZp1cQ==
+"@mysten/bcs@0.6.1", "@mysten/bcs@latest":
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/@mysten/bcs/-/bcs-0.6.1.tgz#9805bf61486bd10136e7d9c703408cea51a3a2fc"
+  integrity sha512-xogS6EqXhyAeineYTy3RT6pWW5W9cy3A4uPIgwedGAQFZbW23zk/jlmZpJZuZmdzuD+EA524uuNsLGgFgzw11g==
   dependencies:
     bs58 "^5.0.0"
 
 "@mysten/sui.js@latest":
-  version "0.28.0"
-  resolved "https://registry.yarnpkg.com/@mysten/sui.js/-/sui.js-0.28.0.tgz#492903b1545ae9c92bf2cefa328f514e7ae55c08"
-  integrity sha512-JYqsmwBvYcyi7SXME3hlPbY0AfJvoxpoUXJqOFQB+olIAqpXUOfYp5ARTSKsA8X847JuH/1Ol5jh2uaG41MjdA==
+  version "0.29.1"
+  resolved "https://registry.yarnpkg.com/@mysten/sui.js/-/sui.js-0.29.1.tgz#cd3b8ccd838c09363f17d5ae9362901c07d22143"
+  integrity sha512-EupoejRft6RUOv9gzvAGnZNPRDD2a/YvUkWNQtijuEFADzJ1zRlE2YUFGn9fW+/kRgYLoR0WWMvd5rNYPD2nqg==
   dependencies:
-    "@mysten/bcs" "0.6.0"
+    "@mysten/bcs" "0.6.1"
     "@noble/hashes" "^1.1.5"
     "@noble/secp256k1" "^1.7.0"
     "@scure/bip32" "^1.1.1"
     "@scure/bip39" "^1.1.0"
     "@suchipi/femver" "^1.0.0"
-    bs58 "^5.0.0"
     cross-fetch "^3.1.5"
     jayson "^4.0.0"
     js-sha3 "^0.8.0"
@@ -80,9 +79,9 @@
     "@types/node" "*"
 
 "@types/node@*":
-  version "18.14.0"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.14.0.tgz#94c47b9217bbac49d4a67a967fdcdeed89ebb7d0"
-  integrity sha512-5EWrvLmglK+imbCJY0+INViFWUHg1AHel1sq4ZVSfdcNqGy9Edv3UB9IIzzg+xPaUcAgZYcfVs2fBcwDeZzU0A==
+  version "18.14.1"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.14.1.tgz#90dad8476f1e42797c49d6f8b69aaf9f876fc69f"
+  integrity sha512-QH+37Qds3E0eDlReeboBxfHbX9omAcBCXEzswCu6jySP642jiM3cYSIkU/REqwhCUqXdonHFuBfJDiAJxMNhaQ==
 
 "@types/node@^12.12.54":
   version "12.20.55"
@@ -218,9 +217,9 @@ regenerator-runtime@^0.13.11:
   integrity sha512-kY1AZVr2Ra+t+piVaJ4gxaFaReZVH40AKNo7UCX6W+dEwBo/2oZJzqfuN1qLq1oL45o56cPaTXELwrTh8Fpggg==
 
 rpc-websockets@^7.5.0:
-  version "7.5.0"
-  resolved "https://registry.yarnpkg.com/rpc-websockets/-/rpc-websockets-7.5.0.tgz#bbeb87572e66703ff151e50af1658f98098e2748"
-  integrity sha512-9tIRi1uZGy7YmDjErf1Ax3wtqdSSLIlnmL5OtOzgd5eqPKbsPpwDP5whUDO2LQay3Xp0CcHlcNSGzacNRluBaQ==
+  version "7.5.1"
+  resolved "https://registry.yarnpkg.com/rpc-websockets/-/rpc-websockets-7.5.1.tgz#e0a05d525a97e7efc31a0617f093a13a2e10c401"
+  integrity sha512-kGFkeTsmd37pHPMaHIgN1LVKXMi0JD782v4Ds9ZKtLlwdTKjn+CxM9A9/gLT2LaOuEcEFGL98h1QWQtlOIdW0w==
   dependencies:
     "@babel/runtime" "^7.17.2"
     eventemitter3 "^4.0.7"
