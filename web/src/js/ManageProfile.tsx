@@ -138,6 +138,12 @@ export const ManageProfile: React.FC = () =>
         </form>;
     }
 
+    const imageSection = (!profile || !inputImage) ? <></> :
+    <div className='section section-image'>
+        <h2>Image preview</h2>
+        <img src={inputImage} />
+    </div>;
+
     const infoSection = !profile ? <></> :
     <div className='section section-info'>
         <h2>Details</h2>
@@ -149,17 +155,11 @@ export const ManageProfile: React.FC = () =>
         </p>
     </div>;
 
-    const imageSection = (!profile || !profile.url) ? <></> :
-    <div className='section section-image'>
-        <h2>Image preview</h2>
-        <img src={inputImage} />
-    </div>;
-
     return <div id='page' className='page-manage-profile'>
         <h1>{profile ? 'EDIT' : (profile===null ? 'CREATE' : 'MANAGE')} PROFILE</h1>
         {view}
-        {infoSection}
         {imageSection}
+        {infoSection}
         { mainError && <div className='error'>{mainError}</div> }
     </div>;
 }
