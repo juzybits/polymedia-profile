@@ -3,6 +3,7 @@ import { useOutletContext } from 'react-router-dom';
 import { useWalletKit } from '@mysten/wallet-kit';
 
 import { AppContext } from './App';
+import { notifyError, notifyOkay } from './components/Notification';
 import '../css/ManageProfile.less';
 
 export const ManageProfile: React.FC = () =>
@@ -17,7 +18,6 @@ export const ManageProfile: React.FC = () =>
     const [inputImage, setInputImage] = useState('');
     const [inputDescription, setInputDescription] = useState('');
     const [waiting, setWaiting] = useState(false);
-    const [mainError, setMainError] = useState('');
 
     /* Functions */
 
@@ -54,8 +54,10 @@ export const ManageProfile: React.FC = () =>
                 description: inputDescription,
             });
             console.debug('[onSubmitCreateProfile] New object ID:', profileObjectId);
+            notifyOkay('SUCCESS');
+            reloadProfile();
         } catch(error: any) {
-            setMainError(error.message);
+            showError('onSubmitCreateProfile', error);
         }
         setWaiting(false);
     };
@@ -67,7 +69,7 @@ export const ManageProfile: React.FC = () =>
             return;
         }
         if (!profile) {
-            setMainError('[onSubmitEditProfile] Missing profile');
+            notifyError('[onSubmitEditProfile] Missing profile');
             return;
         }
         setWaiting(true);
@@ -81,11 +83,10 @@ export const ManageProfile: React.FC = () =>
                 description: inputDescription,
             });
             console.debug('[onSubmitEditProfile] Result:', profileObjectId);
+            notifyOkay('SUCCESS');
             reloadProfile();
         } catch(error: any) {
-            const errorString = String(error.stack || error.message || error);
-            setMainError(errorString);
-            console.warn('[onSubmitEditProfile] Error:', errorString);
+            showError('onSubmitEditProfile', error);
         }
         setWaiting(false);
     };
@@ -160,6 +161,17 @@ export const ManageProfile: React.FC = () =>
         {view}
         {imageSection}
         {infoSection}
-        { mainError && <div className='error'>{mainError}</div> }
     </div>;
+}
+
+
+const showError = (origin: string, error: any): void =>
+{
+    const errorString = String(error.stack || error.message || error);
+    if (errorString.includes('Transaction rejected from user')) {
+        console.debug(`[${origin}] Cancelled by the user`);
+    } else {
+        notifyError(errorString);
+        console.warn(`[${origin}] Error: ${errorString}`);
+    }
 }
