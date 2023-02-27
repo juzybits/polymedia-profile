@@ -42,14 +42,14 @@ export function Nav({openConnectModal}: {
             </div>
 
             <div id='nav-pages' className='nav-section'>
-                {/*<div className='nav-section-title'>
-                    ACTIONS
-                </div>*/}
+                <div className='nav-section-title'>
+                    PAGES
+                </div>
                 <div className='nav-page-link'>
                     <Link to='/' onClick={closeMobileNav}>HOME</Link>
                 </div>
                 <div className='nav-page-link'>
-                    <Link to='/profile/edit' onClick={closeMobileNav}>PROFILE</Link>
+                    <Link to='/manage' onClick={closeMobileNav}>PROFILE</Link>
                 </div>
                 {/*<div className='nav-page-link'>
                     <Link to='/profile/new' onClick={closeMobileNav}>New Profile</Link>
@@ -61,7 +61,10 @@ export function Nav({openConnectModal}: {
 
             <div id='nav-socials' className='nav-section'>
                 <div className='nav-section-title'>
-                    SOCIALS
+                    LINKS
+                </div>
+                <div className='nav-social-link'>
+                    <a href='https://polymedia.app' target='_blank'>Polymedia</a>
                 </div>
                 <div className='nav-social-link'>
                     <a href='https://twitter.com/polymedia_app' target='_blank'>Twitter</a>

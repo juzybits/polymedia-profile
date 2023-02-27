@@ -3,14 +3,15 @@ import { useOutletContext } from 'react-router-dom';
 import { useWalletKit } from '@mysten/wallet-kit';
 
 import { AppContext } from './App';
+import '../css/ManageProfile.less';
 
-export const ProfileEdit: React.FC = () =>
+export const ManageProfile: React.FC = () =>
 {
     /* State */
 
     const { currentAccount, signAndExecuteTransaction } = useWalletKit();
 
-    const { profile, profileManager, openConnectModal, reloadProfile } = useOutletContext<AppContext>();
+    const { network, profile, profileManager, openConnectModal, reloadProfile } = useOutletContext<AppContext>();
 
     const [inputName, setInputName] = useState('');
     const [inputImage, setInputImage] = useState('');
@@ -21,7 +22,7 @@ export const ProfileEdit: React.FC = () =>
     /* Functions */
 
     useEffect(() => {
-        document.title = 'Polymedia Profile - Edit Profile';
+        document.title = 'Polymedia Profile - Manage';
     }, []);
 
     useEffect(() => {
@@ -29,8 +30,35 @@ export const ProfileEdit: React.FC = () =>
             setInputName(profile.name);
             setInputImage(profile.url);
             setInputDescription(profile.description);
+        } else {
+            setInputName('');
+            setInputImage('');
+            setInputDescription('');
         }
     }, [profile]);
+
+    const onSubmitCreateProfile = async (e: SyntheticEvent) => {
+        e.preventDefault();
+        if (!currentAccount) {
+            openConnectModal();
+            return;
+        }
+        console.debug(`[onSubmitCreateProfile] Attempting to create profile: ${inputName}`);
+        setWaiting(true);
+        try {
+            const profileObjectId = await profileManager.createProfile({
+                // @ts-ignore
+                signAndExecuteTransaction,
+                name: inputName,
+                url: inputImage,
+                description: inputDescription,
+            });
+            console.debug('[onSubmitCreateProfile] New object ID:', profileObjectId);
+        } catch(error: any) {
+            setMainError(error.message);
+        }
+        setWaiting(false);
+    };
 
     const onSubmitEditProfile = async (e: SyntheticEvent) => {
         e.preventDefault();
@@ -75,16 +103,8 @@ export const ProfileEdit: React.FC = () =>
             Loading...
         </div>;
     }
-    else if (profile === null) {
-        view = <div>
-            You don't have a profile. Do you want to create it?
-            <br/>
-            <br/>
-            <button onClick={openConnectModal}>CREATE PROFILE</button>
-        </div>;
-    }
     else {
-        view = <form className='form' onSubmit={onSubmitEditProfile}>
+        view = <form className='form' onSubmit={profile===null ? onSubmitCreateProfile : onSubmitEditProfile}>
             <div className='form-field'>
                 <label>Name</label>
                 <input value={inputName} type='text' required maxLength={60}
@@ -109,14 +129,27 @@ export const ProfileEdit: React.FC = () =>
                     onChange={e => setInputDescription(e.target.value)}
                 />
             </div>
-            <button type='submit'className={waiting ? 'waiting' : ''} disabled={waiting}
-                >UPDATE</button>
+            <button type='submit' className={waiting ? 'waiting' : ''} disabled={waiting}>
+                {profile===null ? 'CREATE' : 'UPDATE'}
+            </button>
         </form>;
     }
 
-    return <div id='page' className='page-profile-edit'>
-        <h1>EDIT PROFILE</h1>
+    const infoSection = !profile ? <></> :
+    <div className='profile-info'>
+        <h2>Details</h2>
+        <p>
+            Profile ID: <a target="_blank" href={`https://explorer.sui.io/object/${profile.id}?network=${network}`}>{profile.id}</a>
+        </p>
+        <p>
+        Registry ID: <a target="_blank" href={`https://explorer.sui.io/object/${profileManager.getRegistryId()}?network=${network}`}>{profileManager.getRegistryId()}</a>
+        </p>
+    </div>;
+
+    return <div id='page' className='page-manage-profile'>
+        <h1>{profile ? 'EDIT' : (profile===null ? 'CREATE' : 'MANAGE')} PROFILE</h1>
         {view}
+        {infoSection}
         { mainError && <div className='error'>{mainError}</div> }
-    </div>; // end of #page
+    </div>;
 }

@@ -185,10 +185,6 @@ export class ProfileManager {
             name,
             url,
             description,
-        })
-        .then(resp => {
-            this.#cache.delete(profile.owner);
-            return resp;
         });
     }
 
@@ -198,7 +194,6 @@ export class ProfileManager {
     {
         const results = new Map<SuiAddress, SuiAddress>();
         const addressBatches = chunkArray(lookupAddresses, 50);
-        console.debug(`[fetchProfileObjectIds] looking for ${lookupAddresses.length} addresses in ${addressBatches.length} batches`);
         const promises = addressBatches.map(async batch => {
             const lookupResults = await sui_fetchProfileObjectIds({
                 rpc: this.#rpc,

@@ -7,6 +7,7 @@ import { Nav } from './Nav';
 import '../css/App.less';
 
 export type AppContext = {
+    network: string,
     profile: PolymediaProfile|null|undefined,
     profileManager: ProfileManager;
     openConnectModal: () => void;
@@ -38,7 +39,7 @@ const App: React.FC = () =>
         }
         profileManager.getProfile({
             lookupAddress: currentAccount,
-            useCache: true,
+            useCache: false,
         })
         .then((result: PolymediaProfile|null) => {
             setProfile(result);
@@ -56,6 +57,7 @@ const App: React.FC = () =>
     };
 
     const appContext: AppContext = {
+        network,
         profile,
         profileManager,
         reloadProfile,
