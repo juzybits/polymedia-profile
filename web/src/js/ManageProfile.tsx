@@ -95,7 +95,10 @@ export const ManageProfile: React.FC = () =>
     let view: React.ReactNode;
     if (!currentAccount) {
         view = <div>
-            <button onClick={openConnectModal}>CONNECT WALLET</button>
+            <p>
+                Connect your Sui wallet to get started.
+            </p>
+            <button onClick={openConnectModal}>CONNECT</button>
         </div>;
     }
     else if (profile === undefined) {

@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 export const Home: React.FC = () =>
 {
@@ -16,5 +17,6 @@ export const Home: React.FC = () =>
             <br/>
             Soon we will release a JavaScript SDK to make it easy for others to integrate Polymedia Profile into their own projects.
         </p>
+        <Link to='/manage' className='btn'>MANAGE PROFILE</Link>
     </div>;
 }

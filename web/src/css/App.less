@@ -77,9 +77,6 @@ input, textarea, button, .btn {
             font-variation-settings: 'wght' 350;
         }
     }
-    button {
-        margin-top: 1.4em;
-    }
 }
 
 
@@ -92,14 +89,17 @@ input, textarea, button, .btn {
 }
 
 button, .btn {
-    font-variation-settings: 'wght' 600;
     background-color: #008bff;
     border: 0;
-    color: white;
+    color: var(--text-color);
+    display: inline-block;
     font-size: 1em;
+    font-variation-settings: 'wght' 600;
+    margin-top: 1.4em;
     padding: 0.5em 0.8em;
     &:hover {
         background-color: #00aaff;
+        color: white;
         cursor: pointer;
         text-decoration: none;
     }
