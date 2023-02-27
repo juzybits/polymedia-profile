@@ -136,7 +136,7 @@ export const ManageProfile: React.FC = () =>
     }
 
     const infoSection = !profile ? <></> :
-    <div className='profile-info'>
+    <div className='section section-info'>
         <h2>Details</h2>
         <p>
             Profile ID: <a target="_blank" href={`https://explorer.sui.io/object/${profile.id}?network=${network}`}>{profile.id}</a>
@@ -146,10 +146,17 @@ export const ManageProfile: React.FC = () =>
         </p>
     </div>;
 
+    const imageSection = (!profile || !profile.url) ? <></> :
+    <div className='section section-image'>
+        <h2>Image preview</h2>
+        <img src={inputImage} />
+    </div>;
+
     return <div id='page' className='page-manage-profile'>
         <h1>{profile ? 'EDIT' : (profile===null ? 'CREATE' : 'MANAGE')} PROFILE</h1>
         {view}
         {infoSection}
+        {imageSection}
         { mainError && <div className='error'>{mainError}</div> }
     </div>;
 }
