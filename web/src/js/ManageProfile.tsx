@@ -151,7 +151,7 @@ export const ManageProfile: React.FC = () =>
             Profile ID: <a target="_blank" href={`https://explorer.sui.io/object/${profile.id}?network=${network}`}>{profile.id}</a>
         </p>
         <p>
-        Registry ID: <a target="_blank" href={`https://explorer.sui.io/object/${profileManager.getRegistryId()}?network=${network}`}>{profileManager.getRegistryId()}</a>
+            Registry ID: <a target="_blank" href={`https://explorer.sui.io/object/${profileManager.getRegistryId()}?network=${network}`}>{profileManager.getRegistryId()}</a>
         </p>
     </div>;
 

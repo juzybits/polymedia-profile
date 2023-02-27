@@ -7,9 +7,10 @@ import { useWalletKit } from '@mysten/wallet-kit';
 import imgLogo from '../img/logo.png';
 import '../css/Nav.less';
 
-export function Nav({openConnectModal}: {
+export const Nav: React.FC<{
     openConnectModal: () => void,
-}) {
+}> = ({openConnectModal}) =>
+{
     const { currentAccount, disconnect } = useWalletKit();
 
     const [showMobileNav, setShowMobileNav] = useState(false);

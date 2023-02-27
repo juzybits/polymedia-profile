@@ -1,0 +1,56 @@
+:root {
+    --bottom: 25px;
+}
+
+// A toast/snackback notification in the bottom and center of the screen
+.notification {
+    visibility: hidden;
+    background-color: #333;
+    border-radius: 0.5em;
+    border: 1px solid white;
+    bottom: var(--bottom);
+    color: #fff;
+    left: 50%;
+    max-height: 30%;
+    overflow-y: scroll;
+    padding: 16px;
+    position: fixed;
+    text-align: center;
+    transform: translateX(-50%);
+    z-index: 1;
+
+    @media (min-width: 800px) {
+        width: 700px;
+    }
+    @media (max-width: 799px) {
+        width: 86%;
+    }
+}
+
+.notification.show {
+    visibility: visible;
+    // 0.5 seconds to fade in
+    // 2.5 seconds of pause
+    // 0.5 seconds to fade out
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+.notification.okay {
+    background-color: #008e0b;
+    font-variation-settings: 'wght' 500;
+}
+
+.notification.error {
+    background-color: darkred;
+    font-size: 0.9em;
+}
+
+@keyframes fadein {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: var(--bottom); opacity: 1;}
+}
+
+@keyframes fadeout {
+    from {bottom: var(--bottom); opacity: 1;}
+    to {bottom: 0; opacity: 0;}
+}
