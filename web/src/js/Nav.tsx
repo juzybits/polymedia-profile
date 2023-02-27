@@ -22,9 +22,12 @@ export function Nav({openConnectModal}: {
         </div>
 
         <div id='nav-logo' className='nav-section'>
-            <Link to='/'>
+            <Link to='/' id='nav-logo-link'>
                 <img id='nav-logo-img' src={imgLogo} alt='Polymedia Profile' />
-                <span id='nav-logo-txt'>POLYMEDIA<br/>PROFILE</span>
+                <span id='nav-logo-txt'>
+                    <span id='nav-title-polymedia'>POLYMEDIA</span>
+                    <span id='nav-title-profile'>PROFILE</span>
+                </span>
             </Link>
         </div>
 
