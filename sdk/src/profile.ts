@@ -1,7 +1,7 @@
 import { BCS, getSuiMoveConfig } from '@mysten/bcs';
 import {
+    Connection,
     DevInspectResults,
-    devnetConnection,
     ExecuteTransactionRequestType,
     GetObjectDataResponse,
     JsonRpcProvider,
@@ -16,13 +16,21 @@ import {
     UnserializedSignableTransaction,
 } from '@mysten/sui.js';
 
-const RPC_DEVNET = new JsonRpcProvider(devnetConnection);
 export const POLYMEDIA_PROFILE_PACKAGE_ID_DEVNET = '0xd80bc36eef268d15f9888711fd6cd68d11fe6f59';
 export const POLYMEDIA_PROFILE_REGISTRY_ID_DEVNET = '0xaee180adbdd2cb389671ebfca93c89b841dad214';
 
-const RPC_TESTNET = new JsonRpcProvider(devnetConnection);
 export const POLYMEDIA_PROFILE_PACKAGE_ID_TESTNET = '0x123';
 export const POLYMEDIA_PROFILE_REGISTRY_ID_TESTNET = '0x123';
+
+const RPC_DEVNET = new JsonRpcProvider(new Connection({
+  fullnode: 'https://fullnode.devnet.vincagame.com:443',
+  faucet: 'https://faucet.devnet.sui.io/gas',
+}));
+
+const RPC_TESTNET = new JsonRpcProvider(new Connection({
+  fullnode: 'https://fullnode.testnet.sui.io:443/',
+  faucet: 'https://faucet.testnet.sui.io/gas',
+}));
 
 /**
  * Represents a `polymedia_profile::profile::Profile` Sui object
