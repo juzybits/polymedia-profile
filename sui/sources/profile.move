@@ -171,23 +171,41 @@ module polymedia_profile::profile
         return results
     }
 
-    public fun set_dynamic_field<Name: copy + drop + store, Value: store>(
+    /// Aborts with `EFieldAlreadyExists` if the object already has that field with that name.
+    public fun add_dynamic_field<Name: copy + drop + store, Value: store>(
         profile: &mut Profile,
         name: Name,
         value: Value,
     ) {
-        // TODO: replace existing
         dynamic_field::add(&mut profile.id, name, value);
     }
 
-    public fun set_dynamic_object_field<Name: copy + drop + store, Value: key + store>(
+    /// Aborts with `EFieldDoesNotExist` if the object does not have a field with that name.
+    /// Aborts with `EFieldTypeMismatch` if the field exists, but the value does not have
+    /// the specified type.
+    public fun remove_dynamic_field<Name: copy + drop + store, Value: store>(
+        profile: &mut Profile,
+        name: Name,
+    ): Value {
+        return dynamic_field::remove(&mut profile.id, name)
+    }
+
+    /// Aborts with `EFieldAlreadyExists` if the object already has that field with that name.
+    public fun add_dynamic_object_field<Name: copy + drop + store, Value: key + store>(
         profile: &mut Profile,
         name: Name,
         value: Value,
     ) {
-        // TODO: replace existing
         dynamic_object_field::add(&mut profile.id, name, value);
     }
 
-    // TODO: delete_ fields
+    /// Aborts with `EFieldDoesNotExist` if the object does not have a field with that name.
+    /// Aborts with `EFieldTypeMismatch` if the field exists, but the value object does not have
+    /// the specified type.
+    public fun remove_dynamic_object_field<Name: copy + drop + store, Value: key + store>(
+        profile: &mut Profile,
+        name: Name,
+    ): Value {
+        return dynamic_object_field::remove(&mut profile.id, name)
+    }
 }
