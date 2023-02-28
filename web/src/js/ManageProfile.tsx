@@ -55,7 +55,11 @@ export const ManageProfile: React.FC = () =>
             });
             console.debug('[onSubmitCreateProfile] New object ID:', profileObjectId);
             notifyOkay('SUCCESS');
-            reloadProfile();
+            let newProfile;
+            do {
+                // Deal with RPC lag by retrying until we get the new profile
+                newProfile = await reloadProfile();
+            } while (!newProfile);
         } catch(error: any) {
             showError('onSubmitCreateProfile', error);
         }
@@ -84,7 +88,15 @@ export const ManageProfile: React.FC = () =>
             });
             console.debug('[onSubmitEditProfile] Result:', profileObjectId);
             notifyOkay('SUCCESS');
-            reloadProfile();
+
+            const oldProfileVersion = profile.suiObject.reference.version;
+            do {
+                // Deal with RPC lag by retrying until we get the updated profile
+                const updatedProfile = await reloadProfile();
+                if (updatedProfile && updatedProfile.suiObject.reference.version != oldProfileVersion) {
+                    break;
+                }
+            } while (true);
         } catch(error: any) {
             showError('onSubmitEditProfile', error);
         }
@@ -168,7 +180,8 @@ export const ManageProfile: React.FC = () =>
 const showError = (origin: string, error: any): void =>
 {
     const errorString = String(error.stack || error.message || error);
-    if (errorString.includes('Transaction rejected from user')) {
+    if (errorString.includes('Transaction rejected from user') ||
+        errorString.includes('User rejection')) {
         console.debug(`[${origin}] Cancelled by the user`);
     } else {
         notifyError(errorString);

@@ -11,7 +11,7 @@ export type AppContext = {
     profile: PolymediaProfile|null|undefined,
     profileManager: ProfileManager;
     openConnectModal: () => void;
-    reloadProfile: () => void;
+    reloadProfile: () => Promise<PolymediaProfile|null|undefined>;
 };
 
 export const AppWrap: React.FC = () =>
@@ -32,23 +32,25 @@ const App: React.FC = () =>
         reloadProfile();
     }, [currentAccount]);
 
-    const reloadProfile = (): void => {
+    const reloadProfile = async (): Promise<PolymediaProfile|null|undefined> => {
         if (!currentAccount) {
             setProfile(undefined);
-            return;
+            return undefined;
         }
-        profileManager.getProfile({
+        return await profileManager.getProfile({
             lookupAddress: currentAccount,
             useCache: false,
         })
         .then((result: PolymediaProfile|null) => {
-            setProfile(result);
             console.debug('[reloadProfile] Setting profile:', result);
+            setProfile(result);
+            return result;
         })
         .catch((error: any) => {
             const errorString = String(error.stack || error.message || error);
-            setSuiError(errorString);
             console.warn('[reloadProfile] Error:', errorString);
+            setSuiError(errorString);
+            return undefined;
         })
     };
 
