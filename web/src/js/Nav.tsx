@@ -52,6 +52,9 @@ export const Nav: React.FC<{
                 <div className='nav-page-link'>
                     <Link to='/manage' onClick={closeMobileNav}>PROFILE</Link>
                 </div>
+                <div className='nav-page-link'>
+                    <Link to='/docs' onClick={closeMobileNav}>DOCS</Link>
+                </div>
                 {/*<div className='nav-page-link'>
                     <Link to='/profile/new' onClick={closeMobileNav}>New Profile</Link>
                 </div>
@@ -63,6 +66,9 @@ export const Nav: React.FC<{
             <div id='nav-socials' className='nav-section'>
                 <div className='nav-social-link'>
                     <a href='https://polymedia.app' target='_blank'>About</a>
+                </div>
+                <div className='nav-social-link'>
+                    <a href='https://github.com/juzybits/polymedia-profile' target='_blank'>Github</a>
                 </div>
                 <div className='nav-social-link'>
                     <a href='https://twitter.com/polymedia_app' target='_blank'>Twitter</a>
