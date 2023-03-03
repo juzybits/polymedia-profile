@@ -3,18 +3,17 @@
 #nav {
     user-select: none;
     padding: 0 1em;
+    text-align: center;
     .nav-section {
         border-bottom: 1px solid #333;
         padding: 1em 0;
-        .nav-section-title {
-            margin-bottom: 1em;
-        }
     }
 }
 
 #nav-logo {
     align-items: center;
     display: flex;
+    text-align: left;
     white-space: nowrap;
     #nav-logo-link {
         #nav-logo-img {
@@ -53,22 +52,49 @@
     }
 }
 
+#nav-pages a, #nav-socials a, #nav-wallet #nav-btn {
+    color: rgb(210, 210, 210);
+    &:hover {
+        color: white;
+        color: gold;
+        text-decoration: none;
+        font-size: 1.1em;
+    }
+}
+
 #nav-wallet {
     #nav-btn {
+        font-variation-settings: 'wght' 500;
+        height: 1em;
+        line-height: 1em;
         &:hover {
+            color: lightgreen;
             cursor: pointer;
+        }
+        &.disconnect:hover {
+            color: pink;
         }
     }
 }
 
 #nav-pages {
     .nav-page-link {
-        line-height: 1.5em;
+        font-size: 1.1em;
+        height: 1.65em;
+        line-height: 1.65em;
+        font-variation-settings: 'wght' 700;
+        letter-spacing: 1px;
+        a:hover {
+            font-size: 1.1em;
+        }
     }
 }
 
 #nav-socials {
     .nav-social-link {
+        font-size: 0.8em;
+        height: 1.35em;
+        line-height: 1.35em;
     }
 }
 
