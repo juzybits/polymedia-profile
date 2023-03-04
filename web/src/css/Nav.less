@@ -4,10 +4,7 @@
     user-select: none;
     padding: 0 1em;
     text-align: center;
-    max-width: 230px;
-    @media (max-width: @mobile-width) {
-        max-width: 100%;
-    }
+    min-width: 0;
     .nav-section {
         border-bottom: 1px solid #333;
         padding: 1em 0;
@@ -19,6 +16,10 @@
     display: flex;
     text-align: left;
     white-space: nowrap;
+    justify-content: center;
+    @media (max-width: @mobile-width) {
+        justify-content: left;
+    }
     #nav-logo-link {
         #nav-logo-img {
             display: inline-block;

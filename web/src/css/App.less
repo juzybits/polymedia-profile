@@ -45,17 +45,27 @@ li {
 #layout {
     display: flex;
     flex-flow: row;
+    margin: 0 auto;
+    max-width: 1200px;
     width: 100%;
     @media (max-width: @mobile-width) {
         flex-flow: column;
     }
+    #nav {
+        flex: 1 1 15%;
+    }
     #page {
-        max-width: 600px;
         @media (max-width: @mobile-width) {
             max-width: none;
         }
         padding: 1em;
-        flex-grow: 1;
+        flex: 1 1 50%;
+    }
+    #filler-section {
+        flex: 1 1 15%;
+        @media (max-width: 1100px) {
+            display: none;
+        }
     }
 }
 

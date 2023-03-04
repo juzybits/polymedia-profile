@@ -77,6 +77,7 @@ const App: React.FC = () =>
             <Nav openConnectModal={openConnectModal} profile={profile} />
             {/* #page */}
             <Outlet context={appContext} />
+            <div id='filler-section'></div>
         </div>
 
         { suiError && <div className='sui-error'>⚠️ SUI ERROR:<br/>{suiError}</div> }
