@@ -4,6 +4,10 @@
     user-select: none;
     padding: 0 1em;
     text-align: center;
+    max-width: 230px;
+    @media (max-width: @mobile-width) {
+        max-width: 100%;
+    }
     .nav-section {
         border-bottom: 1px solid #333;
         padding: 1em 0;
@@ -52,27 +56,59 @@
     }
 }
 
-#nav-pages a, #nav-socials a, #nav-wallet #nav-btn {
+#nav-pages a, #nav-socials a, #nav-user #nav-btn-connect {
     color: rgb(210, 210, 210);
     &:hover {
-        color: white;
         color: gold;
         text-decoration: none;
         font-size: 1.1em;
     }
 }
 
-#nav-wallet {
-    #nav-btn {
+#nav-user {
+    #nav-btn-connect {
         font-variation-settings: 'wght' 500;
         height: 1em;
         line-height: 1em;
         &:hover {
-            color: lightgreen;
+            color: #6fee6f;
             cursor: pointer;
         }
-        &.disconnect:hover {
-            color: pink;
+    }
+    #nav-profile {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        &:hover {
+            cursor: pointer;
+            color: #ff6f6f;
+            #nav-profile-image-wrap img {
+                border: 4px solid #ff6f6f;
+            }
+        }
+        #nav-profile-image-wrap {
+            margin-right: 0.5em;
+            height: 55px;
+            width: 55px;
+            img {
+                background-image: url('../img/anon.webp');
+                background-size: cover;
+                height: 55px;
+                width: 55px;
+                box-sizing: border-box;
+                object-fit: cover;
+                border-radius: 50%;
+            }
+        }
+        #nav-profile-name-wrap {
+            min-width: 0;
+            overflow-wrap: break-word;
+            #nav-profile-name {
+                margin-bottom: 0.2em;
+            }
+            #nav-profile-address {
+                font-size: 0.8em;
+            }
         }
     }
 }

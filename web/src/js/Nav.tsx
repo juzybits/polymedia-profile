@@ -3,15 +3,20 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useWalletKit } from '@mysten/wallet-kit';
+import { PolymediaProfile } from '@polymedia/profile-sdk';
 
 import imgLogo from '../img/logo.png';
+import imgAnon from '../img/anon.webp';
 import '../css/Nav.less';
 
 export const Nav: React.FC<{
     openConnectModal: () => void,
-}> = ({openConnectModal}) =>
-{
-    const { currentAccount, disconnect } = useWalletKit();
+    profile: PolymediaProfile|null|undefined,
+}> = ({
+    openConnectModal,
+    profile,
+}) => {
+    const { currentAccount } = useWalletKit();
 
     const [showMobileNav, setShowMobileNav] = useState(false);
     const toggleMobileNav = () => { setShowMobileNav(!showMobileNav) };
@@ -33,15 +38,15 @@ export const Nav: React.FC<{
         </div>
 
         <div id='nav-sections-wrap' className={showMobileNav ? 'open' : ''}>
-            <div id='nav-wallet' className='nav-section'>
+            <div id='nav-user' className='nav-section'>
             {
                 !currentAccount
-                ? <span id='nav-btn' className='connect' onClick={openConnectModal}>
+                ?
+                <span id='nav-btn-connect' onClick={openConnectModal}>
                     LOG IN
-                  </span>
-                : <span id='nav-btn' className='disconnect' onClick={disconnect}>
-                    {'@' + currentAccount.slice(2, 6)}
-                  </span>
+                </span>
+                :
+                <NavProfile profile={profile} />
             }
             </div>
 
@@ -80,4 +85,29 @@ export const Nav: React.FC<{
         </div>
 
     </header>;
+}
+
+const NavProfile: React.FC<{
+    profile: PolymediaProfile|null|undefined,
+}> = ({profile}) =>
+{
+    const { currentAccount, disconnect } = useWalletKit();
+
+    if (!currentAccount) {
+        return <></>;
+    }
+
+    if (profile === undefined) {
+        return <>Loading...</>;
+    }
+
+    return <div id='nav-profile' onClick={disconnect}>
+        <div id='nav-profile-image-wrap'>
+            <img src={(profile && profile.url) || imgAnon} />
+        </div>
+        <div id='nav-profile-name-wrap'>
+            <div id='nav-profile-name'>{ profile ? profile.name : 'Anon' }</div>
+            <div id='nav-profile-address'>{'@' + currentAccount.slice(2, 6) + '..' + currentAccount.slice(-4)}</div>
+        </div>
+    </div>;
 }

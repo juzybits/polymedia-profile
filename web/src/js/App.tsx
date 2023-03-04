@@ -73,8 +73,10 @@ const App: React.FC = () =>
         />
 
         <div id='layout'>
-            <Nav openConnectModal={openConnectModal} /> {/* #nav */}
-            <Outlet context={appContext} /> {/* #page */}
+             {/* #nav */}
+            <Nav openConnectModal={openConnectModal} profile={profile} />
+            {/* #page */}
+            <Outlet context={appContext} />
         </div>
 
         { suiError && <div className='sui-error'>⚠️ SUI ERROR:<br/>{suiError}</div> }
