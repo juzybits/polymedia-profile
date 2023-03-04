@@ -111,7 +111,7 @@ export const ManageProfile: React.FC = () =>
             <p>
                 Connect your Sui wallet to get started.
             </p>
-            <button onClick={openConnectModal}>CONNECT</button>
+            <button onClick={openConnectModal}>LOG IN</button>
         </div>;
     }
     else if (profile === undefined) {
@@ -146,7 +146,7 @@ export const ManageProfile: React.FC = () =>
                 />
             </div>
             <button type='submit' className={waiting ? 'waiting' : ''} disabled={waiting}>
-                {profile===null ? 'CREATE' : 'UPDATE'}
+                {profile===null ? 'CREATE PROFILE' : 'EDIT PROFILE'}
             </button>
         </form>;
     }
