@@ -70,9 +70,6 @@ export const Nav: React.FC<{
 
             <div id='nav-socials' className='nav-section'>
                 <div className='nav-social-link'>
-                    <a href='https://polymedia.app' target='_blank'>About</a>
-                </div>
-                <div className='nav-social-link'>
                     <a href='https://github.com/juzybits/polymedia-profile' target='_blank'>Github</a>
                 </div>
                 <div className='nav-social-link'>
@@ -80,6 +77,12 @@ export const Nav: React.FC<{
                 </div>
                 <div className='nav-social-link'>
                     <a href='https://discord.gg/3ZaE69Eq78' target='_blank'>Discord</a>
+                </div>
+            </div>
+
+            <div id='nav-watermark' className='nav-section'>
+                <div className='nav-social-link'>
+                    <a href='https://polymedia.app' target='_blank'>Polymedia {new Date().getFullYear()}</a>
                 </div>
             </div>
         </div>
