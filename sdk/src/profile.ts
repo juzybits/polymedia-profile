@@ -428,9 +428,9 @@ async function sui_createProfile({
             typeArguments: [],
             arguments: [
                 registryId,
-                name,
-                url,
-                description,
+                Array.from( (new TextEncoder()).encode(name) ),
+                Array.from( (new TextEncoder()).encode(url) ),
+                Array.from( (new TextEncoder()).encode(description) ),
             ],
             gasBudget: 100000,
         }
@@ -478,9 +478,9 @@ async function sui_editProfile({
             typeArguments: [],
             arguments: [
                 profileId,
-                name,
-                url,
-                description,
+                Array.from( (new TextEncoder()).encode(name) ),
+                Array.from( (new TextEncoder()).encode(url) ),
+                Array.from( (new TextEncoder()).encode(description) ),
             ],
             gasBudget: 100000,
         }
