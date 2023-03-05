@@ -22,7 +22,7 @@ export const Docs: React.FC = () =>
 
             <li>The fields in a PP are <b>not unique</b>. Want to use "John" as your name? No problem!</li>
 
-            <li>PPs can be used <b>anywhere</b>, not just on Polymedia apps. We provide a JavaScript SDK to make it very  easy for others to integrate Polymedia Profile into their projects.</li>
+            <li>PPs can be used <b>anywhere</b>, not just on Polymedia apps. We provide a TypeScript SDK to make it very easy for others to integrate Polymedia Profile into their projects.</li>
 
             <li>Unlike name services that map a "domain" to an address, PP is built for a web3 native experience: when you are onchain, addresses are always known - what you want to find in this case is the name associated to an address.</li>
 
@@ -37,7 +37,7 @@ export const Docs: React.FC = () =>
 
             <li><a href='https://github.com/juzybits/polymedia-profile/tree/main/sui' target='_blank'>Sui Move code</a></li>
 
-            <li><a href='https://github.com/juzybits/polymedia-profile/tree/main/sdk' target='_blank'>JavaScript SDK</a></li>
+            <li><a href='https://github.com/juzybits/polymedia-profile/tree/main/sdk' target='_blank'>TypeScript SDK</a></li>
 
             <li><a href='https://github.com/juzybits/polymedia-profile/tree/main/web' target='_blank'>Web interface</a></li>
 
@@ -45,7 +45,7 @@ export const Docs: React.FC = () =>
         </p>
 
         <p>
-            Polymedia Profile is under active development. Soon the JS SDK will be published to NPM. We will be updating this page with more information. And we will add technical docs and code examples to the GitHub repository.
+            Polymedia Profile is under active development. We will be updating this page with more information. And we will add technical docs and code examples to the GitHub repository.
         </p>
 
     </div>;

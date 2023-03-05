@@ -1,3 +1,5 @@
-# Polymedia Profile: JavaScript SDK
+# Polymedia Profile: TypeScript SDK
 
-Tools to interact with Polymedia Profile objects on the Sui network.
+An SDK to interact with Polymedia Profile objects on the Sui network.
+
+Docs and code examples coming soon.

@@ -1,10 +1,11 @@
 {
     "name": "@polymedia/profile-web",
-    "author": "juzybits <https://twitter.com/juzybits>",
+    "author": "@juzybits (https://polymedia.app)",
     "private": true,
     "dependencies": {
         "@mysten/sui.js": "latest",
         "@mysten/wallet-kit": "latest",
+        "@polymedia/profile-sdk": "latest",
         "react": "18",
         "react-dom": "18",
         "react-router-dom": "6"

@@ -1,7 +1,9 @@
 {
     "name": "@polymedia/profile-sdk",
+    "description": "An SDK to interact with Polymedia Profile objects on the Sui network",
     "version": "0.1.0",
-    "description": "Tools to interact with Polymedia Profile objects on the Sui network",
+    "author": "@juzybits (https://polymedia.app)",
+    "license": "CC-BY-NC-SA-4.0",
     "main": "./dist/index.js",
     "types": "./dist/index.d.ts",
     "scripts": {
@@ -9,15 +11,13 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/juzybits/polymedia-profile.git"
+        "url": "git://github.com/juzybits/polymedia-profile.git#sdk-0.1.0"
     },
     "keywords": [
         "polymedia",
         "sui",
         "profile"
     ],
-    "author": "juzybits <https://twitter.com/juzybits>",
-    "license": "Apache-2.0",
     "dependencies": {
         "@mysten/bcs": "latest",
         "@mysten/sui.js": "latest"

@@ -1,4 +1,6 @@
-# Polymedia Profile: Sui code
+# Polymedia Profile: Sui Move
+
+Docs and code examples coming soon.
 
 ## How to use from the command line
 #### Create a registry
