@@ -1,4 +1,7 @@
 import { useEffect } from 'react';
+import { useOutletContext } from 'react-router-dom';
+
+import { AppContext } from './App';
 
 export const Docs: React.FC = () =>
 {
@@ -6,46 +9,53 @@ export const Docs: React.FC = () =>
         document.title = 'Polymedia Profile - Docs';
     }, []);
 
+    const { network, profileManager } = useOutletContext<AppContext>();
+
     return <div id='page' className='page-about'>
         <h1>
-            Docs
+            DOCS
         </h1>
         <p>
-            Polymedia Profile (PP) is a fully on-chain profile system on the Sui Network.
-            <br/><br/>
-            Conceptually, Polymedia Profiles are more similar to Discord profiles than to DNS domains. If a Sui address is like a Discord ID (unique, random), then a PP is like a Discord profile.
-            <br/><br/>
+            Polymedia Profile is a fully on-chain profile/identity system on the Sui Network.
+            <br/>
+            <br/>
+            Conceptually, it is closer to Discord profiles than to DNS domains. If a Sui address is like a Discord ID (unique, random), then a Polymedia Profile is like a Discord profile.
+            <br/>
+            <br/>
             Key facts about Polymedia Profile:
             <ol>
+                <li>Profiles are <b>free</b> to use and there is no cost associated with registering one (aside from network fees).</li>
 
-            <li>PPs are <b>free</b> to use and there is no cost associated with registering one (aside from gas).</li>
+                <li>A <i>Profile</i> object is permanently attached to the Sui address that created it. Profiles are <b>not transferable</b>.</li>
 
-            <li>The fields in a PP are <b>not unique</b>. Want to use "John" as your name? No problem!</li>
+                <li>Profile properties are <b>not unique</b>. Want to use "John" as your name? No problem!</li>
 
-            <li>PPs can be used <b>anywhere</b>, not just on Polymedia apps. We provide a TypeScript SDK to make it very easy for others to integrate Polymedia Profile into their projects.</li>
+                <li>Profiles exist inside a <i>Registry</i> object, and a Sui address can create only <b>one profile</b> per registry.</li>
 
-            <li>Unlike name services that map a "domain" to an address, PP is built for a web3 native experience: when you are onchain, addresses are always known - what you want to find in this case is the name associated to an address.</li>
+                <li>The default registry is called <i><a target="_blank" href={`https://explorer.sui.io/object/${profileManager.getRegistryId()}?network=${network}`}>polymedia-main</a></i>, and is used by all our apps. <b>Anyone</b> can create a new registry.</li>
 
-            <li>PPs exist inside a <i>Registry</i>. The default registry (used by this and all Polymedia apps) is called <i>polymedia-main</i>, but anyone can create a new registry.</li>
-
+                <li>Profiles can be used <b>anywhere</b> on Sui. We provide a <a href='https://www.npmjs.com/package/@polymedia/profile-sdk' target='_blank'>TypeScript SDK</a> to facilitate 3rd party integrations.</li>
             </ol>
         </p>
 
         <p>
-            Polymedia Profile is fully open-source:
+            Polymedia Profile is fully <b>open-source</b>:
             <ul>
+                <li><a href='https://github.com/juzybits/polymedia-profile/tree/main/sui' target='_blank'>Sui Move code</a></li>
 
-            <li><a href='https://github.com/juzybits/polymedia-profile/tree/main/sui' target='_blank'>Sui Move code</a></li>
+                <li><a href='https://github.com/juzybits/polymedia-profile/tree/main/sdk' target='_blank'>TypeScript SDK</a></li>
 
-            <li><a href='https://github.com/juzybits/polymedia-profile/tree/main/sdk' target='_blank'>TypeScript SDK</a></li>
-
-            <li><a href='https://github.com/juzybits/polymedia-profile/tree/main/web' target='_blank'>Web interface</a></li>
-
+                <li><a href='https://github.com/juzybits/polymedia-profile/tree/main/web' target='_blank'>Web interface</a></li>
             </ul>
         </p>
 
         <p>
-            Polymedia Profile is under active development. We will be updating this page with more information. And we will add technical docs and code examples to the GitHub repository.
+            Polymedia Profile is under active development. We will keep updating this page, and we will add technical docs and code examples to the GitHub repo.
+            <br/>
+            <br/>
+            Follow <a href='https://twitter.com/intent/follow?screen_name=polymedia_app' target='_blank'>@polymedia_app</a> on Twitter or join our <a href='https://discord.gg/3ZaE69Eq78' target='_blank'>Discord</a> to stay up to date.
+            <br/>
+            <br/>
         </p>
 
     </div>;
