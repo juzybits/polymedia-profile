@@ -161,10 +161,10 @@ export const ManageProfile: React.FC = () =>
     <div className='section section-info'>
         <h2>Details</h2>
         <p>
-            Profile ID: <a target="_blank" href={`https://explorer.sui.io/object/${profile.id}?network=${network}`}>{profile.id}</a>
+            Profile: <a target="_blank" href={`https://explorer.sui.io/object/${profile.id}?network=${network}`}>{profile.id}</a>
         </p>
         <p>
-            Registry ID: <a target="_blank" href={`https://explorer.sui.io/object/${profileManager.getRegistryId()}?network=${network}`}>{profileManager.getRegistryId()}</a>
+            Registry: <a target="_blank" href={`https://explorer.sui.io/object/${profileManager.getRegistryId()}?network=${network}`}>{profileManager.getRegistryId()}</a>
         </p>
     </div>;
 
@@ -181,7 +181,9 @@ const showError = (origin: string, error: any): void =>
 {
     const errorString = String(error.stack || error.message || error);
     if (errorString.includes('Transaction rejected from user') ||
-        errorString.includes('User rejection')) {
+        errorString.includes('User rejection') ||
+        errorString.includes('User Rejected the request')
+    ) {
         console.debug(`[${origin}] Cancelled by the user`);
     } else {
         notifyError(errorString);
