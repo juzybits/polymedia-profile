@@ -836,9 +836,9 @@
     nullthrows "^1.1.1"
 
 "@polymedia/profile-sdk@latest":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@polymedia/profile-sdk/-/profile-sdk-0.1.0.tgz#158d100b10ed0803bfcf6b70e15e14c11f7886d0"
-  integrity sha512-yERi36N65tWyMvaqc4zOMG2P59HUlSrHmWhB/8tNUcjsRCwmWHHFMH5awqTp3n00b3DW7O2Dr1BUcoL43Q1BoQ==
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@polymedia/profile-sdk/-/profile-sdk-0.1.1.tgz#bfd994538dec4c915a273a146276a2a806d96498"
+  integrity sha512-tJ6F29hI/q48b90NmmrLar5laCg+3Rsys3rc7kDquO9yjZN0svLoPZmWhnMcPbHYyqo16vwm9AYbzrU1eCkNPQ==
   dependencies:
     "@mysten/bcs" latest
     "@mysten/sui.js" latest
