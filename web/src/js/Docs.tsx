@@ -30,11 +30,11 @@ export const Docs: React.FC = () =>
 
                 <li>Profile properties are <b>not unique</b>. Want to use "John" as your name? No problem!</li>
 
-                <li>Profiles exist inside a <i>Registry</i> object, and a Sui address can create only <b>one profile</b> per registry.</li>
+                <li>Profiles are always included in at least one <i>Registry</i> object. A Sui address may own multiple profiles, but can only add one <i>Profile</i> to each <i>Registry</i>.</li>
 
                 <li>The default registry is called <i><a target="_blank" href={`https://explorer.sui.io/object/${profileManager.getRegistryId()}?network=${network}`}>polymedia-main</a></i>, and is used by all our apps. <b>Anyone</b> can create a new registry.</li>
 
-                <li>Profiles can be used <b>anywhere</b> on Sui. We provide a <a href='https://www.npmjs.com/package/@polymedia/profile-sdk' target='_blank'>TypeScript SDK</a> to facilitate 3rd party integrations.</li>
+                <li>Profiles can be used <b>anywhere</b> on Sui. There is a <a href='https://www.npmjs.com/package/@polymedia/profile-sdk' target='_blank'>TypeScript SDK</a> to facilitate 3rd party integrations.</li>
             </ol>
         </p>
 
@@ -50,7 +50,7 @@ export const Docs: React.FC = () =>
         </p>
 
         <p>
-            Polymedia Profile is under active development. We will keep updating this page, and we will add technical docs and code examples to the GitHub repo.
+            Polymedia Profile is under active development, and the system will evolve in response to the needs of the community.
             <br/>
             <br/>
             Follow <a href='https://twitter.com/intent/follow?screen_name=polymedia_app' target='_blank'>@polymedia_app</a> on Twitter or join our <a href='https://discord.gg/3ZaE69Eq78' target='_blank'>Discord</a> to stay up to date.

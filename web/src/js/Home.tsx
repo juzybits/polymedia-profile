@@ -25,7 +25,7 @@ export const Home: React.FC = () =>
             This web app is for users to manage their profiles on the default registry (called <i><a target="_blank" href={`https://explorer.sui.io/object/${profileManager.getRegistryId()}?network=${network}`}>polymedia-main</a></i>).
             <br/>
             <br/>
-            The code for this project is fully <a href='https://github.com/juzybits/polymedia-profile' target='_blank'>open-source</a>, and we provide a <a href='https://www.npmjs.com/package/@polymedia/profile-sdk' target='_blank'>TypeScript SDK</a> to facilitate 3rd party integrations.
+            The code is fully <a href='https://github.com/juzybits/polymedia-profile' target='_blank'>open-source</a>, and there is a <a href='https://www.npmjs.com/package/@polymedia/profile-sdk' target='_blank'>TypeScript SDK</a> to facilitate 3rd party integrations.
         </p>
         <Link to='/manage' className='btn' style={{marginRight: '0.5em'}}>MANAGE PROFILE</Link>
         <Link to='/docs' className='btn'>READ DOCS</Link>
