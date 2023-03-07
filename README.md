@@ -1,5 +1,7 @@
 # Polymedia Profile
 
+![Polymedia Profile](./web/src/img/open_graph.webp)
+
 Polymedia Profile is a fully on-chain profile/identity system on the Sui Network.
 
 Conceptually, it is closer to Discord profiles than to DNS domains. If a Sui address is like a Discord ID (unique, random), then a Polymedia Profile is like a Discord profile.
