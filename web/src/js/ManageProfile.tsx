@@ -131,7 +131,7 @@ export const ManageProfile: React.FC = () =>
             </div>
             <div className='form-field'>
                 <label>Image URL</label>
-                <input value={inputImage} type='text' maxLength={1000}
+                <input value={inputImage} type='text'
                     className={waiting ? 'waiting' : ''} disabled={waiting}
                     spellCheck='false' autoCorrect='off' autoComplete='off'
                     onChange={e => setInputImage(e.target.value)}
@@ -139,7 +139,7 @@ export const ManageProfile: React.FC = () =>
             </div>
             <div className='form-field'>
                 <label>Description</label>
-                <textarea value={inputDescription} maxLength={1000}
+                <textarea value={inputDescription} maxLength={10000}
                     className={waiting ? 'waiting' : ''} disabled={waiting}
                     spellCheck='true' autoCorrect='off' autoComplete='off'
                     onChange={e => setInputDescription(e.target.value)}
@@ -151,7 +151,7 @@ export const ManageProfile: React.FC = () =>
         </form>;
     }
 
-    const imageSection = (!profile || !inputImage) ? <></> :
+    const imageSection = !inputImage ? <></> :
     <div className='section section-image'>
         <h2>Image preview</h2>
         <img src={inputImage} />

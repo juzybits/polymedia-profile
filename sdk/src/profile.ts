@@ -429,7 +429,7 @@ async function sui_createProfile({
                 Array.from( (new TextEncoder()).encode(url) ),
                 Array.from( (new TextEncoder()).encode(description) ),
             ],
-            gasBudget: 100000,
+            gasBudget: 500000, // TODO: adjust depending on argument length
         }
     });
 
@@ -479,7 +479,7 @@ async function sui_editProfile({
                 Array.from( (new TextEncoder()).encode(url) ),
                 Array.from( (new TextEncoder()).encode(description) ),
             ],
-            gasBudget: 100000,
+            gasBudget: 500000, // TODO: adjust depending on argument length
         }
     });
 

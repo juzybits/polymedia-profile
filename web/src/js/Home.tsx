@@ -18,7 +18,7 @@ export const Home: React.FC = () =>
             HOME
         </h1>
         <p>
-            Polymedia Profile is a fully on-chain profile/identity system on the <a href='https://sui.io' target='_blank'>Sui Network</a>. It is used in all our apps, like <a href='https://chat.polymedia.app/@sui-fans' target='_blank'>Polymedia Chat</a>.
+            Polymedia Profile is a fully on-chain profile/identity system on the <a href='https://sui.io' target='_blank'>Sui Network</a> that is used in all Polymedia <a href='https://polymedia.app' target='_blank'>apps</a>.
             <br/>
             <br/>
 
