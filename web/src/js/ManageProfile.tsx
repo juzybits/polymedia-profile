@@ -179,14 +179,21 @@ export const ManageProfile: React.FC = () =>
 
 const showError = (origin: string, error: any): void =>
 {
-    const errorString = String(error.stack || error.message || error);
-    if (errorString.includes('Transaction rejected from user') ||
-        errorString.includes('User rejection') ||
-        errorString.includes('User Rejected the request')
+    let errorString = String(error.stack || error.message || error);
+    if (errorString.includes('Transaction rejected from user') || // Sui, Ethos
+        errorString.includes('User rejection') || // Suiet
+        errorString.includes('User Rejected the request') // Martian
     ) {
         console.debug(`[${origin}] Cancelled by the user`);
-    } else {
-        notifyError(errorString);
-        console.warn(`[${origin}] Error: ${errorString}`);
+        return;
     }
+
+    if (errorString.includes('Cannot find gas coin for signer address') || // Sui
+        errorString.includes('SUI balance is insufficient to pay for') // Suiet
+    ) {
+        errorString = "Your wallet doesn't have enough SUI to pay for the transaction";
+    }
+
+    notifyError(errorString);
+    console.warn(`[${origin}] Error: ${errorString}`);
 }
