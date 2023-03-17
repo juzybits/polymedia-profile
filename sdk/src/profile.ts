@@ -34,26 +34,16 @@ import {
 export const POLYMEDIA_PROFILE_PACKAGE_ID_DEVNET = '0xddbbc1961d48158522cc91eb52e238bd7504108c';
 export const POLYMEDIA_PROFILE_REGISTRY_ID_DEVNET = '0x9189bb5841f9326528e27e488afc6a52ef04f3bf';
 
-export const POLYMEDIA_PROFILE_PACKAGE_ID_TESTNET = '0x123';
-export const POLYMEDIA_PROFILE_REGISTRY_ID_TESTNET = '0x123';
+export const POLYMEDIA_PROFILE_PACKAGE_ID_TESTNET = '0x123'; // TODO
+export const POLYMEDIA_PROFILE_REGISTRY_ID_TESTNET = '0x123'; // TODO
 
-const RPC_DEVNET_PRIVATE = new JsonRpcProvider(new Connection({
+const RPC_DEVNET = new JsonRpcProvider(new Connection({
     fullnode: 'https://node.shinami.com/api/v1/ad388d02ad86069fa8b32278b73709e9',
     faucet: 'https://faucet.devnet.sui.io/gas',
 }));
 
-const RPC_TESTNET_PRIVATE = new JsonRpcProvider(new Connection({ // TODO
-    fullnode: 'https://fullnode.testnet.sui.io:443/',
-    faucet: 'https://faucet.testnet.sui.io/gas',
-}));
-
-const RPC_DEVNET_PUBLIC = new JsonRpcProvider(new Connection({
-    fullnode: 'https://fullnode.devnet.sui.io:443/',
-    faucet: 'https://faucet.devnet.sui.io/gas',
-}));
-
-const RPC_TESTNET_PUBLIC = new JsonRpcProvider(new Connection({
-    fullnode: 'https://fullnode.testnet.sui.io:443/',
+const RPC_TESTNET = new JsonRpcProvider(new Connection({ // TODO
+    fullnode: '...',
     faucet: 'https://faucet.testnet.sui.io/gas',
 }));
 
@@ -79,8 +69,7 @@ type SuiSignAndExecuteTransactionMethod = (
  */
 export class ProfileManager {
     #cache: Map<SuiAddress, PolymediaProfile|null> = new Map();
-    #rpc_private: JsonRpcProvider;
-    #rpc_public: JsonRpcProvider;
+    #rpc: JsonRpcProvider;
     #packageId: SuiAddress;
     #registryId: SuiAddress;
 
@@ -90,13 +79,11 @@ export class ProfileManager {
         registryId?: SuiAddress
     }) {
         if (network === 'devnet') {
-            this.#rpc_private = RPC_DEVNET_PRIVATE;
-            this.#rpc_public = RPC_DEVNET_PUBLIC;
+            this.#rpc = RPC_DEVNET;
             this.#packageId = packageId || POLYMEDIA_PROFILE_PACKAGE_ID_DEVNET;
             this.#registryId = registryId || POLYMEDIA_PROFILE_REGISTRY_ID_DEVNET;
         } else if (network === 'testnet') {
-            this.#rpc_private = RPC_TESTNET_PRIVATE;
-            this.#rpc_public = RPC_TESTNET_PUBLIC;
+            this.#rpc = RPC_TESTNET;
             this.#packageId = packageId || POLYMEDIA_PROFILE_PACKAGE_ID_TESTNET;
             this.#registryId = registryId || POLYMEDIA_PROFILE_REGISTRY_ID_TESTNET;
         } else {
@@ -232,7 +219,7 @@ export class ProfileManager {
         const addressBatches = chunkArray(lookupAddresses, 50);
         const promises = addressBatches.map(async batch => {
             const lookupResults = await sui_fetchProfileObjectIds({
-                rpc: this.#rpc_public,
+                rpc: this.#rpc,
                 packageId: this.#packageId,
                 registryId: this.#registryId,
                 lookupAddresses: batch,
@@ -250,7 +237,7 @@ export class ProfileManager {
     }): Promise<PolymediaProfile[]>
     {
         return sui_fetchProfileObjects({
-            rpc: this.#rpc_private,
+            rpc: this.#rpc,
             objectIds,
         });
     }
@@ -319,7 +306,6 @@ function sui_fetchProfileObjectIds({
         } as MoveCallTransaction,
     } as UnserializedSignableTransaction;
 
-    // NOTE: the private RPC can't handle devInspectTransaction ('429 Too Many Requests')
     return rpc.devInspectTransaction(callerAddress, signableTxn)
     .then((resp: DevInspectResults) => {
         if (resp.effects.status.status == 'success') {
