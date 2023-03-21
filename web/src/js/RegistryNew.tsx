@@ -3,6 +3,7 @@ import { useOutletContext } from 'react-router-dom';
 import { useWalletKit } from '@mysten/wallet-kit';
 
 import { AppContext } from './App';
+import { notifyError } from './components/Notification';
 
 export function RegistryNew() {
     useEffect(() => {
@@ -15,7 +16,6 @@ export function RegistryNew() {
 
     const [inputName, setInputName] = useState('');
     const [waiting, setWaiting] = useState(false);
-    const [suiError, setSuiError] = useState('');
 
     const onSubmitCreateRegistry = async (e: SyntheticEvent) => {
         e.preventDefault();
@@ -33,7 +33,7 @@ export function RegistryNew() {
             });
             console.debug('[onSubmitCreateRegistry] New registry:', registryObject);
         } catch(error: any) {
-            setSuiError(error.message);
+            notifyError(error.message);
         }
         setWaiting(false);
     };
@@ -52,7 +52,5 @@ export function RegistryNew() {
             <button type='submit' className={waiting ? 'primary waiting' : 'primary'} disabled={waiting}
                 >CREATE</button>
         </form>
-
-        { suiError && <div className='error'>{suiError}</div> }
     </div>; // end of #page
 }

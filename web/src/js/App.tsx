@@ -4,6 +4,7 @@ import { ConnectModal, WalletKitProvider, useWalletKit } from '@mysten/wallet-ki
 import { PolymediaProfile, ProfileManager } from '@polymedia/profile-sdk';
 
 import { Nav } from './Nav';
+import { notifyError } from './components/Notification';
 import '../css/App.less';
 
 export type AppContext = {
@@ -26,7 +27,6 @@ const App: React.FC = () =>
     const [profile, setProfile] = useState<PolymediaProfile|null|undefined>(undefined);
 
     const [showConnectModal, setShowConnectModal] = useState(false);
-    const [suiError, setSuiError] = useState('');
 
     useEffect(() => {
         reloadProfile();
@@ -49,7 +49,7 @@ const App: React.FC = () =>
         .catch((error: any) => {
             const errorString = String(error.stack || error.message || error);
             console.warn('[reloadProfile] Error:', errorString);
-            setSuiError(errorString);
+            notifyError(errorString);
             return undefined;
         })
     };
@@ -79,7 +79,5 @@ const App: React.FC = () =>
             <Outlet context={appContext} />
             <div id='filler-section'></div>
         </div>
-
-        { suiError && <div className='sui-error'>⚠️ SUI ERROR:<br/>{suiError}</div> }
     </>;
 }
