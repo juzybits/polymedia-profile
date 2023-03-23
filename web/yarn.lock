@@ -841,10 +841,10 @@
     chrome-trace-event "^1.0.2"
     nullthrows "^1.1.1"
 
-"@polymedia/profile-sdk@0.1.9":
-  version "0.1.9"
-  resolved "https://registry.yarnpkg.com/@polymedia/profile-sdk/-/profile-sdk-0.1.9.tgz#382e6a9c45b3b3994ea04452116a74d727a5b1bc"
-  integrity sha512-kmMX5JCLdwsZ+oVKkkkh68pG77ekUsDsvamHgc4/3xKvMTjL5Y+b3BBvEygV0Z8Ze1XrFZ38IUeeuiTgmmeftA==
+"@polymedia/profile-sdk@0.1.12":
+  version "0.1.12"
+  resolved "https://registry.yarnpkg.com/@polymedia/profile-sdk/-/profile-sdk-0.1.12.tgz#e0fb1631989a12f66842511fc304c90b0acb5b55"
+  integrity sha512-iVUX8sGTV8X0e9Dm65Pt4zLf3yyY5aYi1lZe0mkGSVgO4UUoFvgUCvhsZERk8ukLJMr2bZHTTrpaTs/ivZhwCg==
   dependencies:
     "@mysten/bcs" "^0.6.1"
     "@mysten/sui.js" "^0.29.1"
