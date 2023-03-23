@@ -255,6 +255,13 @@ function fetchObjects({ rpc, objectIds }: {
     objectIds: SuiAddress[],
 }): Promise<SuiObject[]>
 {
+
+// TODO: DELETE THIS TEMPORARY HACK (devnet RPC is down, Shinami RPC has disabled batch queries)
+rpc = new JsonRpcProvider(new Connection({
+    fullnode: 'https://fullnode.devnet.vincagame.com:443',
+    faucet: 'https://faucet.devnet.sui.io/gas',
+}));
+
     return rpc.getObjectBatch(
         objectIds
     ).then((objDataResps: GetObjectDataResponse[]) => {
