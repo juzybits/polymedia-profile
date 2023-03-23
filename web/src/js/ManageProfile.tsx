@@ -136,6 +136,7 @@ export const ManageProfile: React.FC = () =>
                     spellCheck='false' autoCorrect='off' autoComplete='off'
                     onChange={e => setInputImage(e.target.value)}
                 />
+                <div className='field-info'>Right click the image, then click 'Copy Image Address'. To use a picture from your device, upload it to a service like <a href='https://imgur.com/upload' target='_blank'>imgur.com</a>, then copy the image address.</div>
             </div>
             <div className='form-field'>
                 <label>Description</label>
