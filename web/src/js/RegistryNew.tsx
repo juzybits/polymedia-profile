@@ -10,7 +10,7 @@ export function RegistryNew() {
         document.title = 'Polymedia Profile - New Registry';
     }, []);
 
-    const { currentAccount, signAndExecuteTransaction } = useWalletKit();
+    const { currentAccount, signAndExecuteTransactionBlock } = useWalletKit();
 
     const { profileManager, openConnectModal } = useOutletContext<AppContext>();
 
@@ -27,8 +27,7 @@ export function RegistryNew() {
         setWaiting(true);
         try {
             const registryObject = await profileManager.createRegistry({
-                // @ts-ignore
-                signAndExecuteTransaction,
+                signAndExecuteTransactionBlock,
                 registryName: inputName
             });
             console.debug('[onSubmitCreateRegistry] New registry:', registryObject);

@@ -17,29 +17,28 @@ import { BCS, getSuiMoveConfig } from '@mysten/bcs';
 import {
     Connection,
     DevInspectResults,
-    ExecuteTransactionRequestType,
-    GetObjectDataResponse,
     JsonRpcProvider,
-    MoveCallTransaction,
+    ObjectOwner,
     OwnedObjectRef,
-    SignableTransaction,
     SuiAddress,
-    SuiExecuteTransactionResponse,
     SuiMoveObject,
-    SuiObject,
+    SuiObjectResponse,
+    SuiTransactionBlockResponse,
+    TransactionBlock,
     TransactionEffects,
-    UnserializedSignableTransaction,
 } from '@mysten/sui.js';
 
-export const POLYMEDIA_PROFILE_PACKAGE_ID_DEVNET = '0xddbbc1961d48158522cc91eb52e238bd7504108c';
-export const POLYMEDIA_PROFILE_REGISTRY_ID_DEVNET = '0x9189bb5841f9326528e27e488afc6a52ef04f3bf';
+import { SuiSignAndExecuteTransactionBlockMethod } from '@mysten/wallet-standard';
+
+export const POLYMEDIA_PROFILE_PACKAGE_ID_DEVNET = '0x4f1adf75e641d6acf54af5493c13fdd1a4b84a65bd4e3676ab90c2b45470ce22';
+export const POLYMEDIA_PROFILE_REGISTRY_ID_DEVNET = '0x153e5042c6556c98dbc22d14375efbe5e937eb2a0618d513a0682a5f3f99d6e9';
 
 export const POLYMEDIA_PROFILE_PACKAGE_ID_TESTNET = '0x123'; // TODO
 export const POLYMEDIA_PROFILE_REGISTRY_ID_TESTNET = '0x123'; // TODO
 
 const RPC_DEVNET = new JsonRpcProvider(new Connection({
     fullnode: 'https://node.shinami.com/api/v1/ad388d02ad86069fa8b32278b73709e9',
-    // fullnode: 'https://fullnode.devnet.sui.io:443/',
+    // fullnode: 'https://fullnode.devnet.sui.io:443',
     faucet: 'https://faucet.devnet.sui.io/gas',
 }));
 
@@ -58,13 +57,9 @@ export type PolymediaProfile = {
     url: string, // image URL
     description: string,
     owner: SuiAddress,
-    suiObject: SuiObject,
+    previousTx: string,
+    suiObject: SuiMoveObject,
 }
-
-type SuiSignAndExecuteTransactionMethod = (
-    transaction: SignableTransaction,
-    requestType?: ExecuteTransactionRequestType,
-) => Promise<SuiExecuteTransactionResponse>;
 
 /**
  * Helps you interact with the `polymedia_profile` Sui package
@@ -166,27 +161,27 @@ export class ProfileManager {
         return profile !== null;
     }
 
-    public createRegistry({ signAndExecuteTransaction, registryName }: {
-        signAndExecuteTransaction: SuiSignAndExecuteTransactionMethod,
+    public createRegistry({ signAndExecuteTransactionBlock, registryName }: {
+        signAndExecuteTransactionBlock: SuiSignAndExecuteTransactionBlockMethod,
         registryName: string,
     }): Promise<OwnedObjectRef>
     {
         return sui_createRegistry({
-            signAndExecuteTransaction,
+            signAndExecuteTransactionBlock,
             packageId: this.#packageId,
             registryName,
         });
     }
 
-    public createProfile({ signAndExecuteTransaction, name, url='', description='' }: {
-        signAndExecuteTransaction: SuiSignAndExecuteTransactionMethod,
+    public createProfile({ signAndExecuteTransactionBlock, name, url='', description='' }: {
+        signAndExecuteTransactionBlock: SuiSignAndExecuteTransactionBlockMethod,
         name: string,
         url?: string,
         description?: string,
     }): Promise<SuiAddress>
     {
         return sui_createProfile({
-            signAndExecuteTransaction,
+            signAndExecuteTransactionBlock,
             packageId: this.#packageId,
             registryId: this.#registryId,
             name,
@@ -195,16 +190,16 @@ export class ProfileManager {
         });
     }
 
-    public editProfile({ signAndExecuteTransaction, profile, name, url='', description='' }: {
-        signAndExecuteTransaction: SuiSignAndExecuteTransactionMethod,
+    public editProfile({ signAndExecuteTransactionBlock, profile, name, url='', description='' }: {
+        signAndExecuteTransactionBlock: SuiSignAndExecuteTransactionBlockMethod,
         profile: PolymediaProfile,
         name: string,
         url?: string,
         description?: string,
-    }): Promise<SuiExecuteTransactionResponse>
+    }): Promise<SuiTransactionBlockResponse>
     {
         return sui_editProfile({
-            signAndExecuteTransaction,
+            signAndExecuteTransactionBlock,
             profileId: profile.id,
             packageId: this.#packageId,
             name,
@@ -247,32 +242,6 @@ export class ProfileManager {
 
 /* Sui RPC calls and signed transactions */
 
-/**
- * Generic function to fetch Sui objects
- */
-function fetchObjects({ rpc, objectIds }: {
-    rpc: JsonRpcProvider,
-    objectIds: SuiAddress[],
-}): Promise<SuiObject[]>
-{
-
-// TODO: DELETE THIS TEMPORARY HACK (devnet RPC is down, Shinami RPC has disabled batch queries)
-rpc = new JsonRpcProvider(new Connection({
-    fullnode: 'https://fullnode.devnet.vincagame.com:443',
-    faucet: 'https://faucet.devnet.sui.io/gas',
-}));
-
-    return rpc.getObjectBatch(
-        objectIds
-    ).then((objDataResps: GetObjectDataResponse[]) => {
-        const suiObjects: SuiObject[] = [];
-        for (const obj of objDataResps)
-            if (obj.status == 'Exists')
-                suiObjects.push(obj.details as SuiObject);
-        return suiObjects;
-    });
-}
-
 // Register a custom struct type for Sui 'Binary Canonical (de)Serialization'
 const bcs = new BCS( getSuiMoveConfig() );
 const LookupResult = {
@@ -299,28 +268,25 @@ function sui_fetchProfileObjectIds({
     lookupAddresses: SuiAddress[],
 }): Promise<Array<TypeOfLookupResult>>
 {
-    const callerAddress = '0x7777777777777777777777777777777777777777';
+    const tx = new TransactionBlock();
+    tx.moveCall({
+        target: `${packageId}::profile::get_profiles`,
+        typeArguments: [],
+        arguments: [
+            tx.object(registryId),
+            tx.pure(lookupAddresses),
+        ],
+    });
 
-    const signableTxn = {
-        kind: 'moveCall',
-        data: {
-            packageObjectId: packageId,
-            module: 'profile',
-            function: 'get_profiles',
-            typeArguments: [],
-            arguments: [
-                registryId,
-                lookupAddresses,
-            ],
-        } as MoveCallTransaction,
-    } as UnserializedSignableTransaction;
-
-    return rpc.devInspectTransaction(callerAddress, signableTxn)
+    return rpc.devInspectTransactionBlock({
+        transactionBlock: tx,
+        sender: '0x7777777777777777777777777777777777777777777777777777777777777777',
+    })
     .then((resp: DevInspectResults) => {
         if (resp.effects.status.status == 'success') {
             // Deserialize the returned value into an array of LookupResult objects
             // @ts-ignore
-            const returnValue: any[] = resp.results.Ok[0][1].returnValues[0]; // grab the 1st and only tuple
+            const returnValue: any[] = resp.results[0].returnValues[0]; // grab the 1st and only tuple
             const valueType: string = returnValue[1];
             const valueData = Uint8Array.from(returnValue[0]);
             const lookupResults: Array<TypeOfLookupResult> = bcs.de(valueType, valueData, 'hex');
@@ -342,21 +308,30 @@ function sui_fetchProfileObjects({ rpc, objectIds }: {
     objectIds: SuiAddress[],
 }): Promise<PolymediaProfile[]>
 {
-    return fetchObjects({
-        rpc, objectIds
+    return rpc.multiGetObjects({
+        ids: objectIds,
+        options: {
+            showContent: true,
+            showOwner: true,
+            showPreviousTransaction: true,
+        },
     })
-    .then((objects: SuiObject[]) => {
+    .then((resps: SuiObjectResponse[]) => {
         const profiles: PolymediaProfile[] = [];
-        for (const obj of objects) {
-            const objData = obj.data as SuiMoveObject;
-            const objOwner = obj.owner as { AddressOwner: SuiAddress };
+        for (const resp of resps) {
+            if (resp.error || !resp.data)
+                continue;
+            const objData = resp.data.content as SuiMoveObject;
+            const objOwner = resp.data.owner as ObjectOwner;
             profiles.push({
                 id: objData.fields.id.id,
                 name: objData.fields.name,
                 url: objData.fields.url,
                 description: objData.fields.description,
+                // @ts-ignore
                 owner: objOwner.AddressOwner,
-                suiObject: obj,
+                previousTx: resp.data.previousTransaction||'',
+                suiObject: objData,
             });
         }
         return profiles;
@@ -367,34 +342,37 @@ function sui_fetchProfileObjects({ rpc, objectIds }: {
 }
 
 function sui_createRegistry({
-    signAndExecuteTransaction,
+    signAndExecuteTransactionBlock,
     packageId,
     registryName,
 } : {
-    signAndExecuteTransaction: SuiSignAndExecuteTransactionMethod,
+    signAndExecuteTransactionBlock: SuiSignAndExecuteTransactionBlockMethod,
     packageId: SuiAddress,
     registryName: string,
 }): Promise<OwnedObjectRef>
 {
-    return signAndExecuteTransaction({
-        kind: 'moveCall',
-        data: {
-            packageObjectId: packageId,
-            module: 'profile',
-            function: 'create_registry',
-            typeArguments: [],
-            arguments: [
-                registryName,
-            ],
-            gasBudget: 10000,
-        }
+    const tx = new TransactionBlock();
+    tx.moveCall({
+        target: `${packageId}::profile::create_registry`,
+        typeArguments: [],
+        arguments: [
+            tx.pure(Array.from( (new TextEncoder()).encode(registryName) )),
+        ],
+    });
+
+    // @ts-ignore
+    return signAndExecuteTransactionBlock({
+        transactionBlock: tx,
+        options: {
+            showEffects: true,
+        },
     })
     .then(resp => {
         // @ts-ignore
         //                  Sui/Ethos || Suiet
         const effects = (resp.effects || resp.EffectsCert?.effects?.effects) as TransactionEffects;
         if (effects.status.status === 'success') {
-            if (effects.created?.length === 1) {
+            if (effects.created?.length === 1) { // TODO: test
                 return effects.created[0] as OwnedObjectRef;
             } else { // Should never happen
                 throw new Error('New registry object missing from response: ' + JSON.stringify(resp));
@@ -409,14 +387,14 @@ function sui_createRegistry({
 }
 
 async function sui_createProfile({
-    signAndExecuteTransaction,
+    signAndExecuteTransactionBlock,
     packageId,
     registryId,
     name,
     url = '',
     description = '',
 } : {
-    signAndExecuteTransaction: SuiSignAndExecuteTransactionMethod,
+    signAndExecuteTransactionBlock: SuiSignAndExecuteTransactionBlockMethod,
     packageId: SuiAddress,
     registryId: SuiAddress,
     name: string,
@@ -424,22 +402,26 @@ async function sui_createProfile({
     description?: string,
 }): Promise<SuiAddress>
 {
+    const tx = new TransactionBlock();
+    tx.moveCall({
+        target: `${packageId}::profile::create_profile`,
+        typeArguments: [],
+        arguments: [
+            tx.object(registryId),
+            tx.pure(Array.from( (new TextEncoder()).encode(name) )),
+            tx.pure(Array.from( (new TextEncoder()).encode(url) )),
+            tx.pure(Array.from( (new TextEncoder()).encode(description) )),
+        ],
+    });
+
+    // @ts-ignore
     // Creates 2 objects: the profile (owned by the caller) and a dynamic field (inside the registry's table)
-    const resp = await signAndExecuteTransaction({
-        kind: 'moveCall',
-        data: {
-            packageObjectId: packageId,
-            module: 'profile',
-            function: 'create_profile',
-            typeArguments: [],
-            arguments: [
-                registryId,
-                Array.from( (new TextEncoder()).encode(name) ),
-                Array.from( (new TextEncoder()).encode(url) ),
-                Array.from( (new TextEncoder()).encode(description) ),
-            ],
-            gasBudget: 500000, // TODO: adjust depending on argument length
-        }
+    const resp = await signAndExecuteTransactionBlock({
+        transactionBlock: tx,
+        options: {
+            showEffects: true,
+            showEvents: true,
+        },
     });
 
     // @ts-ignore
@@ -450,46 +432,49 @@ async function sui_createProfile({
         throw new Error(effects.status.error);
     }
     // Extract the new profile object ID from the 'EventCreateProfile' event
-    for (const event of effects.events||[]) {
-        if ('moveEvent' in event) {
-            return event.moveEvent.fields.profile_id;
-        }
+    if (resp.events)
+        for (const event of resp.events) {
+            if (event.type.endsWith('::profile::EventCreateProfile'))
+                return event.parsedJson?.profile_id;
     }
     // Should never happen:
     throw new Error("Transaction was successful, but can't find the new profile object ID in the response: " + JSON.stringify(resp));
 }
 
 async function sui_editProfile({
-    signAndExecuteTransaction,
+    signAndExecuteTransactionBlock,
     profileId,
     packageId,
     name,
     url = '',
     description = '',
 } : {
-    signAndExecuteTransaction: SuiSignAndExecuteTransactionMethod,
+    signAndExecuteTransactionBlock: SuiSignAndExecuteTransactionBlockMethod,
     profileId: SuiAddress,
     packageId: SuiAddress,
     name: string,
     url?: string,
     description?: string,
-}): Promise<SuiExecuteTransactionResponse>
+}): Promise<SuiTransactionBlockResponse>
 {
-    const resp = await signAndExecuteTransaction({
-        kind: 'moveCall',
-        data: {
-            packageObjectId: packageId,
-            module: 'profile',
-            function: 'edit_profile',
-            typeArguments: [],
-            arguments: [
-                profileId,
-                Array.from( (new TextEncoder()).encode(name) ),
-                Array.from( (new TextEncoder()).encode(url) ),
-                Array.from( (new TextEncoder()).encode(description) ),
-            ],
-            gasBudget: 500000, // TODO: adjust depending on argument length
-        }
+    const tx = new TransactionBlock();
+    tx.moveCall({
+        target: `${packageId}::profile::edit_profile`,
+        typeArguments: [],
+        arguments: [
+            tx.object(profileId),
+            tx.pure(Array.from( (new TextEncoder()).encode(name) )),
+            tx.pure(Array.from( (new TextEncoder()).encode(url) )),
+            tx.pure(Array.from( (new TextEncoder()).encode(description) )),
+        ],
+    });
+
+    // @ts-ignore
+    const resp = await signAndExecuteTransactionBlock({
+        transactionBlock: tx,
+        options: {
+            showEffects: true,
+        },
     });
 
     // @ts-ignore

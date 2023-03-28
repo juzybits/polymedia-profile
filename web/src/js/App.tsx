@@ -38,7 +38,7 @@ const App: React.FC = () =>
             return undefined;
         }
         return await profileManager.getProfile({
-            lookupAddress: currentAccount,
+            lookupAddress: currentAccount.address,
             useCache: false,
         })
         .then((result: PolymediaProfile|null) => {

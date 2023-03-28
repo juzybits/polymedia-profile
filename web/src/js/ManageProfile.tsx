@@ -10,7 +10,7 @@ export const ManageProfile: React.FC = () =>
 {
     /* State */
 
-    const { currentAccount, signAndExecuteTransaction } = useWalletKit();
+    const { currentAccount, signAndExecuteTransactionBlock } = useWalletKit();
 
     const { network, profile, profileManager, openConnectModal, reloadProfile } = useOutletContext<AppContext>();
 
@@ -47,8 +47,7 @@ export const ManageProfile: React.FC = () =>
         setWaiting(true);
         try {
             const profileObjectId = await profileManager.createProfile({
-                // @ts-ignore
-                signAndExecuteTransaction,
+                signAndExecuteTransactionBlock,
                 name: inputName,
                 url: inputImage,
                 description: inputDescription,
@@ -66,6 +65,20 @@ export const ManageProfile: React.FC = () =>
         setWaiting(false);
     };
 
+    // Deal with RPC lag by retrying until we get the updated profile
+    const reloadProfileUntilUpdated = async(oldTx: string) => {
+        const updatedProfile = await reloadProfile();
+        if (!updatedProfile) {
+            notifyError('[reloadProfileUntilUpdated] Failed to fetch the updated profile');
+            setWaiting(false);
+            return;
+        }
+        if (updatedProfile.previousTx == oldTx) { // Still not updated. Retry.
+            setTimeout(reloadProfileUntilUpdated, 1000, oldTx);
+            return;
+        }
+        setWaiting(false);
+    };
     const onSubmitEditProfile = async (e: SyntheticEvent) => {
         e.preventDefault();
         if (!currentAccount) {
@@ -79,8 +92,7 @@ export const ManageProfile: React.FC = () =>
         setWaiting(true);
         try {
             const profileObjectId = await profileManager.editProfile({
-                // @ts-ignore
-                signAndExecuteTransaction,
+                signAndExecuteTransactionBlock,
                 profile: profile,
                 name: inputName,
                 url: inputImage,
@@ -88,19 +100,11 @@ export const ManageProfile: React.FC = () =>
             });
             console.debug('[onSubmitEditProfile] Result:', profileObjectId);
             notifyOkay('SUCCESS');
-
-            const oldProfileVersion = profile.suiObject.reference.version;
-            do {
-                // Deal with RPC lag by retrying until we get the updated profile
-                const updatedProfile = await reloadProfile();
-                if (updatedProfile && updatedProfile.suiObject.reference.version != oldProfileVersion) {
-                    break;
-                }
-            } while (true);
+            reloadProfileUntilUpdated(profile.previousTx)
         } catch(error: any) {
             showError('onSubmitEditProfile', error);
+            setWaiting(false);
         }
-        setWaiting(false);
     };
 
     /* HTML */

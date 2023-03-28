@@ -110,7 +110,7 @@ const NavProfile: React.FC<{
         </div>
         <div id='nav-profile-name-wrap'>
             <div id='nav-profile-name'>{ profile ? profile.name : 'Anon' }</div>
-            <div id='nav-profile-address'>{'@' + currentAccount.slice(2, 6) + '..' + currentAccount.slice(-4)}</div>
+            <div id='nav-profile-address'>{'@' + currentAccount.address.slice(2, 6) + '..' + currentAccount.address.slice(-4)}</div>
         </div>
     </div>;
 }
