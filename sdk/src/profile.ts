@@ -37,8 +37,8 @@ export const POLYMEDIA_PROFILE_PACKAGE_ID_TESTNET = '0x123'; // TODO
 export const POLYMEDIA_PROFILE_REGISTRY_ID_TESTNET = '0x123'; // TODO
 
 const RPC_DEVNET = new JsonRpcProvider(new Connection({
-    fullnode: 'https://node.shinami.com/api/v1/ad388d02ad86069fa8b32278b73709e9',
-    // fullnode: 'https://fullnode.devnet.sui.io:443',
+    // fullnode: 'https://node.shinami.com/api/v1/ad388d02ad86069fa8b32278b73709e9',
+    fullnode: 'https://fullnode.devnet.sui.io:443',
     faucet: 'https://faucet.devnet.sui.io/gas',
 }));
 
@@ -213,7 +213,7 @@ export class ProfileManager {
     }): Promise<Map<SuiAddress,SuiAddress>>
     {
         const results = new Map<SuiAddress, SuiAddress>();
-        const addressBatches = chunkArray(lookupAddresses, 50);
+        const addressBatches = chunkArray(lookupAddresses, 30);
         const promises = addressBatches.map(async batch => {
             const lookupResults = await sui_fetchProfileObjectIds({
                 rpc: this.#rpc,
