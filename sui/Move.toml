@@ -1,6 +1,5 @@
 [package]
 name = "PolymediaProfile"
-published-at = "0x4f1adf75e641d6acf54af5493c13fdd1a4b84a65bd4e3676ab90c2b45470ce22"
 version = "0.0.1"
 authors = ["juzybits <https://twitter.com/juzybits>"]
 

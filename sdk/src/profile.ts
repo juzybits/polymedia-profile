@@ -13,6 +13,7 @@
 
 */
 
+import { SuiSignAndExecuteTransactionBlockMethod } from '@mysten/wallet-standard';
 import { BCS, getSuiMoveConfig } from '@mysten/bcs';
 import {
     Connection,
@@ -28,23 +29,32 @@ import {
     TransactionEffects,
 } from '@mysten/sui.js';
 
-import { SuiSignAndExecuteTransactionBlockMethod } from '@mysten/wallet-standard';
+export const POLYMEDIA_PROFILE_PACKAGE_ID_LOCALNET = '0xdbba545e627c16abea67de01676a22968cb9d6c170103c72e54a1412b2df83e2';
+export const POLYMEDIA_PROFILE_REGISTRY_ID_LOCALNET = '0x342dfc1556de78f6e69e268dd0e6027b5181c8f076c91c348158366314d30970';
 
-export const POLYMEDIA_PROFILE_PACKAGE_ID_DEVNET = '0x4f1adf75e641d6acf54af5493c13fdd1a4b84a65bd4e3676ab90c2b45470ce22';
-export const POLYMEDIA_PROFILE_REGISTRY_ID_DEVNET = '0x153e5042c6556c98dbc22d14375efbe5e937eb2a0618d513a0682a5f3f99d6e9';
+export const POLYMEDIA_PROFILE_PACKAGE_ID_DEVNET = '0x936cbf87c7a06afe4c408ac4920b33d221adc317c179549bdc8018312c52d344';
+export const POLYMEDIA_PROFILE_REGISTRY_ID_DEVNET = '0x8055d286a07bf85159662acbadc4df64105352362a3da849bc73d4be6fc39481';
 
 export const POLYMEDIA_PROFILE_PACKAGE_ID_TESTNET = '0x123'; // TODO
 export const POLYMEDIA_PROFILE_REGISTRY_ID_TESTNET = '0x123'; // TODO
 
+const RPC_LOCALNET = new JsonRpcProvider(new Connection({
+    fullnode: 'http://127.0.0.1:9000',
+    faucet: 'http://127.0.0.1:9123',
+}));
+
 const RPC_DEVNET = new JsonRpcProvider(new Connection({
-    // fullnode: 'https://node.shinami.com/api/v1/ad388d02ad86069fa8b32278b73709e9',
     fullnode: 'https://fullnode.devnet.sui.io:443',
+    // fullnode: 'https://node.shinami.com/api/v1/ad388d02ad86069fa8b32278b73709e9',
+    // fullnode: 'https://sui-devnet-endpoint.blockvision.org',
+    // fullnode: 'https://fullnode.devnet.vincagame.com:443',
     faucet: 'https://faucet.devnet.sui.io/gas',
 }));
 
 const RPC_TESTNET = new JsonRpcProvider(new Connection({
-    // fullnode: '...',
-    fullnode: 'https://fullnode.testnet.sui.io:443/',
+    fullnode: 'https://fullnode.testnet.sui.io:443',
+    // fullnode: 'https://sui-testnet-endpoint.blockvision.org',
+    // fullnode: 'https://fullnode.testnet.vincagame.com:443',
     faucet: 'https://faucet.testnet.sui.io/gas',
 }));
 
@@ -54,7 +64,7 @@ const RPC_TESTNET = new JsonRpcProvider(new Connection({
 export type PolymediaProfile = {
     id: SuiAddress,
     name: string,
-    url: string, // image URL
+    imageUrl: string,
     description: string,
     owner: SuiAddress,
     previousTx: string,
@@ -75,7 +85,11 @@ export class ProfileManager {
         packageId?: SuiAddress,
         registryId?: SuiAddress
     }) {
-        if (network === 'devnet') {
+        if (network === 'localnet') {
+            this.#rpc = RPC_LOCALNET;
+            this.#packageId = packageId || POLYMEDIA_PROFILE_PACKAGE_ID_LOCALNET;
+            this.#registryId = registryId || POLYMEDIA_PROFILE_REGISTRY_ID_LOCALNET;
+        } else if (network === 'devnet') {
             this.#rpc = RPC_DEVNET;
             this.#packageId = packageId || POLYMEDIA_PROFILE_PACKAGE_ID_DEVNET;
             this.#registryId = registryId || POLYMEDIA_PROFILE_REGISTRY_ID_DEVNET;
@@ -173,10 +187,10 @@ export class ProfileManager {
         });
     }
 
-    public createProfile({ signAndExecuteTransactionBlock, name, url='', description='' }: {
+    public createProfile({ signAndExecuteTransactionBlock, name, imageUrl='', description='' }: {
         signAndExecuteTransactionBlock: SuiSignAndExecuteTransactionBlockMethod,
         name: string,
-        url?: string,
+        imageUrl?: string,
         description?: string,
     }): Promise<SuiAddress>
     {
@@ -185,16 +199,16 @@ export class ProfileManager {
             packageId: this.#packageId,
             registryId: this.#registryId,
             name,
-            url,
+            imageUrl,
             description,
         });
     }
 
-    public editProfile({ signAndExecuteTransactionBlock, profile, name, url='', description='' }: {
+    public editProfile({ signAndExecuteTransactionBlock, profile, name, imageUrl='', description='' }: {
         signAndExecuteTransactionBlock: SuiSignAndExecuteTransactionBlockMethod,
         profile: PolymediaProfile,
         name: string,
-        url?: string,
+        imageUrl?: string,
         description?: string,
     }): Promise<SuiTransactionBlockResponse>
     {
@@ -203,7 +217,7 @@ export class ProfileManager {
             profileId: profile.id,
             packageId: this.#packageId,
             name,
-            url,
+            imageUrl,
             description,
         });
     }
@@ -248,6 +262,7 @@ const LookupResult = {
     lookupAddr: BCS.ADDRESS,
     profileAddr: BCS.ADDRESS,
 };
+bcs.registerStructType(POLYMEDIA_PROFILE_PACKAGE_ID_LOCALNET + '::profile::LookupResult', LookupResult);
 bcs.registerStructType(POLYMEDIA_PROFILE_PACKAGE_ID_DEVNET + '::profile::LookupResult', LookupResult);
 bcs.registerStructType(POLYMEDIA_PROFILE_PACKAGE_ID_TESTNET + '::profile::LookupResult', LookupResult);
 type TypeOfLookupResult = typeof LookupResult;
@@ -326,7 +341,7 @@ function sui_fetchProfileObjects({ rpc, objectIds }: {
             profiles.push({
                 id: objData.fields.id.id,
                 name: objData.fields.name,
-                url: objData.fields.url,
+                imageUrl: objData.fields.image_url,
                 description: objData.fields.description,
                 // @ts-ignore
                 owner: objOwner.AddressOwner,
@@ -391,14 +406,14 @@ async function sui_createProfile({
     packageId,
     registryId,
     name,
-    url = '',
+    imageUrl = '',
     description = '',
 } : {
     signAndExecuteTransactionBlock: SuiSignAndExecuteTransactionBlockMethod,
     packageId: SuiAddress,
     registryId: SuiAddress,
     name: string,
-    url?: string,
+    imageUrl?: string,
     description?: string,
 }): Promise<SuiAddress>
 {
@@ -408,9 +423,9 @@ async function sui_createProfile({
         typeArguments: [],
         arguments: [
             tx.object(registryId),
-            tx.pure(Array.from( (new TextEncoder()).encode(name) )),
-            tx.pure(Array.from( (new TextEncoder()).encode(url) )),
-            tx.pure(Array.from( (new TextEncoder()).encode(description) )),
+            tx.pure(name),
+            tx.pure(imageUrl),
+            tx.pure(description),
         ],
     });
 
@@ -446,14 +461,14 @@ async function sui_editProfile({
     profileId,
     packageId,
     name,
-    url = '',
+    imageUrl = '',
     description = '',
 } : {
     signAndExecuteTransactionBlock: SuiSignAndExecuteTransactionBlockMethod,
     profileId: SuiAddress,
     packageId: SuiAddress,
     name: string,
-    url?: string,
+    imageUrl?: string,
     description?: string,
 }): Promise<SuiTransactionBlockResponse>
 {
@@ -463,9 +478,9 @@ async function sui_editProfile({
         typeArguments: [],
         arguments: [
             tx.object(profileId),
-            tx.pure(Array.from( (new TextEncoder()).encode(name) )),
-            tx.pure(Array.from( (new TextEncoder()).encode(url) )),
-            tx.pure(Array.from( (new TextEncoder()).encode(description) )),
+            tx.pure(name),
+            tx.pure(imageUrl),
+            tx.pure(description),
         ],
     });
 

@@ -22,7 +22,7 @@ const App: React.FC = () =>
 {
     const { currentAccount } = useWalletKit();
 
-    const network = 'devnet'; // TODO: add toggle
+    const network = 'localnet'; // TODO: add toggle
     const [profileManager] = useState( new ProfileManager({network}));
     const [profile, setProfile] = useState<PolymediaProfile|null|undefined>(undefined);
 

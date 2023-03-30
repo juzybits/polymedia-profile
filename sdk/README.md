@@ -15,10 +15,11 @@ This library exports one type and one class:
   export type PolymediaProfile = {
     id: SuiAddress,
     name: string,
-    url: string, // image URL
+    imageUrl: string,
     description: string,
     owner: SuiAddress,
-    suiObject: SuiObject,
+    previousTx: string,
+    suiObject: SuiMoveObject,
   }
   ```
 
@@ -69,7 +70,7 @@ const { signAndExecuteTransaction } = useWalletKit();
 const profileObjectId = await profileManager.createProfile({
   signAndExecuteTransaction,
   name: 'John Doe',
-  url: 'https://example.com/profile.png',
+  imageUrl: 'https://example.com/profile.png',
   description: 'My name is John and I love Sui',
 });
 ```
@@ -81,7 +82,7 @@ const profileObjectId = await profileManager.editProfile({
   signAndExecuteTransaction,
   profile: profile, // the PolymediaProfile to be changed
   name: 'New username',
-  url: 'https://example.com/new_profile.png',
+  imageUrl: 'https://example.com/new_profile.png',
   description: 'New description',
 });
 ```

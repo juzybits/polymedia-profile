@@ -26,15 +26,9 @@ export const ManageProfile: React.FC = () =>
     }, []);
 
     useEffect(() => {
-        if (profile) {
-            setInputName(profile.name);
-            setInputImage(profile.url);
-            setInputDescription(profile.description);
-        } else {
-            setInputName('');
-            setInputImage('');
-            setInputDescription('');
-        }
+        setInputName(profile?.name || '');
+        setInputImage(profile?.imageUrl || '');
+        setInputDescription(profile?.description || '');
     }, [profile]);
 
     const onSubmitCreateProfile = async (e: SyntheticEvent) => {
@@ -49,7 +43,7 @@ export const ManageProfile: React.FC = () =>
             const profileObjectId = await profileManager.createProfile({
                 signAndExecuteTransactionBlock,
                 name: inputName,
-                url: inputImage,
+                imageUrl: inputImage,
                 description: inputDescription,
             });
             console.debug('[onSubmitCreateProfile] New object ID:', profileObjectId);
@@ -95,7 +89,7 @@ export const ManageProfile: React.FC = () =>
                 signAndExecuteTransactionBlock,
                 profile: profile,
                 name: inputName,
-                url: inputImage,
+                imageUrl: inputImage,
                 description: inputDescription,
             });
             console.debug('[onSubmitEditProfile] Result:', profileObjectId);
@@ -185,7 +179,7 @@ export const ManageProfile: React.FC = () =>
 const showError = (origin: string, error: any): void =>
 {
     let errorString = String(error.stack || error.message || error);
-    if (errorString.includes('Transaction rejected from user') || // Sui, Ethos
+    if (errorString.includes('ejected from user') || // Sui, Ethos
         errorString.includes('User rejection') || // Suiet
         errorString.includes('User Rejected the request') // Martian
     ) {

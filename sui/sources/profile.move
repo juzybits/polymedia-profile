@@ -15,16 +15,17 @@
 
 module polymedia_profile::profile
 {
-    use std::string::{Self, String};
+    use std::string::{String, utf8};
     use std::vector;
+    use sui::display::{Self};
     use sui::dynamic_field;
     use sui::dynamic_object_field;
     use sui::event;
     use sui::object::{Self, ID, UID};
+    use sui::package::{Self};
     use sui::table::{Self, Table};
     use sui::transfer;
     use sui::tx_context::{Self, TxContext};
-    use sui::url::{Self, Url};
 
     /* Errors */
 
@@ -41,7 +42,7 @@ module polymedia_profile::profile
     struct Profile has key {
         id: UID,
         name: String,
-        url: Url, // image URL
+        image_url: String,
         description: String,
         registries: vector<address>,
     }
@@ -68,7 +69,7 @@ module polymedia_profile::profile
 
         let registry = Registry {
             id: registry_uid,
-            name: string::utf8(name),
+            name: utf8(name),
             profiles: table::new(ctx),
         };
         transfer::share_object(registry);
@@ -79,7 +80,7 @@ module polymedia_profile::profile
     public entry fun create_profile(
         registry: &mut Registry,
         name: vector<u8>,
-        url: vector<u8>,
+        image_url: vector<u8>,
         description: vector<u8>,
         ctx: &mut TxContext,
     ) {
@@ -93,9 +94,9 @@ module polymedia_profile::profile
         vector::push_back(&mut registries, registry_addr);
         let profile = Profile {
             id: profile_uid,
-            name: string::utf8(name),
-            url: url::new_unsafe_from_bytes(url),
-            description: string::utf8(description),
+            name: utf8(name),
+            image_url: utf8(image_url),
+            description: utf8(description),
             registries,
         };
         table::add(&mut registry.profiles, sender_addr, profile_addr);
@@ -147,13 +148,13 @@ module polymedia_profile::profile
     public entry fun edit_profile(
         profile: &mut Profile,
         name: vector<u8>,
-        url: vector<u8>,
+        image_url: vector<u8>,
         description: vector<u8>,
         _ctx: &mut TxContext,
     ) {
-        profile.name = string::utf8(name);
-        profile.url = url::new_unsafe_from_bytes(url);
-        profile.description = string::utf8(description);
+        profile.name = utf8(name);
+        profile.image_url = utf8(image_url);
+        profile.description = utf8(description);
     }
 
     /* Regular functions */
@@ -222,5 +223,37 @@ module polymedia_profile::profile
         name: Name,
     ): Value {
         return dynamic_object_field::remove(&mut profile.id, name)
+    }
+
+    // One-Time-Witness
+    struct PROFILE has drop {}
+
+    fun init(otw: PROFILE, ctx: &mut TxContext)
+    {
+        let publisher = package::claim(otw, ctx);
+
+        let profile_display = display::new_with_fields<Profile>(
+            &publisher,
+            vector[
+                utf8(b"name"),
+                utf8(b"image_url"),
+                utf8(b"description"),
+                utf8(b"link"),
+                utf8(b"project_url"),
+                utf8(b"creator"),
+            ], vector[
+                utf8(b"{name}"),
+                utf8(b"{image_url}"),
+                utf8(b"{description}"),
+                utf8(b"https://profile.polymedia.app/view/{id}"),
+                utf8(b"https://profile.polymedia.app"),
+                utf8(b"https://polymedia.app")
+            ], ctx
+        );
+
+        display::update_version(&mut profile_display);
+
+        transfer::public_transfer(publisher, tx_context::sender(ctx));
+        transfer::public_transfer(profile_display, tx_context::sender(ctx));
     }
 }

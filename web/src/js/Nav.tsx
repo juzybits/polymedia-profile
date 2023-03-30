@@ -106,7 +106,7 @@ const NavProfile: React.FC<{
 
     return <div id='nav-profile' onClick={disconnect}>
         <div id='nav-profile-image-wrap'>
-            <img src={(profile && profile.url) || imgAnon} />
+            <img src={(profile?.imageUrl) || imgAnon} />
         </div>
         <div id='nav-profile-name-wrap'>
             <div id='nav-profile-name'>{ profile ? profile.name : 'Anon' }</div>
