@@ -27,10 +27,6 @@ module polymedia_profile::profile
     use sui::transfer;
     use sui::tx_context::{Self, TxContext};
 
-    /* Errors */
-
-    const E_CANT_REMOVE_LAST_REGISTRY: u64 = 100;
-
     /* Structs */
 
     struct Registry has key {
@@ -108,7 +104,8 @@ module polymedia_profile::profile
         });
     }
 
-    /// Aborts when the profile is already in the registry with `sui::dynamic_field::EFieldAlreadyExists`
+    /// Aborts if the owner of the profile (the sender) is already in
+    /// the registry, with `sui::dynamic_field::EFieldAlreadyExists`.
     public entry fun add_to_registry(
         registry: &mut Registry,
         profile: &mut Profile,
@@ -124,25 +121,6 @@ module polymedia_profile::profile
         // Add the registry to the profile
         vector::push_back(&mut profile.registries, registry_addr);
 
-    }
-
-    /// Aborts when the profile is in only one registry.
-    /// Aborts when the profile is not in the registry, with `sui::dynamic_field::EFieldDoesNotExist`.
-    public entry fun remove_from_registry(
-        registry: &mut Registry,
-        profile: &mut Profile,
-        ctx: &mut TxContext,
-    ) {
-        assert!( vector::length(&profile.registries) > 1 , E_CANT_REMOVE_LAST_REGISTRY );
-        let registry_addr = object::id_address(registry);
-        let sender_addr = tx_context::sender(ctx);
-
-        // Remove the sender and their profile from the registry
-        table::remove(&mut registry.profiles, sender_addr);
-
-        // Remove the registry from the profile
-        let (_found, index) = vector::index_of(&profile.registries, &registry_addr);
-        vector::remove(&mut profile.registries, index);
     }
 
     public entry fun edit_profile(
@@ -257,3 +235,28 @@ module polymedia_profile::profile
         transfer::public_transfer(profile_display, tx_context::sender(ctx));
     }
 }
+
+/*
+    /* Errors */
+
+    const E_CANT_REMOVE_LAST_REGISTRY: u64 = 100;
+
+    /// Aborts when the profile is in only one registry.
+    /// Aborts when the profile is not in the registry, with `sui::dynamic_field::EFieldDoesNotExist`.
+    public entry fun remove_from_registry(
+        registry: &mut Registry,
+        profile: &mut Profile,
+        ctx: &mut TxContext,
+    ) {
+        assert!( vector::length(&profile.registries) > 1 , E_CANT_REMOVE_LAST_REGISTRY );
+        let registry_addr = object::id_address(registry);
+        let sender_addr = tx_context::sender(ctx);
+
+        // Remove the sender and their profile from the registry
+        table::remove(&mut registry.profiles, sender_addr);
+
+        // Remove the registry from the profile
+        let (_found, index) = vector::index_of(&profile.registries, &registry_addr);
+        vector::remove(&mut profile.registries, index);
+    }
+*/
