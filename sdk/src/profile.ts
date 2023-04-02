@@ -54,6 +54,7 @@ const RPC_DEVNET = new JsonRpcProvider(new Connection({
 const RPC_TESTNET = new JsonRpcProvider(new Connection({
     fullnode: 'https://fullnode.testnet.sui.io:443',
     // fullnode: 'https://sui-testnet-endpoint.blockvision.org',
+    // fullnode: 'https://suinode-testnet.belaunch.io',
     // fullnode: 'https://fullnode.testnet.vincagame.com:443',
     faucet: 'https://faucet.testnet.sui.io/gas',
 }));

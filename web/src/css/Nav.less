@@ -1,29 +1,38 @@
 @import './variables.less';
 
 #nav {
-    user-select: none;
+    min-width: 0;
     padding: 0 1em;
     text-align: center;
-    min-width: 0;
+    user-select: none;
+    @media (max-width: @mobile-width) {
+        background-color: #182022;
+        padding: 0;
+        position: fixed;
+        width: 100%;
+    }
     .nav-section {
         border-bottom: 1px solid #333;
         padding: 1em 0;
     }
-        a {
-            display: block;
-        }
+    a {
+        display: block;
+    }
 }
 
 #nav-logo {
     align-items: center;
     display: flex;
+    justify-content: center;
     text-align: left;
     white-space: nowrap;
-    justify-content: center;
     @media (max-width: @mobile-width) {
         justify-content: left;
     }
     #nav-logo-link {
+        @media (max-width: @mobile-width) {
+            margin-left: 1em;
+        }
         #nav-logo-img {
             display: inline-block;
             vertical-align: middle;
@@ -172,6 +181,7 @@
         }
     }
     #nav-sections-wrap {
+        border-bottom: 2px solid #333;
         display: none;
         &.open {
             display: block;

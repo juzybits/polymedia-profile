@@ -41,14 +41,14 @@ export const Docs: React.FC = () =>
 
         <p>
             Polymedia Profile is fully <b>open-source</b>:
-            <ul>
-                <li><a href='https://github.com/juzybits/polymedia-profile/tree/main/sui' target='_blank'>Sui Move code</a></li>
-
-                <li><a href='https://github.com/juzybits/polymedia-profile/tree/main/sdk' target='_blank'>TypeScript SDK</a></li>
-
-                <li><a href='https://github.com/juzybits/polymedia-profile/tree/main/web' target='_blank'>Web interface</a></li>
-            </ul>
         </p>
+        <ul>
+            <li><a href='https://github.com/juzybits/polymedia-profile/tree/main/sui' target='_blank'>Sui Move code</a></li>
+
+            <li><a href='https://github.com/juzybits/polymedia-profile/tree/main/sdk' target='_blank'>TypeScript SDK</a></li>
+
+            <li><a href='https://github.com/juzybits/polymedia-profile/tree/main/web' target='_blank'>Web interface</a></li>
+        </ul>
 
         <p>
             Polymedia Profile is under active development, and the system will evolve in response to the needs of the community.
