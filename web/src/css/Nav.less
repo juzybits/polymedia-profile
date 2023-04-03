@@ -78,13 +78,14 @@
     }
 }
 
+@green: #6fee6f;
 #nav-user {
     #nav-btn-connect {
         font-variation-settings: 'wght' 500;
         height: 1em;
         line-height: 1em;
         &:hover {
-            color: #6fee6f;
+            color: @green;
             cursor: pointer;
         }
     }
@@ -121,6 +122,27 @@
             }
             #nav-profile-address {
                 font-size: 0.8em;
+            }
+        }
+    }
+    #network-selector {
+        margin-top: 0.2em;
+        margin-bottom: -0.2em;
+        padding: 0.2em 0;
+
+        .network-options {
+            margin: 0 auto;
+            width: fit-content;
+            .network-option {
+                font-size: 0.8em;
+                height: 1.1rem;
+                line-height: 1.1rem;
+                &:hover:not(.selected) {
+                    color: @green;
+                    cursor: pointer;
+                    font-size: 0.85em;
+                    font-weight: bold;
+                }
             }
         }
     }

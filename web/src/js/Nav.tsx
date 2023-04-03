@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { useWalletKit } from '@mysten/wallet-kit';
 import { PolymediaProfile } from '@polymedia/profile-sdk';
 
+import { NetworkSelector } from '@polymedia/webutils';
 import imgLogo from '../img/logo.png';
 import imgAnon from '../img/anon.webp';
 import '../css/Nav.less';
@@ -48,6 +49,7 @@ export const Nav: React.FC<{
                 :
                 <NavProfile profile={profile} />
             }
+            <NetworkSelector />
             </div>
 
             <div id='nav-pages' className='nav-section'>

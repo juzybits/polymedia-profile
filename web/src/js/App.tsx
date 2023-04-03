@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom';
 import { ConnectModal, WalletKitProvider, useWalletKit } from '@mysten/wallet-kit';
 import { PolymediaProfile, ProfileManager } from '@polymedia/profile-sdk';
 
+import { currentNetwork as network } from '@polymedia/webutils';
 import { Nav } from './Nav';
 import { notifyError } from './components/Notification';
 import '../css/App.less';
@@ -22,7 +23,6 @@ const App: React.FC = () =>
 {
     const { currentAccount } = useWalletKit();
 
-    const network = 'localnet'; // TODO: add toggle
     const [profileManager] = useState( new ProfileManager({network}));
     const [profile, setProfile] = useState<PolymediaProfile|null|undefined>(undefined);
 

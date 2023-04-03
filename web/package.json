@@ -6,6 +6,7 @@
         "@mysten/sui.js": "latest",
         "@mysten/wallet-kit": "latest",
         "@polymedia/profile-sdk": "0.1.13",
+        "@polymedia/webutils": "latest",
         "react": "18",
         "react-dom": "18",
         "react-router-dom": "6"
