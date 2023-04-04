@@ -40,7 +40,7 @@ module polymedia_profile::profile
         name: String,
         image_url: String,
         description: String,
-        registries: vector<address>,
+        // registries: vector<address>,
     }
 
     /* Events */
@@ -73,6 +73,8 @@ module polymedia_profile::profile
         event::emit(EventCreateRegistry { registry_id });
     }
 
+    /// Aborts if the sender already has a Profile inside the Registry,
+    /// with `sui::dynamic_field::EFieldAlreadyExists`.
     public entry fun create_profile(
         registry: &mut Registry,
         name: vector<u8>,
@@ -83,17 +85,17 @@ module polymedia_profile::profile
         let profile_uid = object::new(ctx);
         let profile_id = object::uid_to_inner(&profile_uid);
         let profile_addr = object::uid_to_address(&profile_uid);
-        let registry_addr = object::id_address(registry);
+        // let registry_addr = object::id_address(registry);
         let sender_addr = tx_context::sender(ctx);
 
-        let registries = vector::empty<address>();
-        vector::push_back(&mut registries, registry_addr);
+        // let registries = vector::empty<address>();
+        // vector::push_back(&mut registries, registry_addr);
         let profile = Profile {
             id: profile_uid,
             name: utf8(name),
             image_url: utf8(image_url),
             description: utf8(description),
-            registries,
+            // registries,
         };
         table::add(&mut registry.profiles, sender_addr, profile_addr);
         transfer::transfer(profile, sender_addr);
@@ -104,14 +106,14 @@ module polymedia_profile::profile
         });
     }
 
-    /// Aborts if the owner of the profile (the sender) is already in
-    /// the registry, with `sui::dynamic_field::EFieldAlreadyExists`.
+    /// Aborts if the sender already has a Profile inside the Registry,
+    /// with `sui::dynamic_field::EFieldAlreadyExists`.
     public entry fun add_to_registry(
         registry: &mut Registry,
         profile: &mut Profile,
         ctx: &mut TxContext,
     ) {
-        let registry_addr = object::id_address(registry);
+        // let registry_addr = object::id_address(registry);
         let profile_addr = object::id_address(profile);
         let sender_addr = tx_context::sender(ctx);
 
@@ -119,7 +121,7 @@ module polymedia_profile::profile
         table::add(&mut registry.profiles, sender_addr, profile_addr);
 
         // Add the registry to the profile
-        vector::push_back(&mut profile.registries, registry_addr);
+        // vector::push_back(&mut profile.registries, registry_addr);
 
     }
 
