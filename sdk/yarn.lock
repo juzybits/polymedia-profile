@@ -9,14 +9,14 @@
   dependencies:
     regenerator-runtime "^0.13.11"
 
-"@mysten/bcs@0.7.0", "@mysten/bcs@^0.7.0":
+"@mysten/bcs@0.7.0", "@mysten/bcs@latest":
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/@mysten/bcs/-/bcs-0.7.0.tgz#141cbaba8ccb89215747d9ca1296c20c5b4fe4a1"
   integrity sha512-AFNnTClmc1XuxWZOzrzqVPDnujgN5AF2oNUyPYbLfvwqAj+qH7CrE3Rxhuf7et+k8M1Ff55CDgF58vPDMIhIrA==
   dependencies:
     bs58 "^5.0.0"
 
-"@mysten/sui.js@0.30.0", "@mysten/sui.js@^0.30.0":
+"@mysten/sui.js@0.30.0", "@mysten/sui.js@latest":
   version "0.30.0"
   resolved "https://registry.yarnpkg.com/@mysten/sui.js/-/sui.js-0.30.0.tgz#4f952418f97b172444412f771a5dab842f45e0e8"
   integrity sha512-7Mb5fGeg/NfoKvZvCQLL+XsuynFZKx328UykPpqcgY7buAbJiTl8dNNncZGH6nC/+fZRf2J9X0EffiKTES78ig==
@@ -32,7 +32,24 @@
     superstruct "^1.0.3"
     tweetnacl "^1.0.3"
 
-"@mysten/wallet-standard@^0.5.0":
+"@mysten/wallet-adapter-base@0.7.0":
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/@mysten/wallet-adapter-base/-/wallet-adapter-base-0.7.0.tgz#193a1287888269404bdc90ebefc69a344f82e2b8"
+  integrity sha512-8JpYDftAvZdc/65XDRc0MDtyUi2bKbMMkGqbQ1bEOyWHQYyRSimFsMyEi0+LdHvALmF5EuNRxak/7CIqsri9SQ==
+  dependencies:
+    "@mysten/sui.js" "0.30.0"
+    "@mysten/wallet-standard" "0.5.0"
+
+"@mysten/wallet-kit-core@latest":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@mysten/wallet-kit-core/-/wallet-kit-core-0.4.0.tgz#43c60c73efb169ff1f5ddd58571f174c6408697e"
+  integrity sha512-xEqvigtU+ipIIhuYbxjUM3CFjc0cHYaRvyEg3yCgZRjXErbsNtV8KJCkH8FL07SlosOTWpdDOdkqc5aroujUKQ==
+  dependencies:
+    "@mysten/sui.js" "0.30.0"
+    "@mysten/wallet-adapter-base" "0.7.0"
+    "@mysten/wallet-standard" "0.5.0"
+
+"@mysten/wallet-standard@0.5.0":
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/@mysten/wallet-standard/-/wallet-standard-0.5.0.tgz#d0c1d43336d8f660e0498ff3c43fe2ccc59a6175"
   integrity sha512-tQy28KEv3J3plaz9ZdTfq7HMmhiRAIHXTp59/1LXi5tfSsoSxmVF7R1nf4LKbvdgWKR2s+SX3m5g+3BsOWtUqw==

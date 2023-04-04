@@ -13,7 +13,6 @@
 
 */
 
-import { SuiSignAndExecuteTransactionBlockMethod } from '@mysten/wallet-standard';
 import { BCS, getSuiMoveConfig } from '@mysten/bcs';
 import {
     Connection,
@@ -28,6 +27,7 @@ import {
     TransactionBlock,
     TransactionEffects,
 } from '@mysten/sui.js';
+import { WalletKitCore } from '@mysten/wallet-kit-core';
 
 export const POLYMEDIA_PROFILE_PACKAGE_ID_LOCALNET = '0xdbba545e627c16abea67de01676a22968cb9d6c170103c72e54a1412b2df83e2';
 export const POLYMEDIA_PROFILE_REGISTRY_ID_LOCALNET = '0x342dfc1556de78f6e69e268dd0e6027b5181c8f076c91c348158366314d30970';
@@ -177,7 +177,7 @@ export class ProfileManager {
     }
 
     public createRegistry({ signAndExecuteTransactionBlock, registryName }: {
-        signAndExecuteTransactionBlock: SuiSignAndExecuteTransactionBlockMethod,
+        signAndExecuteTransactionBlock: WalletKitCore['signAndExecuteTransactionBlock'],
         registryName: string,
     }): Promise<OwnedObjectRef>
     {
@@ -189,7 +189,7 @@ export class ProfileManager {
     }
 
     public createProfile({ signAndExecuteTransactionBlock, name, imageUrl='', description='' }: {
-        signAndExecuteTransactionBlock: SuiSignAndExecuteTransactionBlockMethod,
+        signAndExecuteTransactionBlock: WalletKitCore['signAndExecuteTransactionBlock'],
         name: string,
         imageUrl?: string,
         description?: string,
@@ -206,7 +206,7 @@ export class ProfileManager {
     }
 
     public editProfile({ signAndExecuteTransactionBlock, profile, name, imageUrl='', description='' }: {
-        signAndExecuteTransactionBlock: SuiSignAndExecuteTransactionBlockMethod,
+        signAndExecuteTransactionBlock: WalletKitCore['signAndExecuteTransactionBlock'],
         profile: PolymediaProfile,
         name: string,
         imageUrl?: string,
@@ -310,9 +310,6 @@ function sui_fetchProfileObjectIds({
         } else {
             throw new Error(resp.effects.status.error);
         }
-    })
-    .catch((error: any) => {
-        throw error;
     });
 }
 
@@ -351,9 +348,6 @@ function sui_fetchProfileObjects({ rpc, objectIds }: {
             });
         }
         return profiles;
-    })
-    .catch((error: any) => {
-        throw error;
     });
 }
 
@@ -362,7 +356,7 @@ function sui_createRegistry({
     packageId,
     registryName,
 } : {
-    signAndExecuteTransactionBlock: SuiSignAndExecuteTransactionBlockMethod,
+    signAndExecuteTransactionBlock: WalletKitCore['signAndExecuteTransactionBlock'],
     packageId: SuiAddress,
     registryName: string,
 }): Promise<OwnedObjectRef>
@@ -376,7 +370,6 @@ function sui_createRegistry({
         ],
     });
 
-    // @ts-ignore
     return signAndExecuteTransactionBlock({
         transactionBlock: tx,
         options: {
@@ -384,11 +377,9 @@ function sui_createRegistry({
         },
     })
     .then(resp => {
-        // @ts-ignore
-        //                  Sui/Ethos || Suiet
-        const effects = (resp.effects || resp.EffectsCert?.effects?.effects) as TransactionEffects;
+        const effects = resp.effects as TransactionEffects;
         if (effects.status.status === 'success') {
-            if (effects.created?.length === 1) { // TODO: test
+            if (effects.created?.length === 1) {
                 return effects.created[0] as OwnedObjectRef;
             } else { // Should never happen
                 throw new Error('New registry object missing from response: ' + JSON.stringify(resp));
@@ -396,9 +387,6 @@ function sui_createRegistry({
         } else {
             throw new Error(effects.status.error);
         }
-    })
-    .catch((error: any) => {
-        throw error;
     });
 }
 
@@ -410,7 +398,7 @@ async function sui_createProfile({
     imageUrl = '',
     description = '',
 } : {
-    signAndExecuteTransactionBlock: SuiSignAndExecuteTransactionBlockMethod,
+    signAndExecuteTransactionBlock: WalletKitCore['signAndExecuteTransactionBlock'],
     packageId: SuiAddress,
     registryId: SuiAddress,
     name: string,
@@ -424,13 +412,12 @@ async function sui_createProfile({
         typeArguments: [],
         arguments: [
             tx.object(registryId),
-            tx.pure(name),
-            tx.pure(imageUrl),
-            tx.pure(description),
+            tx.pure(Array.from( (new TextEncoder()).encode(name) )),
+            tx.pure(Array.from( (new TextEncoder()).encode(imageUrl) )),
+            tx.pure(Array.from( (new TextEncoder()).encode(description) )),
         ],
     });
 
-    // @ts-ignore
     // Creates 2 objects: the profile (owned by the caller) and a dynamic field (inside the registry's table)
     const resp = await signAndExecuteTransactionBlock({
         transactionBlock: tx,
@@ -440,10 +427,8 @@ async function sui_createProfile({
         },
     });
 
-    // @ts-ignore
     // Verify the transaction results
-    //                  Sui/Ethos || Suiet
-    const effects = (resp.effects || resp.EffectsCert?.effects?.effects) as TransactionEffects;
+    const effects = resp.effects as TransactionEffects;
     if (effects.status.status !== 'success') {
         throw new Error(effects.status.error);
     }
@@ -465,7 +450,7 @@ async function sui_editProfile({
     imageUrl = '',
     description = '',
 } : {
-    signAndExecuteTransactionBlock: SuiSignAndExecuteTransactionBlockMethod,
+    signAndExecuteTransactionBlock: WalletKitCore['signAndExecuteTransactionBlock'],
     profileId: SuiAddress,
     packageId: SuiAddress,
     name: string,
@@ -479,13 +464,12 @@ async function sui_editProfile({
         typeArguments: [],
         arguments: [
             tx.object(profileId),
-            tx.pure(name),
-            tx.pure(imageUrl),
-            tx.pure(description),
+            tx.pure(Array.from( (new TextEncoder()).encode(name) )),
+            tx.pure(Array.from( (new TextEncoder()).encode(imageUrl) )),
+            tx.pure(Array.from( (new TextEncoder()).encode(description) )),
         ],
     });
 
-    // @ts-ignore
     const resp = await signAndExecuteTransactionBlock({
         transactionBlock: tx,
         options: {
@@ -493,10 +477,8 @@ async function sui_editProfile({
         },
     });
 
-    // @ts-ignore
     // Verify the transaction results
-    //                  Sui/Ethos || Suiet
-    const effects = (resp.effects || resp.EffectsCert?.effects?.effects) as TransactionEffects;
+    const effects = resp.effects as TransactionEffects;
     if (effects.status.status !== 'success') {
         throw new Error(effects.status.error);
     }

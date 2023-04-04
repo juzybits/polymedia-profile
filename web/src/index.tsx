@@ -32,6 +32,7 @@ ReactDOM
                 <Route path='manage' element={<ManageProfile />} />
                 <Route path='docs' element={<Docs />} />
                 <Route path='registry/new' element={<RegistryNew />} />
+                {/*<Route path='view/:profileId' element={<ViewProfile />} />*/} {/*TODO*/}
                 <Route path='*' element={<NotFound />} />
             </Route>
         </Routes>
