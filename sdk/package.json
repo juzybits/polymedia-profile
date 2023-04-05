@@ -5,9 +5,11 @@
     "license": "CC-BY-NC-SA-4.0",
     "author": "@juzybits (https://polymedia.app)",
     "homepage": "https://profile.polymedia.app",
-    "main": "./src/index.ts",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
     "scripts": {
-        "build": "tsc"
+        "build": "tsc",
+        "prepublishOnly": "rm -rf dist/ && yarn build"
     },
     "repository": {
         "type": "git",
