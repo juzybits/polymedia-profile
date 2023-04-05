@@ -1,19 +1,25 @@
 {
     "name": "@polymedia/profile-sdk",
     "description": "An SDK to interact with Polymedia Profile objects on the Sui network",
-    "version": "0.1.14",
+    "version": "0.1.15",
     "license": "CC-BY-NC-SA-4.0",
     "author": "@juzybits (https://polymedia.app)",
     "homepage": "https://profile.polymedia.app",
-    "main": "./dist/index.js",
-    "types": "./dist/index.d.ts",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
     "scripts": {
         "build": "tsc",
         "prepublishOnly": "rm -rf dist/ && yarn build"
     },
+    "files": [
+        "dist/",
+        "src/",
+        "LICENSE",
+        "README.md"
+    ],
     "repository": {
         "type": "git",
-        "url": "git://github.com/juzybits/polymedia-profile.git#sdk-0.1.14"
+        "url": "git://github.com/juzybits/polymedia-profile.git#sdk-0.1.15"
     },
     "keywords": [
         "polymedia",
@@ -23,7 +29,8 @@
     "dependencies": {
         "@mysten/bcs": "latest",
         "@mysten/sui.js": "latest",
-        "@mysten/wallet-kit-core": "latest"
+        "@mysten/wallet-kit-core": "latest",
+        "@polymedia/webutils": "latest"
     },
     "devDependencies": {
         "typescript": "4"

@@ -28,6 +28,7 @@ import {
     TransactionEffects,
 } from '@mysten/sui.js';
 import { WalletKitCore } from '@mysten/wallet-kit-core';
+import { RPC_CONFIG } from '@polymedia/webutils';
 
 export const POLYMEDIA_PROFILE_PACKAGE_ID_LOCALNET = '0xdbba545e627c16abea67de01676a22968cb9d6c170103c72e54a1412b2df83e2';
 export const POLYMEDIA_PROFILE_REGISTRY_ID_LOCALNET = '0x342dfc1556de78f6e69e268dd0e6027b5181c8f076c91c348158366314d30970';
@@ -39,24 +40,19 @@ export const POLYMEDIA_PROFILE_PACKAGE_ID_TESTNET = '0x123'; // TODO
 export const POLYMEDIA_PROFILE_REGISTRY_ID_TESTNET = '0x123'; // TODO
 
 const RPC_LOCALNET = new JsonRpcProvider(new Connection({
-    fullnode: 'http://127.0.0.1:9000',
-    faucet: 'http://127.0.0.1:9123',
+    fullnode: RPC_CONFIG.LOCALNET_FULLNODE,
+    faucet: RPC_CONFIG.LOCALNET_FAUCET,
 }));
 
 const RPC_DEVNET = new JsonRpcProvider(new Connection({
-    fullnode: 'https://fullnode.devnet.sui.io:443',
     // fullnode: 'https://node.shinami.com/api/v1/ad388d02ad86069fa8b32278b73709e9',
-    // fullnode: 'https://sui-devnet-endpoint.blockvision.org',
-    // fullnode: 'https://fullnode.devnet.vincagame.com:443',
-    faucet: 'https://faucet.devnet.sui.io/gas',
+    fullnode: RPC_CONFIG.DEVNET_FULLNODE,
+    faucet: RPC_CONFIG.DEVNET_FAUCET,
 }));
 
 const RPC_TESTNET = new JsonRpcProvider(new Connection({
-    fullnode: 'https://fullnode.testnet.sui.io:443',
-    // fullnode: 'https://sui-testnet-endpoint.blockvision.org',
-    // fullnode: 'https://suinode-testnet.belaunch.io',
-    // fullnode: 'https://fullnode.testnet.vincagame.com:443',
-    faucet: 'https://faucet.testnet.sui.io/gas',
+    fullnode: RPC_CONFIG.TESTNET_FULLNODE,
+    faucet: RPC_CONFIG.TESTNET_FAUCET,
 }));
 
 /**
