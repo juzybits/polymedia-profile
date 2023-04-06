@@ -41,7 +41,7 @@ A `Profile` has a field, `registries: vector<address>`, that lists the registrie
 
 A `Registry` has a field, `profiles: Table<address, address>`, that maps profile owners (keys) to profile objects (values).
 
-A `Profile` is guaranteed to be included in at least one `Registry`. A `Profile` can be added or removed from a registry with `add_to_registry` and `remove_from_registry`.
+A `Profile` is guaranteed to be included in at least one `Registry`. A `Profile` can be added to a registry with `add_to_registry`.
 
 A Sui address can own multiple `Profile` objects, but it can only register one `Profile` per `Registry`.
 
