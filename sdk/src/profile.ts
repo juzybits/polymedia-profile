@@ -15,7 +15,6 @@
 
 import { BCS, getSuiMoveConfig } from '@mysten/bcs';
 import {
-    Connection,
     DevInspectResults,
     JsonRpcProvider,
     ObjectOwner,
@@ -28,7 +27,7 @@ import {
     TransactionEffects,
 } from '@mysten/sui.js';
 import { WalletKitCore } from '@mysten/wallet-kit-core';
-import { RPC_CONFIG } from '@polymedia/webutils';
+import { NetworkName } from '@polymedia/webutils';
 
 export const POLYMEDIA_PROFILE_PACKAGE_ID_LOCALNET = '0xdbba545e627c16abea67de01676a22968cb9d6c170103c72e54a1412b2df83e2';
 export const POLYMEDIA_PROFILE_REGISTRY_ID_LOCALNET = '0x342dfc1556de78f6e69e268dd0e6027b5181c8f076c91c348158366314d30970';
@@ -38,22 +37,6 @@ export const POLYMEDIA_PROFILE_REGISTRY_ID_DEVNET = '0x454fc9a10fe30277de2228205
 
 export const POLYMEDIA_PROFILE_PACKAGE_ID_TESTNET = '0x176c277279d99cdd2e8afcf618ba8d6705465cdeabb3bdbe1a7ce020141e67dd';
 export const POLYMEDIA_PROFILE_REGISTRY_ID_TESTNET = '0xec4c82836bcd537015b252df836cdcd27412f0a581591737cad0b8bfef7241d5';
-
-const RPC_LOCALNET = new JsonRpcProvider(new Connection({
-    fullnode: RPC_CONFIG.LOCALNET_FULLNODE,
-    faucet: RPC_CONFIG.LOCALNET_FAUCET,
-}));
-
-const RPC_DEVNET = new JsonRpcProvider(new Connection({
-    // fullnode: 'https://node.shinami.com/api/v1/ad388d02ad86069fa8b32278b73709e9',
-    fullnode: RPC_CONFIG.DEVNET_FULLNODE,
-    faucet: RPC_CONFIG.DEVNET_FAUCET,
-}));
-
-const RPC_TESTNET = new JsonRpcProvider(new Connection({
-    fullnode: RPC_CONFIG.TESTNET_FULLNODE,
-    faucet: RPC_CONFIG.TESTNET_FAUCET,
-}));
 
 /**
  * Represents a `polymedia_profile::profile::Profile` Sui object
@@ -77,21 +60,20 @@ export class ProfileManager {
     #packageId: SuiAddress;
     #registryId: SuiAddress;
 
-    constructor({ network, packageId, registryId }: {
-        network: string,
+    constructor({ network, rpcProvider, packageId, registryId }: {
+        network: NetworkName,
+        rpcProvider: JsonRpcProvider,
         packageId?: SuiAddress,
         registryId?: SuiAddress
     }) {
+        this.#rpc = rpcProvider;
         if (network === 'localnet') {
-            this.#rpc = RPC_LOCALNET;
             this.#packageId = packageId || POLYMEDIA_PROFILE_PACKAGE_ID_LOCALNET;
             this.#registryId = registryId || POLYMEDIA_PROFILE_REGISTRY_ID_LOCALNET;
         } else if (network === 'devnet') {
-            this.#rpc = RPC_DEVNET;
             this.#packageId = packageId || POLYMEDIA_PROFILE_PACKAGE_ID_DEVNET;
             this.#registryId = registryId || POLYMEDIA_PROFILE_REGISTRY_ID_DEVNET;
         } else if (network === 'testnet') {
-            this.#rpc = RPC_TESTNET;
             this.#packageId = packageId || POLYMEDIA_PROFILE_PACKAGE_ID_TESTNET;
             this.#registryId = registryId || POLYMEDIA_PROFILE_REGISTRY_ID_TESTNET;
         } else {

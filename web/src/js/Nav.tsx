@@ -3,17 +3,19 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useWalletKit } from '@mysten/wallet-kit';
-import { PolymediaProfile } from '@polymedia/profile-sdk';
 
-import { NetworkSelector } from '@polymedia/webutils';
+import { NetworkName, NetworkSelector } from '@polymedia/webutils';
+import { PolymediaProfile } from '@polymedia/profile-sdk';
 import imgLogo from '../img/logo.png';
 import imgAnon from '../img/anon.webp';
 import '../css/Nav.less';
 
 export const Nav: React.FC<{
+    network: NetworkName,
     openConnectModal: () => void,
     profile: PolymediaProfile|null|undefined,
 }> = ({
+    network,
     openConnectModal,
     profile,
 }) => {
@@ -49,7 +51,7 @@ export const Nav: React.FC<{
                 :
                 <NavProfile profile={profile} />
             }
-            <NetworkSelector />
+            <NetworkSelector currentNetwork={network} />
             </div>
 
             <div id='nav-pages' className='nav-section'>

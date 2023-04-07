@@ -1,15 +1,16 @@
 import { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
+import { Connection, JsonRpcProvider } from '@mysten/sui.js';
 import { ConnectModal, WalletKitProvider, useWalletKit } from '@mysten/wallet-kit';
+import { NetworkName, loadNetwork, loadRpcConfig } from '@polymedia/webutils';
 import { PolymediaProfile, ProfileManager } from '@polymedia/profile-sdk';
 
-import { currentNetwork as network } from '@polymedia/webutils';
 import { Nav } from './Nav';
 import { notifyError } from './components/Notification';
 import '../css/App.less';
 
 export type AppContext = {
-    network: string,
+    network: NetworkName,
     profile: PolymediaProfile|null|undefined,
     profileManager: ProfileManager;
     openConnectModal: () => void;
@@ -22,18 +23,28 @@ export const AppWrap: React.FC = () =>
 const App: React.FC = () =>
 {
     const { currentAccount } = useWalletKit();
-
-    const [profileManager] = useState( new ProfileManager({network}));
     const [profile, setProfile] = useState<PolymediaProfile|null|undefined>(undefined);
-
     const [showConnectModal, setShowConnectModal] = useState(false);
+    const [network, setNetwork] = useState<NetworkName|null>(null);
+    const [profileManager, setProfileManager] = useState<ProfileManager|null>(null);
 
     useEffect(() => {
-        reloadProfile();
-    }, [currentAccount]);
+        async function initialize() {
+            const network = loadNetwork();
+            const rpcConfig = await loadRpcConfig({network});
+            const rpcProvider = new JsonRpcProvider(new Connection(rpcConfig));
+            setNetwork(network);
+            setProfileManager( new ProfileManager({network, rpcProvider}) );
+        };
+        initialize();
+    }, []);
+
+    useEffect(() => {
+        profileManager && reloadProfile();
+    }, [currentAccount, profileManager]);
 
     const reloadProfile = async (): Promise<PolymediaProfile|null|undefined> => {
-        if (!currentAccount) {
+        if (!currentAccount || !profileManager) {
             setProfile(undefined);
             return undefined;
         }
@@ -58,6 +69,10 @@ const App: React.FC = () =>
         setShowConnectModal(true);
     };
 
+    if (!network || !profileManager) {
+        return <></>;
+    }
+
     const appContext: AppContext = {
         network,
         profile,
@@ -74,7 +89,7 @@ const App: React.FC = () =>
 
         <div id='layout'>
              {/* #nav */}
-            <Nav openConnectModal={openConnectModal} profile={profile} />
+            <Nav network={network} openConnectModal={openConnectModal} profile={profile} />
             {/* #page */}
             <Outlet context={appContext} />
             <div id='filler-section'></div>
