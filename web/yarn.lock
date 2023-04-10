@@ -878,9 +878,9 @@
     nullthrows "^1.1.1"
 
 "@polymedia/profile-sdk@latest":
-  version "0.1.17"
-  resolved "https://registry.yarnpkg.com/@polymedia/profile-sdk/-/profile-sdk-0.1.17.tgz#8229effda154b0e8ba72ab255ef490504dc293d8"
-  integrity sha512-LADbMawtYG0Rennws/qGsrKFY/zlS1ham+xmCXYf+Ke4vJxQKODzWP9Yao13A55TaNQrBE9qhhMnHp5McRJmwA==
+  version "0.1.19"
+  resolved "https://registry.yarnpkg.com/@polymedia/profile-sdk/-/profile-sdk-0.1.19.tgz#3d6adffb387eca1794f0569aff7c68e8869f18fa"
+  integrity sha512-GpvwkqPMlfQNs7WdPIbRRX8KOptNspiy71MGZvszz2gomb7jrbNc48h4oYSjQkKb7ceW5+EXDfnwVBjOwI8IMw==
   dependencies:
     "@mysten/bcs" latest
     "@mysten/sui.js" latest
