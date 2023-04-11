@@ -68,7 +68,7 @@ export const ManageProfile: React.FC = () =>
             return;
         }
         if (updatedProfile.previousTx == oldTx) { // Still not updated. Retry.
-            setTimeout(reloadProfileUntilUpdated, 1000, oldTx);
+            setTimeout(reloadProfileUntilUpdated, 1500, oldTx);
             return;
         }
         setWaiting(false);
