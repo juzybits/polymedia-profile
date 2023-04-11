@@ -878,9 +878,9 @@
     nullthrows "^1.1.1"
 
 "@polymedia/profile-sdk@latest":
-  version "0.1.19"
-  resolved "https://registry.yarnpkg.com/@polymedia/profile-sdk/-/profile-sdk-0.1.19.tgz#3d6adffb387eca1794f0569aff7c68e8869f18fa"
-  integrity sha512-GpvwkqPMlfQNs7WdPIbRRX8KOptNspiy71MGZvszz2gomb7jrbNc48h4oYSjQkKb7ceW5+EXDfnwVBjOwI8IMw==
+  version "0.1.20"
+  resolved "https://registry.yarnpkg.com/@polymedia/profile-sdk/-/profile-sdk-0.1.20.tgz#f6f7cd3b5779470870eb36193fd0ed0f8d5b102f"
+  integrity sha512-KwD4HlrOgOmGOz3cSKIWpA5GqVdUL24gtLi1peSJEeGrRVcRKE2yi2N2hs4umXrCFQqkDGcI0slubF4BpRThCQ==
   dependencies:
     "@mysten/bcs" latest
     "@mysten/sui.js" latest
@@ -1690,9 +1690,9 @@ duplexer3@^0.1.4:
   integrity sha512-1A8za6ws41LQgv9HrE/66jyC5yuSjQ3L/KOpFtoBilsAK2iA2wuS5rTt1OCzIvtS2V7nVmedsUU+DGRcjBmOYA==
 
 electron-to-chromium@^1.4.284:
-  version "1.4.356"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.356.tgz#b75a8a8c31d571f6024310cc980a08cd6c15a8c5"
-  integrity sha512-nEftV1dRX3omlxAj42FwqRZT0i4xd2dIg39sog/CnCJeCcL1TRd2Uh0i9Oebgv8Ou0vzTPw++xc+Z20jzS2B6A==
+  version "1.4.357"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.357.tgz#ad02bab69e696e9a122788da4460c86166a98a01"
+  integrity sha512-UTkCbNTAcGXABmEnQrGcW4m3cG6fcyBfD4KDF0iyEAlbrGZiY9dmslyDAGOD1Kr5biN2F743Y30aRCOtau35Vw==
 
 electron@^23.1.2:
   version "23.2.2"
