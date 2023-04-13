@@ -102,13 +102,15 @@ input, textarea, button, .btn {
     }
 }
 
-
-.waiting {
+.disabled, .waiting {
     color: #bbb;
     background-color: #777;
-    &:hover {
-        cursor: wait;
-    }
+}
+.disabled:hover {
+    cursor: not-allowed;
+}
+.waiting:hover {
+    cursor: wait;
 }
 
 button, .btn {
@@ -127,6 +129,9 @@ button, .btn {
         cursor: pointer;
         text-decoration: none;
     }
+    &.disabled {
+        .disabled();
+    }
     &.waiting {
         .waiting();
     }
@@ -134,4 +139,8 @@ button, .btn {
 
 .error {
     overflow-wrap: anywhere;
+}
+
+.hidden {
+    display: none;
 }

@@ -248,7 +248,7 @@ type TypeOfLookupResult = typeof LookupResult;
 
 /**
  * Given one or more Sui addresses, find their associated profile object IDs.
- * Addresses that don't have a profile won't be included in the returned Map.
+ * Addresses that don't have a profile won't be included in the returned array.
  */
 function sui_fetchProfileObjectIds({
     rpc,

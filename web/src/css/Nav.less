@@ -78,14 +78,13 @@
     }
 }
 
-@green: #6fee6f;
 #nav-user {
     #nav-btn-connect {
         font-variation-settings: 'wght' 500;
         height: 1em;
         line-height: 1em;
         &:hover {
-            color: @green;
+            color: @color-green;
             cursor: pointer;
         }
     }
@@ -95,9 +94,9 @@
         align-items: center;
         &:hover {
             cursor: pointer;
-            color: #ff6f6f;
+            color: @color-red;
             #nav-profile-image-wrap img {
-                border: 4px solid #ff6f6f;
+                border: 4px solid @color-red;
             }
         }
         #nav-profile-image-wrap {
@@ -138,7 +137,7 @@
                 height: 1.1rem;
                 line-height: 1.1rem;
                 &:hover:not(.selected) {
-                    color: @green;
+                    color: @color-green;
                     cursor: pointer;
                     font-size: 0.85em;
                     font-weight: bold;

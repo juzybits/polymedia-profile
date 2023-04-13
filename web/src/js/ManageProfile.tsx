@@ -14,9 +14,14 @@ export const ManageProfile: React.FC = () =>
 
     const { network, profile, profileManager, openConnectModal, reloadProfile } = useOutletContext<AppContext>();
 
+    // Form inputs
     const [inputName, setInputName] = useState('');
     const [inputImage, setInputImage] = useState('');
     const [inputDescription, setInputDescription] = useState('');
+    // Form errors
+    const [isErrorImage, setIsErrorImage] = useState(false);
+    const [isErrorForm, setIsErrorForm] = useState(false);
+    // Other state
     const [waiting, setWaiting] = useState(false);
 
     /* Functions */
@@ -30,6 +35,23 @@ export const ManageProfile: React.FC = () =>
         setInputImage(profile?.imageUrl || '');
         setInputDescription(profile?.description || '');
     }, [profile]);
+
+    const onInputImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (!e.target.value) {
+            setIsErrorImage(false);
+            setIsErrorForm(false);
+        }
+        setInputImage(e.target.value);
+    };
+    const onImageLoad = () => {
+        setIsErrorImage(false);
+        setIsErrorForm(false);
+    };
+    const onImageError = () => {
+        setIsErrorImage(true);
+        setIsErrorForm(true);
+        notifyError("That doesn't look like a valid image URL");
+    };
 
     const onSubmitCreateProfile = async (e: SyntheticEvent) => {
         e.preventDefault();
@@ -85,14 +107,14 @@ export const ManageProfile: React.FC = () =>
         }
         setWaiting(true);
         try {
-            const profileObjectId = await profileManager.editProfile({
+            const response = await profileManager.editProfile({
                 signAndExecuteTransactionBlock,
                 profile: profile,
                 name: inputName,
                 imageUrl: inputImage,
                 description: inputDescription,
             });
-            console.debug('[onSubmitEditProfile] Result:', profileObjectId);
+            console.debug('[onSubmitEditProfile] Response:', response);
             notifyOkay('SUCCESS');
             reloadProfileUntilUpdated(profile.previousTx)
         } catch(error: any) {
@@ -132,8 +154,9 @@ export const ManageProfile: React.FC = () =>
                 <input value={inputImage} type='text'
                     className={waiting ? 'waiting' : ''} disabled={waiting}
                     spellCheck='false' autoCorrect='off' autoComplete='off'
-                    onChange={e => setInputImage(e.target.value)}
+                    onChange={onInputImageChange}
                 />
+                {isErrorImage && <div className='field-error'>That doesn't look like a valid image URL</div>}
                 <div className='field-info'>Right click the image, then click 'Copy Image Address'. To use a picture from your device, upload it to a service like <a href='https://imgur.com/upload' target='_blank'>imgur.com</a>, then copy the image address.</div>
             </div>
             <div className='form-field'>
@@ -144,16 +167,25 @@ export const ManageProfile: React.FC = () =>
                     onChange={e => setInputDescription(e.target.value)}
                 />
             </div>
-            <button type='submit' className={waiting ? 'waiting' : ''} disabled={waiting}>
+            <button
+                type='submit'
+                disabled={waiting || isErrorForm}
+                className={isErrorForm ? 'disabled' : (waiting ? 'waiting' : '')}
+            >
                 {profile===null ? 'CREATE PROFILE' : 'EDIT PROFILE'}
             </button>
+            {isErrorForm && <div className='field-error'>Form has errors</div>}
         </form>;
     }
 
     const imageSection = !inputImage ? <></> :
-    <div className='section section-image'>
+    <div className={'section section-image '+(isErrorImage?'hidden':'')}>
         <h2>Image preview</h2>
-        <img src={inputImage} />
+        <img
+            src={inputImage}
+            onLoad={onImageLoad}
+            onError={onImageError}
+        />
     </div>;
 
     const infoSection = !profile ? <></> :
@@ -174,7 +206,6 @@ export const ManageProfile: React.FC = () =>
         {infoSection}
     </div>;
 }
-
 
 const showError = (origin: string, error: any): void =>
 {
