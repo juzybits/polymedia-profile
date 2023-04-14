@@ -1,6 +1,7 @@
 import { useEffect, useState, SyntheticEvent } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { useWalletKit } from '@mysten/wallet-kit';
+import { PolymediaProfile } from '@polymedia/profile-sdk';
 
 import { AppContext } from './App';
 import { notifyError, notifyOkay } from './components/Notification';
@@ -12,7 +13,13 @@ export const ManageProfile: React.FC = () =>
 
     const { currentAccount, signAndExecuteTransactionBlock } = useWalletKit();
 
-    const { network, profile, profileManager, openConnectModal, reloadProfile } = useOutletContext<AppContext>();
+    const {
+        network,
+        profile,
+        setProfile,
+        profileManager,
+        openConnectModal,
+    } = useOutletContext<AppContext>();
 
     // Form inputs
     const [inputName, setInputName] = useState('');
@@ -62,39 +69,21 @@ export const ManageProfile: React.FC = () =>
         console.debug(`[onSubmitCreateProfile] Attempting to create profile: ${inputName}`);
         setWaiting(true);
         try {
-            const profileObjectId = await profileManager.createProfile({
+            const newProfile = await profileManager.createProfile({
                 signAndExecuteTransactionBlock,
                 name: inputName,
                 imageUrl: inputImage,
                 description: inputDescription,
             });
-            console.debug('[onSubmitCreateProfile] New object ID:', profileObjectId);
+            console.debug('[onSubmitCreateProfile] New profile:', newProfile);
             notifyOkay('SUCCESS');
-            let newProfile;
-            do {
-                // Deal with RPC lag by retrying until we get the new profile
-                newProfile = await reloadProfile();
-            } while (!newProfile);
+            setProfile(newProfile);
         } catch(error: any) {
             showError('onSubmitCreateProfile', error);
         }
         setWaiting(false);
     };
 
-    // Deal with RPC lag by retrying until we get the updated profile
-    const reloadProfileUntilUpdated = async(oldTx: string) => {
-        const updatedProfile = await reloadProfile();
-        if (!updatedProfile) {
-            notifyError('[reloadProfileUntilUpdated] Failed to fetch the updated profile');
-            setWaiting(false);
-            return;
-        }
-        if (updatedProfile.previousTx == oldTx) { // Still not updated. Retry.
-            setTimeout(reloadProfileUntilUpdated, 1500, oldTx);
-            return;
-        }
-        setWaiting(false);
-    };
     const onSubmitEditProfile = async (e: SyntheticEvent) => {
         e.preventDefault();
         if (!currentAccount) {
@@ -116,9 +105,18 @@ export const ManageProfile: React.FC = () =>
             });
             console.debug('[onSubmitEditProfile] Response:', response);
             notifyOkay('SUCCESS');
-            reloadProfileUntilUpdated(profile.previousTx)
+            const updatedProfile: PolymediaProfile = {
+                id: profile.id,
+                name: inputName,
+                imageUrl: inputImage,
+                description: inputDescription,
+                owner: profile.owner,
+                previousTx: response.digest,
+            };
+            setProfile(updatedProfile);
         } catch(error: any) {
             showError('onSubmitEditProfile', error);
+        } finally {
             setWaiting(false);
         }
     };
