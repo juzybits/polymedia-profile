@@ -105,9 +105,9 @@
   integrity sha512-Aq58f5HiWdyDlFffbbSjAlv596h/cOnt2DO1w3DOC7OJ5EHs0hd/nycJfiu9RJbT6Yk6F1knnRRXNSpxoIVZ9Q==
 
 "@polymedia/webutils@latest":
-  version "0.1.7"
-  resolved "https://registry.yarnpkg.com/@polymedia/webutils/-/webutils-0.1.7.tgz#bd4926f5c2c2ec45317d7aa9bf35f08858e404c5"
-  integrity sha512-oUVXrmxHuJtHvABgAGf9IZLCAfcxmhCLH0O2DvBGMYwRMpc5CIzrWjPsA+LPrC1fx63VFDXqSWParR7u33VtCA==
+  version "0.1.8"
+  resolved "https://registry.yarnpkg.com/@polymedia/webutils/-/webutils-0.1.8.tgz#0d9a0aada10b96f23b23c923b1457f143fe127dc"
+  integrity sha512-h0fPrL4iXdZm5+FK5teQS1wpF3w/7I7Ner2AxJHz2MrRfeCQZ1eLHD72oypzeyfErEIKKW7hOdCXg7PAnQl2Dw==
 
 "@scure/base@~1.1.0":
   version "1.1.1"
