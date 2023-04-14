@@ -48,7 +48,6 @@ export type PolymediaProfile = {
     description: string,
     owner: SuiAddress,
     previousTx: string,
-    suiObject: SuiMoveObject,
 }
 
 /**
@@ -171,7 +170,7 @@ export class ProfileManager {
         name: string,
         imageUrl?: string,
         description?: string,
-    }): Promise<SuiAddress>
+    }): Promise<PolymediaProfile>
     {
         return sui_createProfile({
             signAndExecuteTransactionBlock,
@@ -322,7 +321,6 @@ function sui_fetchProfileObjects({ rpc, objectIds }: {
                 // @ts-ignore
                 owner: objOwner.AddressOwner,
                 previousTx: resp.data.previousTransaction||'',
-                suiObject: objData,
             });
         }
         return profiles;
@@ -382,7 +380,7 @@ async function sui_createProfile({
     name: string,
     imageUrl?: string,
     description?: string,
-}): Promise<SuiAddress>
+}): Promise<PolymediaProfile>
 {
     const tx = new TransactionBlock();
     tx.moveCall({
@@ -410,11 +408,20 @@ async function sui_createProfile({
     if (effects.status.status !== 'success') {
         throw new Error(effects.status.error);
     }
-    // Extract the new profile object ID from the 'EventCreateProfile' event
+    // Build and return PolymediaProfile object from the 'EventCreateProfile' event
     if (resp.events)
         for (const event of resp.events) {
-            if (event.type.endsWith('::profile::EventCreateProfile'))
-                return event.parsedJson?.profile_id;
+            if (event.type.endsWith('::profile::EventCreateProfile')) {
+                const newProfile: PolymediaProfile = {
+                    id: event.parsedJson?.profile_id,
+                    name: name,
+                    imageUrl: imageUrl,
+                    description: description,
+                    owner: event.sender,
+                    previousTx: resp.digest,
+                };
+                return newProfile;
+            }
     }
     // Should never happen:
     throw new Error("Transaction was successful, but can't find the new profile object ID in the response: " + JSON.stringify(resp));
