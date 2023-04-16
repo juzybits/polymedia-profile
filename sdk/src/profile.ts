@@ -183,9 +183,9 @@ export class ProfileManager {
         });
     }
 
-    public editProfile({ signAndExecuteTransactionBlock, profile, name, imageUrl='', description='' }: {
+    public editProfile({ signAndExecuteTransactionBlock, profileId, name, imageUrl='', description='' }: {
         signAndExecuteTransactionBlock: WalletKitCore['signAndExecuteTransactionBlock'],
-        profile: PolymediaProfile,
+        profileId: SuiAddress,
         name: string,
         imageUrl?: string,
         description?: string,
@@ -193,7 +193,7 @@ export class ProfileManager {
     {
         return sui_editProfile({
             signAndExecuteTransactionBlock,
-            profileId: profile.id,
+            profileId: profileId,
             packageId: this.#packageId,
             name,
             imageUrl,

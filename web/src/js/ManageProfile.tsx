@@ -98,7 +98,7 @@ export const ManageProfile: React.FC = () =>
         try {
             const response = await profileManager.editProfile({
                 signAndExecuteTransactionBlock,
-                profile: profile,
+                profileId: profile.id,
                 name: inputName,
                 imageUrl: inputImage,
                 description: inputDescription,
