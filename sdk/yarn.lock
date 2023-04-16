@@ -104,11 +104,6 @@
   resolved "https://registry.yarnpkg.com/@open-draft/until/-/until-1.0.3.tgz#db9cc719191a62e7d9200f6e7bab21c5b848adca"
   integrity sha512-Aq58f5HiWdyDlFffbbSjAlv596h/cOnt2DO1w3DOC7OJ5EHs0hd/nycJfiu9RJbT6Yk6F1knnRRXNSpxoIVZ9Q==
 
-"@polymedia/webutils@latest":
-  version "0.1.8"
-  resolved "https://registry.yarnpkg.com/@polymedia/webutils/-/webutils-0.1.8.tgz#0d9a0aada10b96f23b23c923b1457f143fe127dc"
-  integrity sha512-h0fPrL4iXdZm5+FK5teQS1wpF3w/7I7Ner2AxJHz2MrRfeCQZ1eLHD72oypzeyfErEIKKW7hOdCXg7PAnQl2Dw==
-
 "@scure/base@~1.1.0":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@scure/base/-/base-1.1.1.tgz#ebb651ee52ff84f420097055f4bf46cfba403938"

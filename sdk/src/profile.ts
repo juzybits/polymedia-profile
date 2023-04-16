@@ -27,7 +27,6 @@ import {
     TransactionEffects,
 } from '@mysten/sui.js';
 import { WalletKitCore } from '@mysten/wallet-kit-core';
-import { NetworkName } from '@polymedia/webutils';
 
 export const POLYMEDIA_PROFILE_PACKAGE_ID_LOCALNET = '0x419ced1b0d9c8c56660ab0d446cd3a65571cbaf9d2a50d663ca22e1cdc8b33ca';
 export const POLYMEDIA_PROFILE_REGISTRY_ID_LOCALNET = '0xf764edb4b677b0e1b6a3b40377c69b1ee5b39f546d0e5c0c98823d4e82eafe78';
@@ -49,6 +48,8 @@ export type PolymediaProfile = {
     owner: SuiAddress,
     previousTx: string,
 }
+
+type NetworkName = 'localnet' | 'devnet' | 'testnet';
 
 /**
  * Helps you interact with the `polymedia_profile` Sui package

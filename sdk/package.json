@@ -29,8 +29,7 @@
     "dependencies": {
         "@mysten/bcs": "latest",
         "@mysten/sui.js": "latest",
-        "@mysten/wallet-kit-core": "latest",
-        "@polymedia/webutils": "latest"
+        "@mysten/wallet-kit-core": "latest"
     },
     "devDependencies": {
         "typescript": "^4.0.0"
