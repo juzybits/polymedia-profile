@@ -15,10 +15,10 @@
 
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { AppWrap } from './js/App';
+import { AppEthos } from './js/AppEthos';
 import { Home } from './js/Home';
 import { Docs } from './js/Docs';
-import { ManageProfile } from './js/ManageProfile';
+import { ManageProfileEthos } from './js/ManageProfileEthos';
 import { RegistryNew } from './js/RegistryNew';
 import { NotFound } from './js/NotFound';
 
@@ -27,9 +27,9 @@ ReactDOM
     .render(
         <BrowserRouter>
         <Routes>
-            <Route path='/' element={<AppWrap />} >
+            <Route path='/' element={<AppEthos />} >
                 <Route index element={<Home />} />
-                <Route path='manage' element={<ManageProfile />} />
+                <Route path='manage' element={<ManageProfileEthos />} />
                 <Route path='docs' element={<Docs />} />
                 <Route path='registry/new' element={<RegistryNew />} />
                 {/*<Route path='view/:profileId' element={<ViewProfile />} />*/} {/*TODO*/}
