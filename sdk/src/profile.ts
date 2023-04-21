@@ -41,12 +41,12 @@ export const POLYMEDIA_PROFILE_REGISTRY_ID_TESTNET = '0xec4c82836bcd537015b252df
  * Represents a `polymedia_profile::profile::Profile` Sui object
  */
 export type PolymediaProfile = {
-    id: SuiAddress,
-    name: string,
-    imageUrl: string,
-    description: string,
-    owner: SuiAddress,
-    previousTx: string,
+    id: SuiAddress;
+    name: string;
+    imageUrl: string;
+    description: string;
+    owner: SuiAddress;
+    previousTx: string;
 }
 
 type NetworkName = 'localnet' | 'devnet' | 'testnet';
@@ -154,26 +154,26 @@ export class ProfileManager {
         return profile !== null;
     }
 
-    public createRegistry({ signAndExecuteTransactionBlock, registryName }: {
+    public async createRegistry({ signAndExecuteTransactionBlock, registryName }: {
         signAndExecuteTransactionBlock: WalletKitCore['signAndExecuteTransactionBlock'],
         registryName: string,
     }): Promise<OwnedObjectRef>
     {
-        return sui_createRegistry({
+        return await sui_createRegistry({
             signAndExecuteTransactionBlock,
             packageId: this.#packageId,
             registryName,
         });
     }
 
-    public createProfile({ signAndExecuteTransactionBlock, name, imageUrl='', description='' }: {
+    public async createProfile({ signAndExecuteTransactionBlock, name, imageUrl='', description='' }: {
         signAndExecuteTransactionBlock: WalletKitCore['signAndExecuteTransactionBlock'],
         name: string,
         imageUrl?: string,
         description?: string,
     }): Promise<PolymediaProfile>
     {
-        return sui_createProfile({
+        return await sui_createProfile({
             signAndExecuteTransactionBlock,
             packageId: this.#packageId,
             registryId: this.#registryId,
@@ -183,7 +183,7 @@ export class ProfileManager {
         });
     }
 
-    public editProfile({ signAndExecuteTransactionBlock, profileId, name, imageUrl='', description='' }: {
+    public async editProfile({ signAndExecuteTransactionBlock, profileId, name, imageUrl='', description='' }: {
         signAndExecuteTransactionBlock: WalletKitCore['signAndExecuteTransactionBlock'],
         profileId: SuiAddress,
         name: string,
@@ -191,7 +191,7 @@ export class ProfileManager {
         description?: string,
     }): Promise<SuiTransactionBlockResponse>
     {
-        return sui_editProfile({
+        return await sui_editProfile({
             signAndExecuteTransactionBlock,
             profileId: profileId,
             packageId: this.#packageId,
@@ -222,11 +222,11 @@ export class ProfileManager {
         return results;
     }
 
-    #fetchProfileObjects({ objectIds }: {
+    async #fetchProfileObjects({ objectIds }: {
         objectIds: SuiAddress[]
     }): Promise<PolymediaProfile[]>
     {
-        return sui_fetchProfileObjects({
+        return await sui_fetchProfileObjects({
             rpc: this.#rpc,
             objectIds,
         });
