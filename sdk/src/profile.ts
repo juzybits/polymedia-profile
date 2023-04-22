@@ -294,20 +294,24 @@ function sui_fetchProfileObjectIds({
 /**
  * Fetch one or more Sui objects and return them as PolymediaProfile instances
  */
-function sui_fetchProfileObjects({ rpc, objectIds }: {
+async function sui_fetchProfileObjects({ rpc, objectIds }: {
     rpc: JsonRpcProvider,
     objectIds: SuiAddress[],
 }): Promise<PolymediaProfile[]>
 {
-    return rpc.multiGetObjects({
-        ids: objectIds,
-        options: {
-            showContent: true,
-            showOwner: true,
-            showPreviousTransaction: true,
-        },
-    })
-    .then((resps: SuiObjectResponse[]) => {
+    const allProfiles = new Array<PolymediaProfile>();
+    const objectIdBatches = chunkArray(objectIds, 50);
+    const promises = objectIdBatches.map(async objectIds =>
+    {
+        const resps: SuiObjectResponse[] = await rpc.multiGetObjects({
+            ids: objectIds,
+            options: {
+                showContent: true,
+                showOwner: true,
+                showPreviousTransaction: true,
+            },
+        });
+
         const profiles: PolymediaProfile[] = [];
         for (const resp of resps) {
             if (resp.error || !resp.data)
@@ -324,8 +328,10 @@ function sui_fetchProfileObjects({ rpc, objectIds }: {
                 previousTx: resp.data.previousTransaction||'',
             });
         }
-        return profiles;
+        allProfiles.push(...profiles);
     });
+    await Promise.all(promises);
+    return allProfiles;
 }
 
 function sui_createRegistry({
