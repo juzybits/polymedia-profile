@@ -2,6 +2,7 @@
 name = "PolymediaProfile"
 version = "0.0.1"
 authors = ["juzybits <https://twitter.com/juzybits>"]
+published-at = "0x176c277279d99cdd2e8afcf618ba8d6705465cdeabb3bdbe1a7ce020141e67dd"
 
 [dependencies]
 Sui = { local = "../../sui/crates/sui-framework/packages/sui-framework" }
