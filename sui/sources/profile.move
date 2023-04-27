@@ -210,15 +210,19 @@ module polymedia_profile::profile
                 utf8(b"image_url"),
                 utf8(b"description"),
                 utf8(b"link"),
-                utf8(b"project_url"),
                 utf8(b"creator"),
+                utf8(b"project_name"),
+                utf8(b"project_url"),
+                utf8(b"project_image_url"),
             ], vector[
-                utf8(b"{name}"),
-                utf8(b"{image_url}"),
-                utf8(b"{description}"),
-                utf8(b"https://profile.polymedia.app/view/{id}"),
-                utf8(b"https://profile.polymedia.app"),
-                utf8(b"https://polymedia.app")
+                utf8(b"{name}"), // name
+                utf8(b"{image_url}"), // image_url
+                utf8(b"{description}"), // description
+                utf8(b"https://profile.polymedia.app/view/{id}"), // link
+                utf8(b"https://polymedia.app"), // creator
+                utf8(b"Polymedia Profile"), // project_name
+                utf8(b"https://profile.polymedia.app"), // project_url
+                utf8(b"https://profile.polymedia.app/img/project_image.png"), // project_image_url
             ], ctx
         );
 
