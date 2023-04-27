@@ -408,16 +408,21 @@ async function sui_createProfile({
 {
     const dataJson = data ? JSON.stringify(data) : '';
     const tx = new TransactionBlock();
+    // Temporary hack for legacy POLYMEDIA_PROFILE_PACKAGE_ID_TESTNET. TODO: remove eventually
+    const hasDataField = packageId !== '0x176c277279d99cdd2e8afcf618ba8d6705465cdeabb3bdbe1a7ce020141e67dd';
+    const moveArgs = [
+        tx.object(registryId),
+        tx.pure(Array.from( (new TextEncoder()).encode(name) )),
+        tx.pure(Array.from( (new TextEncoder()).encode(imageUrl) )),
+        tx.pure(Array.from( (new TextEncoder()).encode(description) )),
+    ];
+    if (hasDataField) {
+        moveArgs.push(tx.pure(Array.from( (new TextEncoder()).encode(dataJson) )));
+    }
     tx.moveCall({
         target: `${packageId}::profile::create_profile`,
         typeArguments: [],
-        arguments: [
-            tx.object(registryId),
-            tx.pure(Array.from( (new TextEncoder()).encode(name) )),
-            tx.pure(Array.from( (new TextEncoder()).encode(imageUrl) )),
-            tx.pure(Array.from( (new TextEncoder()).encode(description) )),
-            tx.pure(Array.from( (new TextEncoder()).encode(dataJson) )),
-        ],
+        arguments: moveArgs,
     });
 
     // Creates 2 objects: the profile (owned by the caller) and a dynamic field (inside the registry's table)
@@ -474,16 +479,21 @@ async function sui_editProfile({
 {
     const dataJson = data ? JSON.stringify(data) : '';
     const tx = new TransactionBlock();
+    // Temporary hack for legacy POLYMEDIA_PROFILE_PACKAGE_ID_TESTNET. TODO: remove eventually
+    const hasDataField = packageId !== '0x176c277279d99cdd2e8afcf618ba8d6705465cdeabb3bdbe1a7ce020141e67dd';
+    const moveArgs = [
+        tx.object(profileId),
+        tx.pure(Array.from( (new TextEncoder()).encode(name) )),
+        tx.pure(Array.from( (new TextEncoder()).encode(imageUrl) )),
+        tx.pure(Array.from( (new TextEncoder()).encode(description) )),
+    ];
+    if (hasDataField) {
+        moveArgs.push(tx.pure(Array.from( (new TextEncoder()).encode(dataJson) )));
+    }
     tx.moveCall({
         target: `${packageId}::profile::edit_profile`,
         typeArguments: [],
-        arguments: [
-            tx.object(profileId),
-            tx.pure(Array.from( (new TextEncoder()).encode(name) )),
-            tx.pure(Array.from( (new TextEncoder()).encode(imageUrl) )),
-            tx.pure(Array.from( (new TextEncoder()).encode(description) )),
-            tx.pure(Array.from( (new TextEncoder()).encode(dataJson) )),
-        ],
+        arguments: moveArgs,
     });
 
     const resp = await signAndExecuteTransactionBlock({
