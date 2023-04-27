@@ -2,6 +2,7 @@ import { useEffect, useState, SyntheticEvent } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { useWalletKit } from '@mysten/wallet-kit';
 import { PolymediaProfile } from '@polymedia/profile-sdk';
+import { linkToExplorer } from '@polymedia/webutils';
 
 import { AppContext } from './App';
 import { notifyError, notifyOkay } from './components/Notification';
@@ -193,10 +194,10 @@ export const ManageProfile: React.FC = () =>
     <div className='section section-info'>
         <h2>Details</h2>
         <p>
-            Profile: <a target="_blank" href={`https://explorer.sui.io/object/${profile.id}?network=${network}`}>{profile.id}</a>
+            Profile: <a target="_blank" href={linkToExplorer(network, 'object', profile.id)}>{profile.id}</a>
         </p>
         <p>
-            Registry: <a target="_blank" href={`https://explorer.sui.io/object/${profileManager.getRegistryId()}?network=${network}`}>{profileManager.getRegistryId()}</a>
+            Registry: <a target="_blank" href={linkToExplorer(network, 'object', profileManager.getRegistryId())}>{profileManager.getRegistryId()}</a>
         </p>
     </div>;
 

@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import { linkToExplorer } from '@polymedia/webutils';
 
 import { AppContext } from './App';
 
@@ -22,7 +23,7 @@ export const Home: React.FC = () =>
             <br/>
             <br/>
 
-            This web app is for users to manage their profiles on the default registry (called <i><a target="_blank" href={`https://explorer.sui.io/object/${profileManager.getRegistryId()}?network=${network}`}>polymedia-main</a></i>).
+            This web app is for users to manage their profiles on the default registry (called <i><a target="_blank" href={linkToExplorer(network, 'object', profileManager.getRegistryId())}>polymedia-main</a></i>).
             <br/>
             <br/>
             The code is fully <a href='https://github.com/juzybits/polymedia-profile' target='_blank'>open-source</a>, and there is a <a href='https://www.npmjs.com/package/@polymedia/profile-sdk' target='_blank'>TypeScript SDK</a> to facilitate 3rd party integrations.

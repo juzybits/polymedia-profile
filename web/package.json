@@ -6,15 +6,15 @@
         "@mysten/sui.js": "latest",
         "@mysten/wallet-kit": "latest",
         "@polymedia/profile-sdk": "latest",
-        "@polymedia/webutils": "latest",
+        "@polymedia/webutils": "^0.1.9",
         "react": "^18.0.0",
         "react-dom": "^18.0.0",
         "react-router-dom": "^6.0.0"
     },
     "devDependencies": {
         "@parcel/transformer-less": "latest",
-        "@types/react": "latest",
-        "@types/react-dom": "latest",
+        "@types/react": "^18.0.0",
+        "@types/react-dom": "^18.0.0",
         "buffer": "^5.0.0",
         "parcel": "latest",
         "process": "latest",
