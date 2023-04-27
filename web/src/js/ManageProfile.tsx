@@ -74,6 +74,7 @@ export const ManageProfile: React.FC = () =>
                 name: inputName,
                 imageUrl: inputImage,
                 description: inputDescription,
+                data: null,
             });
             console.debug('[onSubmitCreateProfile] New profile:', newProfile);
             notifyOkay('SUCCESS');
@@ -102,6 +103,7 @@ export const ManageProfile: React.FC = () =>
                 name: inputName,
                 imageUrl: inputImage,
                 description: inputDescription,
+                data: null,
             });
             console.debug('[onSubmitEditProfile] Response:', response);
             notifyOkay('SUCCESS');
@@ -110,6 +112,7 @@ export const ManageProfile: React.FC = () =>
                 name: inputName,
                 imageUrl: inputImage,
                 description: inputDescription,
+                data: null,
                 owner: profile.owner,
                 previousTx: response.digest,
             };

@@ -21,17 +21,17 @@ The package defines two _structs_:
 - `Profile` objects are owned:
   ```
   struct Profile has key {
-    id: UID,
-    name: String,
-    image_url: String,
-    description: String,
-    registries: vector<address>,
+      id: UID,
+      name: String,
+      image_url: String,
+      description: String,
+      data: String,
   }
   ```
 
 Call `create_registry` and `create_profile` respectively to create new objects.
 
-Call `edit_profile` to modify a `Profile` object fields (`name`/`url`/`description`).
+Call `edit_profile` to modify a `Profile` object fields (`name`/`url`/`description`/`data`).
 
 In addition to its regular fields, a `Profile` can have any number of dynamic (object) fields. These can be added/removed with: `add_dynamic_field`, `remove_dynamic_field`, `add_dynamic_object_field`, `remove_dynamic_object_field`.
 

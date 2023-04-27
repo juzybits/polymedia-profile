@@ -27,8 +27,8 @@ import { WalletKitCore } from '@mysten/wallet-kit-core';
 export const POLYMEDIA_PROFILE_PACKAGE_ID_LOCALNET = '0x419ced1b0d9c8c56660ab0d446cd3a65571cbaf9d2a50d663ca22e1cdc8b33ca';
 export const POLYMEDIA_PROFILE_REGISTRY_ID_LOCALNET = '0xf764edb4b677b0e1b6a3b40377c69b1ee5b39f546d0e5c0c98823d4e82eafe78';
 
-export const POLYMEDIA_PROFILE_PACKAGE_ID_DEVNET = '0x934d8f9692960e531316df8a66541cdbe6351649ae6ea464ad4d51b9779bbac1';
-export const POLYMEDIA_PROFILE_REGISTRY_ID_DEVNET = '0x7d39132a20a53d9758cfcaca344e3a37aebfa0f639ff5c5e7ba4207aa193c385';
+export const POLYMEDIA_PROFILE_PACKAGE_ID_DEVNET = '0xe7cfb33c19df87e4b357a3bb3e6ac1c648811c4884ab2988fc2f02eae6176560';
+export const POLYMEDIA_PROFILE_REGISTRY_ID_DEVNET = '0x8f9a36a72c67356bc8f8bb3574fd512c3a0aacef84a472bbe90624979d8015b8';
 
 export const POLYMEDIA_PROFILE_PACKAGE_ID_TESTNET = '0x176c277279d99cdd2e8afcf618ba8d6705465cdeabb3bdbe1a7ce020141e67dd';
 export const POLYMEDIA_PROFILE_REGISTRY_ID_TESTNET = '0xec4c82836bcd537015b252df836cdcd27412f0a581591737cad0b8bfef7241d5';
@@ -41,6 +41,7 @@ export type PolymediaProfile = {
     name: string;
     imageUrl: string;
     description: string;
+    data: any;
     owner: SuiAddress;
     previousTx: string;
 }
@@ -162,11 +163,18 @@ export class ProfileManager {
         });
     }
 
-    public async createProfile({ signAndExecuteTransactionBlock, name, imageUrl='', description='' }: {
+    public async createProfile({
+        signAndExecuteTransactionBlock,
+        name,
+        imageUrl='',
+        description='',
+        data=null,
+    }: {
         signAndExecuteTransactionBlock: WalletKitCore['signAndExecuteTransactionBlock'],
         name: string,
         imageUrl?: string,
         description?: string,
+        data?: any,
     }): Promise<PolymediaProfile>
     {
         return await sui_createProfile({
@@ -176,15 +184,24 @@ export class ProfileManager {
             name,
             imageUrl,
             description,
+            data,
         });
     }
 
-    public async editProfile({ signAndExecuteTransactionBlock, profileId, name, imageUrl='', description='' }: {
+    public async editProfile({
+        signAndExecuteTransactionBlock,
+        profileId,
+        name,
+        imageUrl='',
+        description='',
+        data=null,
+    }: {
         signAndExecuteTransactionBlock: WalletKitCore['signAndExecuteTransactionBlock'],
         profileId: SuiAddress,
         name: string,
         imageUrl?: string,
         description?: string,
+        data?: any,
     }): Promise<SuiTransactionBlockResponse>
     {
         return await sui_editProfile({
@@ -194,6 +211,7 @@ export class ProfileManager {
             name,
             imageUrl,
             description,
+            data,
         });
     }
 
@@ -319,6 +337,7 @@ async function sui_fetchProfileObjects({ rpc, objectIds }: {
                 name: objData.fields.name,
                 imageUrl: objData.fields.image_url,
                 description: objData.fields.description,
+                data: objData.fields.data ? JSON.parse(objData.fields.data) : null,
                 // @ts-ignore
                 owner: objOwner.AddressOwner,
                 previousTx: resp.data.previousTransaction||'',
@@ -376,6 +395,7 @@ async function sui_createProfile({
     name,
     imageUrl = '',
     description = '',
+    data = null,
 } : {
     signAndExecuteTransactionBlock: WalletKitCore['signAndExecuteTransactionBlock'],
     packageId: SuiAddress,
@@ -383,8 +403,10 @@ async function sui_createProfile({
     name: string,
     imageUrl?: string,
     description?: string,
+    data?: any,
 }): Promise<PolymediaProfile>
 {
+    const dataJson = data ? JSON.stringify(data) : '';
     const tx = new TransactionBlock();
     tx.moveCall({
         target: `${packageId}::profile::create_profile`,
@@ -394,6 +416,7 @@ async function sui_createProfile({
             tx.pure(Array.from( (new TextEncoder()).encode(name) )),
             tx.pure(Array.from( (new TextEncoder()).encode(imageUrl) )),
             tx.pure(Array.from( (new TextEncoder()).encode(description) )),
+            tx.pure(Array.from( (new TextEncoder()).encode(dataJson) )),
         ],
     });
 
@@ -420,6 +443,7 @@ async function sui_createProfile({
                     name: name,
                     imageUrl: imageUrl,
                     description: description,
+                    data: data,
                     owner: event.sender,
                     previousTx: resp.digest,
                 };
@@ -437,6 +461,7 @@ async function sui_editProfile({
     name,
     imageUrl = '',
     description = '',
+    data = null,
 } : {
     signAndExecuteTransactionBlock: WalletKitCore['signAndExecuteTransactionBlock'],
     profileId: SuiAddress,
@@ -444,8 +469,10 @@ async function sui_editProfile({
     name: string,
     imageUrl?: string,
     description?: string,
+    data?: any,
 }): Promise<SuiTransactionBlockResponse>
 {
+    const dataJson = data ? JSON.stringify(data) : '';
     const tx = new TransactionBlock();
     tx.moveCall({
         target: `${packageId}::profile::edit_profile`,
@@ -455,6 +482,7 @@ async function sui_editProfile({
             tx.pure(Array.from( (new TextEncoder()).encode(name) )),
             tx.pure(Array.from( (new TextEncoder()).encode(imageUrl) )),
             tx.pure(Array.from( (new TextEncoder()).encode(description) )),
+            tx.pure(Array.from( (new TextEncoder()).encode(dataJson) )),
         ],
     });
 

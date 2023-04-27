@@ -13,12 +13,13 @@ This library exports only one type and one class:
 - The `PolymediaProfile` type represents a `Profile` Sui object:
   ```
   export type PolymediaProfile = {
-    id: SuiAddress,
-    name: string,
-    imageUrl: string,
-    description: string,
-    owner: SuiAddress,
-    previousTx: string,
+    id: SuiAddress;
+    name: string;
+    imageUrl: string;
+    description: string;
+    data: any;
+    owner: SuiAddress;
+    previousTx: string;
   }
   ```
 
@@ -100,6 +101,7 @@ profileManager.createProfile({
     name: 'John Doe',
     imageUrl: 'https://example.com/pfp.jpeg',
     description: 'Lorem ipsum',
+    data: {'twitter': 'https://twitter.com/johndoe_1'},
 }).then((profile: PolymediaProfile) => {
     // do something with the profile
 }).catch(error => {
@@ -128,7 +130,8 @@ profileManager.editProfile({
     profileId: '0x_PROFILE_ADDRESS',
     name: 'John Doe (updated)',
     imageUrl: 'https://example.com/pfp_updated.jpeg',
-    description: 'Lorem ipsum (updated)',
+    description: 'Lorem ipsum (updated)',,
+    data: {'twitter': 'https://twitter.com/johndoe_2'},
 }).then(response => {
     // success
 }).catch(error => {
