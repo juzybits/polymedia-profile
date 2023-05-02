@@ -151,26 +151,30 @@ export class ProfileManager {
         return profile !== null;
     }
 
-    public async createRegistry({ signAndExecuteTransactionBlock, registryName }: {
-        signAndExecuteTransactionBlock: WalletKitCore['signAndExecuteTransactionBlock'],
+    public async createRegistry({
+        signTransactionBlock,
+        registryName
+    }: {
+        signTransactionBlock: WalletKitCore['signTransactionBlock'],
         registryName: string,
     }): Promise<OwnedObjectRef>
     {
         return await sui_createRegistry({
-            signAndExecuteTransactionBlock,
+            rpcProvider: this.#rpc,
+            signTransactionBlock,
             packageId: this.#packageId,
             registryName,
         });
     }
 
     public async createProfile({
-        signAndExecuteTransactionBlock,
+        signTransactionBlock,
         name,
         imageUrl='',
         description='',
         data=null,
     }: {
-        signAndExecuteTransactionBlock: WalletKitCore['signAndExecuteTransactionBlock'],
+        signTransactionBlock: WalletKitCore['signTransactionBlock'],
         name: string,
         imageUrl?: string,
         description?: string,
@@ -178,7 +182,8 @@ export class ProfileManager {
     }): Promise<PolymediaProfile>
     {
         return await sui_createProfile({
-            signAndExecuteTransactionBlock,
+            rpcProvider: this.#rpc,
+            signTransactionBlock,
             packageId: this.#packageId,
             registryId: this.#registryId,
             name,
@@ -189,14 +194,14 @@ export class ProfileManager {
     }
 
     public async editProfile({
-        signAndExecuteTransactionBlock,
+        signTransactionBlock,
         profileId,
         name,
         imageUrl='',
         description='',
         data=null,
     }: {
-        signAndExecuteTransactionBlock: WalletKitCore['signAndExecuteTransactionBlock'],
+        signTransactionBlock: WalletKitCore['signTransactionBlock'],
         profileId: SuiAddress,
         name: string,
         imageUrl?: string,
@@ -205,7 +210,8 @@ export class ProfileManager {
     }): Promise<SuiTransactionBlockResponse>
     {
         return await sui_editProfile({
-            signAndExecuteTransactionBlock,
+            rpcProvider: this.#rpc,
+            signTransactionBlock,
             profileId: profileId,
             packageId: this.#packageId,
             name,
@@ -349,12 +355,14 @@ async function sui_fetchProfileObjects({ rpc, objectIds }: {
     return allProfiles;
 }
 
-function sui_createRegistry({
-    signAndExecuteTransactionBlock,
+async function sui_createRegistry({
+    rpcProvider,
+    signTransactionBlock,
     packageId,
     registryName,
 } : {
-    signAndExecuteTransactionBlock: WalletKitCore['signAndExecuteTransactionBlock'],
+    rpcProvider: JsonRpcProvider,
+    signTransactionBlock: WalletKitCore['signTransactionBlock'],
     packageId: SuiAddress,
     registryName: string,
 }): Promise<OwnedObjectRef>
@@ -368,8 +376,12 @@ function sui_createRegistry({
         ],
     });
 
-    return signAndExecuteTransactionBlock({
+    const signedTx = await signTransactionBlock({
         transactionBlock: tx,
+    });
+    return rpcProvider.executeTransactionBlock({
+        transactionBlock: signedTx.transactionBlockBytes,
+        signature: signedTx.signature,
         options: {
             showEffects: true,
         },
@@ -389,7 +401,8 @@ function sui_createRegistry({
 }
 
 async function sui_createProfile({
-    signAndExecuteTransactionBlock,
+    rpcProvider,
+    signTransactionBlock,
     packageId,
     registryId,
     name,
@@ -397,7 +410,8 @@ async function sui_createProfile({
     description = '',
     data = null,
 } : {
-    signAndExecuteTransactionBlock: WalletKitCore['signAndExecuteTransactionBlock'],
+    rpcProvider: JsonRpcProvider,
+    signTransactionBlock: WalletKitCore['signTransactionBlock'],
     packageId: SuiAddress,
     registryId: SuiAddress,
     name: string,
@@ -426,8 +440,12 @@ async function sui_createProfile({
     });
 
     // Creates 2 objects: the profile (owned by the caller) and a dynamic field (inside the registry's table)
-    const resp = await signAndExecuteTransactionBlock({
+    const signedTx = await signTransactionBlock({
         transactionBlock: tx,
+    });
+    const resp = await rpcProvider.executeTransactionBlock({
+        transactionBlock: signedTx.transactionBlockBytes,
+        signature: signedTx.signature,
         options: {
             showEffects: true,
             showEvents: true,
@@ -460,7 +478,8 @@ async function sui_createProfile({
 }
 
 async function sui_editProfile({
-    signAndExecuteTransactionBlock,
+    rpcProvider,
+    signTransactionBlock,
     profileId,
     packageId,
     name,
@@ -468,7 +487,8 @@ async function sui_editProfile({
     description = '',
     data = null,
 } : {
-    signAndExecuteTransactionBlock: WalletKitCore['signAndExecuteTransactionBlock'],
+    rpcProvider: JsonRpcProvider,
+    signTransactionBlock: WalletKitCore['signTransactionBlock'],
     profileId: SuiAddress,
     packageId: SuiAddress,
     name: string,
@@ -496,8 +516,12 @@ async function sui_editProfile({
         arguments: moveArgs,
     });
 
-    const resp = await signAndExecuteTransactionBlock({
+    const signedTx = await signTransactionBlock({
         transactionBlock: tx,
+    });
+    const resp = await rpcProvider.executeTransactionBlock({
+        transactionBlock: signedTx.transactionBlockBytes,
+        signature: signedTx.signature,
         options: {
             showEffects: true,
         },

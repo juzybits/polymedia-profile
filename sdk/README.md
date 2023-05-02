@@ -94,10 +94,10 @@ To search for `Profile` objects associated to Sui addreses, you can use the foll
 ```
 import { useWalletKit } from '@mysten/wallet-kit';
 ...
-const { signAndExecuteTransactionBlock } = useWalletKit();
+const { signTransactionBlock } = useWalletKit();
 ...
 profileManager.createProfile({
-    signAndExecuteTransactionBlock,
+    signTransactionBlock,
     name: 'John Doe',
     imageUrl: 'https://example.com/pfp.jpeg',
     description: 'Lorem ipsum',
@@ -117,7 +117,7 @@ import { ethos } from 'ethos-connect';
 const { wallet } = ethos.useWallet();
 ...
 profileManager.createProfile({
-    signAndExecuteTransactionBlock: wallet.signAndExecuteTransactionBlock,
+    signTransactionBlock: wallet.signTransactionBlock,
     ...
 ```
 
@@ -126,7 +126,7 @@ profileManager.createProfile({
 
 ```
 profileManager.editProfile({
-    signAndExecuteTransactionBlock,
+    signTransactionBlock,
     profileId: '0x_PROFILE_ADDRESS',
     name: 'John Doe (updated)',
     imageUrl: 'https://example.com/pfp_updated.jpeg',
@@ -144,7 +144,7 @@ profileManager.editProfile({
 
 ```
 profileManager.createRegistry({
-    signAndExecuteTransactionBlock,
+    signTransactionBlock,
     registryName: 'The Registry Name',
 }).then(objRef => {
     console.log('registry ID:', objRef.reference.objectId);

@@ -50,7 +50,7 @@ module polymedia_profile::profile
         registry_id: ID,
     }
 
-    /* Entry functions */
+    /* Functions */
 
     public entry fun create_registry(
         name: vector<u8>,
@@ -128,13 +128,10 @@ module polymedia_profile::profile
         profile.data = utf8(data);
     }
 
-    /* Regular functions */
-
     struct LookupResult {
         lookup_addr: address,
         profile_addr: address,
     }
-
     /// Find profiles in a registry by the addresses of their owners.
     /// Addresses that don't have a profile in the registry don't get included in the results.
     /// Clients are expected to use the sui_devInspectTransaction RPC API.
@@ -234,8 +231,6 @@ module polymedia_profile::profile
 }
 
 /*
-    /* Errors */
-
     const E_CANT_REMOVE_LAST_REGISTRY: u64 = 100;
 
     /// Aborts when the profile is in only one registry.

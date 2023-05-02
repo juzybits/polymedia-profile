@@ -1,7 +1,6 @@
 import { useEffect, useState, SyntheticEvent } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { useWalletKit } from '@mysten/wallet-kit';
-import { PolymediaProfile } from '@polymedia/profile-sdk';
 import { linkToExplorer } from '@polymedia/webutils';
 
 import { AppContext } from './App';
@@ -12,13 +11,13 @@ export const ManageProfile: React.FC = () =>
 {
     /* State */
 
-    const { currentAccount, signAndExecuteTransactionBlock } = useWalletKit();
+    const { currentAccount, signTransactionBlock } = useWalletKit();
 
     const {
         network,
         profile,
-        setProfile,
         profileManager,
+        reloadProfile,
         openConnectModal,
     } = useOutletContext<AppContext>();
 
@@ -71,7 +70,7 @@ export const ManageProfile: React.FC = () =>
         setWaiting(true);
         try {
             const newProfile = await profileManager.createProfile({
-                signAndExecuteTransactionBlock,
+                signTransactionBlock,
                 name: inputName,
                 imageUrl: inputImage,
                 description: inputDescription,
@@ -79,7 +78,7 @@ export const ManageProfile: React.FC = () =>
             });
             console.debug('[onSubmitCreateProfile] New profile:', newProfile);
             notifyOkay('SUCCESS');
-            setProfile(newProfile);
+            reloadProfile();
         } catch(error: any) {
             showError('onSubmitCreateProfile', error);
         }
@@ -99,7 +98,7 @@ export const ManageProfile: React.FC = () =>
         setWaiting(true);
         try {
             const response = await profileManager.editProfile({
-                signAndExecuteTransactionBlock,
+                signTransactionBlock,
                 profileId: profile.id,
                 name: inputName,
                 imageUrl: inputImage,
@@ -108,16 +107,7 @@ export const ManageProfile: React.FC = () =>
             });
             console.debug('[onSubmitEditProfile] Response:', response);
             notifyOkay('SUCCESS');
-            const updatedProfile: PolymediaProfile = {
-                id: profile.id,
-                name: inputName,
-                imageUrl: inputImage,
-                description: inputDescription,
-                data: null,
-                owner: profile.owner,
-                previousTx: response.digest,
-            };
-            setProfile(updatedProfile);
+            reloadProfile();
         } catch(error: any) {
             showError('onSubmitEditProfile', error);
         } finally {

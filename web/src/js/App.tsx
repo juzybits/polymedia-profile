@@ -12,8 +12,8 @@ import '../css/App.less';
 export type AppContext = {
     network: NetworkName,
     profile: PolymediaProfile|null|undefined,
-    setProfile: React.Dispatch<React.SetStateAction<PolymediaProfile|null|undefined>>;
     profileManager: ProfileManager;
+    reloadProfile: () => Promise<PolymediaProfile|null|undefined>;
     openConnectModal: () => void;
 };
 
@@ -76,8 +76,8 @@ const App: React.FC = () =>
     const appContext: AppContext = {
         network,
         profile,
-        setProfile,
         profileManager,
+        reloadProfile,
         openConnectModal,
     };
 
