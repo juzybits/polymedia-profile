@@ -1,11 +1,12 @@
 [package]
 name = "PolymediaProfile"
-version = "0.0.1"
+version = "1.0.0"
 authors = ["juzybits <https://twitter.com/juzybits>"]
-published-at = "0x176c277279d99cdd2e8afcf618ba8d6705465cdeabb3bdbe1a7ce020141e67dd"
+license = "CC-BY-NC-SA-4.0"
+published-at = "0x57138e18b82cc8ea6e92c3d5737d6078b1304b655f59cf5ae9668cc44aad4ead"
 
 [dependencies]
-Sui = { local = "../../sui/crates/sui-framework/packages/sui-framework" }
+Sui = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "mainnet" }
 
 [addresses]
-polymedia_profile = "0x0"
+polymedia_profile = "0x57138e18b82cc8ea6e92c3d5737d6078b1304b655f59cf5ae9668cc44aad4ead"

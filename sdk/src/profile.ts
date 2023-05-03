@@ -33,6 +33,9 @@ export const POLYMEDIA_PROFILE_REGISTRY_ID_DEVNET = '0x61bacafd53850607f09f4b4a0
 export const POLYMEDIA_PROFILE_PACKAGE_ID_TESTNET = '0x176c277279d99cdd2e8afcf618ba8d6705465cdeabb3bdbe1a7ce020141e67dd';
 export const POLYMEDIA_PROFILE_REGISTRY_ID_TESTNET = '0xec4c82836bcd537015b252df836cdcd27412f0a581591737cad0b8bfef7241d5';
 
+export const POLYMEDIA_PROFILE_PACKAGE_ID_MAINNET = '0x57138e18b82cc8ea6e92c3d5737d6078b1304b655f59cf5ae9668cc44aad4ead';
+export const POLYMEDIA_PROFILE_REGISTRY_ID_MAINNET = '0xd6eb0ca817dfe0763af9303a6bea89b88a524844d78e657dc25ed8ba3877deac';
+
 /**
  * Represents a `polymedia_profile::profile::Profile` Sui object
  */
@@ -46,7 +49,7 @@ export type PolymediaProfile = {
     previousTx: string;
 }
 
-type NetworkName = 'localnet' | 'devnet' | 'testnet';
+type NetworkName = 'localnet' | 'devnet' | 'testnet' | 'mainnet';
 
 /**
  * Helps you interact with the `polymedia_profile` Sui package
@@ -73,6 +76,9 @@ export class ProfileManager {
         } else if (network === 'testnet') {
             this.#packageId = packageId || POLYMEDIA_PROFILE_PACKAGE_ID_TESTNET;
             this.#registryId = registryId || POLYMEDIA_PROFILE_REGISTRY_ID_TESTNET;
+        } else if (network === 'mainnet') {
+            this.#packageId = packageId || POLYMEDIA_PROFILE_PACKAGE_ID_MAINNET;
+            this.#registryId = registryId || POLYMEDIA_PROFILE_REGISTRY_ID_MAINNET;
         } else {
             throw new Error('Network not recognized: ' + network);
         }
@@ -264,6 +270,7 @@ const LookupResult = {
 bcs.registerStructType(POLYMEDIA_PROFILE_PACKAGE_ID_LOCALNET + '::profile::LookupResult', LookupResult);
 bcs.registerStructType(POLYMEDIA_PROFILE_PACKAGE_ID_DEVNET + '::profile::LookupResult', LookupResult);
 bcs.registerStructType(POLYMEDIA_PROFILE_PACKAGE_ID_TESTNET + '::profile::LookupResult', LookupResult);
+bcs.registerStructType(POLYMEDIA_PROFILE_PACKAGE_ID_MAINNET + '::profile::LookupResult', LookupResult);
 type TypeOfLookupResult = typeof LookupResult;
 
 /**
