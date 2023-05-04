@@ -153,7 +153,52 @@ profileManager.createRegistry({
 });
 ```
 
-### Real-world examples
+## Dynamic fields
+
+`profile::add_dynamic_field` and `profile::remove_dynamic_field` are wrappers around `sui::dynamic_field::add` and `sui::dynamic_field::remove`. These functions accept generic types `Name` and `Value`. Because of that, it is necessary to specify `typeArguments` in your `moveCall` to indicate how `arguments` should be serialized.
+
+### Add a dynamic field
+
+```
+const tx = new TransactionBlock();
+tx.moveCall({
+    target: '0x_POLYMEDIA_PROFILE_PACKAGE_ID::profile::add_dynamic_field',
+    typeArguments: ['0x1::string::String', '0x1::string::String'],
+    arguments: [
+        tx.object('0x_PROFILE_ID'),
+        tx.pure(Array.from((new TextEncoder()).encode('THE FIELD NAME')), 'vector<u8>'),
+        tx.pure(Array.from((new TextEncoder()).encode('THE FIELD VALUE')), 'vector<u8>'),
+    ],
+});
+const signedTx = await signTransactionBlock({
+    transactionBlock: tx,
+});
+const resp = await rpcProvider.executeTransactionBlock({
+    transactionBlock: signedTx.transactionBlockBytes,
+    signature: signedTx.signature,
+    options: {
+        showEffects: true,
+    },
+});
+```
+
+### Delete a dynamic field
+
+```
+tx.moveCall({
+    target: '0x_POLYMEDIA_PROFILE_PACKAGE_ID::profile::remove_dynamic_field',
+    typeArguments: ['0x1::string::String', '0x1::string::String'],
+    arguments: [
+        tx.object('0x_PROFILE_ID'),
+        tx.pure(Array.from((new TextEncoder()).encode('THE FIELD NAME')), 'vector<u8>'),
+    ],
+});
+```
+
+### Dynamic object fields
+Similarly to the previous examples, call `profile::add_dynamic_object_field` and `profile::remove_dynamic_object_field`.
+
+## Real-world examples
 
 If this document is outdated, you can find up-to-date usage examples in the following Sui apps:
 
