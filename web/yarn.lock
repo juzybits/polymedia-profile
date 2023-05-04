@@ -843,9 +843,9 @@
     nullthrows "^1.1.1"
 
 "@polymedia/profile-sdk@latest":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@polymedia/profile-sdk/-/profile-sdk-1.0.0.tgz#54579894bc92ff9a19e6e27581e483640320673b"
-  integrity sha512-DbmbV40bHKkDVwxio9RKhNCNbZrtCY6YgwHATw83W2Yoq85wC5AMk/iy9CeG8jaYI7j1aNKNZ1zKHwWIDox2oA==
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@polymedia/profile-sdk/-/profile-sdk-1.0.1.tgz#71d2b2b137eb3b5f56ee02d938f7213b19c2ebc9"
+  integrity sha512-NEsKuXLJq647AZ1oDT854VknH6vJsf4pgG6T84xJXhiUShXKKsL8BfDQVF+TPUhukFsAQrTrNSUT25bpgC53Uw==
   dependencies:
     "@mysten/bcs" latest
     "@mysten/sui.js" latest
@@ -856,10 +856,10 @@
   resolved "https://registry.yarnpkg.com/@polymedia/webutils/-/webutils-1.0.0.tgz#2fe839a33c940cfff3f6b417d7bba6c499b4a0ba"
   integrity sha512-6L8JjucCBCk+sf/k+yw/1sn5QZMpsfBGGogCYR5pNE/hXJFP7w8clOIRVDXJ9BvOosF9fOHl7ua9s+CGUXFsSA==
 
-"@remix-run/router@1.6.0":
-  version "1.6.0"
-  resolved "https://registry.yarnpkg.com/@remix-run/router/-/router-1.6.0.tgz#45010e1826f4d81a1b2cfaf874f1aac93998cd28"
-  integrity sha512-N13NRw3T2+6Xi9J//3CGLsK2OqC8NMme3d/YX+nh05K9YHWGcv8DycHJrqGScSP4T75o8IN6nqIMhVFU8ohg8w==
+"@remix-run/router@1.6.1":
+  version "1.6.1"
+  resolved "https://registry.yarnpkg.com/@remix-run/router/-/router-1.6.1.tgz#3a3a408481a3796f45223a549c2571517bc8af2d"
+  integrity sha512-YUkWj+xs0oOzBe74OgErsuR3wVn+efrFhXBWrit50kOiED+pvQe2r6MWY0iJMQU/mSVKxvNzL4ZaYvjdX+G7ZA==
 
 "@scure/base@~1.1.0":
   version "1.1.1"
@@ -967,16 +967,16 @@
   integrity sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==
 
 "@types/react-dom@^18.0.0":
-  version "18.2.1"
-  resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-18.2.1.tgz#663b2612feb5f6431a70207430d7c04881b87f29"
-  integrity sha512-8QZEV9+Kwy7tXFmjJrp3XUKQSs9LTnE0KnoUb0YCguWBiNW0Yfb2iBMYZ08WPg35IR6P3Z0s00B15SwZnO26+w==
+  version "18.2.3"
+  resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-18.2.3.tgz#2fe492bb0e67047b7b43e18166d8f50d44e0525e"
+  integrity sha512-hxXEXWxFJXbY0LMj/T69mznqOZJXNtQMqVxIiirVAZnnpeYiD4zt+lPsgcr/cfWg2VLsxZ1y26vigG03prYB+Q==
   dependencies:
     "@types/react" "*"
 
 "@types/react@*", "@types/react@^18.0.0":
-  version "18.2.0"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-18.2.0.tgz#15cda145354accfc09a18d2f2305f9fc099ada21"
-  integrity sha512-0FLj93y5USLHdnhIhABk83rm8XEGA7kH3cr+YUlvxoUGp1xNt/DINUMvqPxLyOQMzLmZe8i4RTHbvb8MC7NmrA==
+  version "18.2.5"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-18.2.5.tgz#f9403e1113b12b53f7edcdd9a900c10dd4b49a59"
+  integrity sha512-RuoMedzJ5AOh23Dvws13LU9jpZHIc/k90AgmK7CecAYeWmSr3553L4u5rk4sWAPBuQosfT7HmTfG4Rg5o4nGEA==
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"
@@ -1496,14 +1496,14 @@ duplexer3@^0.1.4:
   integrity sha512-1A8za6ws41LQgv9HrE/66jyC5yuSjQ3L/KOpFtoBilsAK2iA2wuS5rTt1OCzIvtS2V7nVmedsUU+DGRcjBmOYA==
 
 electron-to-chromium@^1.4.284:
-  version "1.4.380"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.380.tgz#195dc59d930c6b74efbee6f0e6a267ce4af5ed91"
-  integrity sha512-XKGdI4pWM78eLH2cbXJHiBnWUwFSzZM7XujsB6stDiGu9AeSqziedP6amNLpJzE3i0rLTcfAwdCTs5ecP5yeSg==
+  version "1.4.382"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.382.tgz#87e659b0f0d5f7b19759038871bac0a327191f82"
+  integrity sha512-czMavlW52VIPgutbVL9JnZIZuFijzsG1ww/1z2Otu1r1q+9Qe2bTsH3My3sZarlvwyqHM6+mnZfEnt2Vr4dsIg==
 
 electron@^23.1.2:
-  version "23.3.0"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-23.3.0.tgz#3e83e75d8bebe00764611c1d0c1bfa90cc197c7c"
-  integrity sha512-DVAtptpOSxM7ycgriphSxzlkb3R92d28sFKG1hMtmPkAwHl/e87reaHXhGwyj8Xu4GY69e6yUoAJqma20w0Vgw==
+  version "23.3.1"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-23.3.1.tgz#8ffe35c363948f1da4278ff8fa8d129e89bd67bf"
+  integrity sha512-N+xGMPwK733BU6xn1qs2t/AE3wKEqhWYLvPqWEu6TRC8yQvf7PNNjtgBTPZ9R0GhtrRgu6kUTX3HSV3UG9r/Dw==
   dependencies:
     "@electron/get" "^2.0.0"
     "@types/node" "^16.11.26"
@@ -2535,19 +2535,19 @@ react-refresh@^0.9.0:
   integrity sha512-Gvzk7OZpiqKSkxsQvO/mbTN1poglhmAV7gR/DdIrRrSMXraRQQlfikRJOr3Nb9GTMPC5kof948Zy6jJZIFtDvQ==
 
 react-router-dom@^6.0.0:
-  version "6.11.0"
-  resolved "https://registry.yarnpkg.com/react-router-dom/-/react-router-dom-6.11.0.tgz#e9507327dad2dfdd3c4815810dbd8de8fc2ee211"
-  integrity sha512-Q3mK1c/CYoF++J6ZINz7EZzwlgSOZK/kc7lxIA7PhtWhKju4KfF1WHqlx0kVCIFJAWztuYVpXZeljEbds8z4Og==
+  version "6.11.1"
+  resolved "https://registry.yarnpkg.com/react-router-dom/-/react-router-dom-6.11.1.tgz#af226bae950deb437208a606a47cf5c2d72c55dc"
+  integrity sha512-dPC2MhoPeTQ1YUOt5uIK376SMNWbwUxYRWk2ZmTT4fZfwlOvabF8uduRKKJIyfkCZvMgiF0GSCQckmkGGijIrg==
   dependencies:
-    "@remix-run/router" "1.6.0"
-    react-router "6.11.0"
+    "@remix-run/router" "1.6.1"
+    react-router "6.11.1"
 
-react-router@6.11.0:
-  version "6.11.0"
-  resolved "https://registry.yarnpkg.com/react-router/-/react-router-6.11.0.tgz#2e9008e40f8ce69e381373a7916ebadfbf2ff184"
-  integrity sha512-hTm6KKNpj9SDG4syIWRjCU219O0RZY8RUPobCFt9p+PlF7nnkRgMoh2DieTKvw3F3Mw6zg565HGnSv8BuoY5oQ==
+react-router@6.11.1:
+  version "6.11.1"
+  resolved "https://registry.yarnpkg.com/react-router/-/react-router-6.11.1.tgz#6e58458c03e16834dda2b433c6adb9e7c2b1d7a8"
+  integrity sha512-OZINSdjJ2WgvAi7hgNLazrEV8SGn6xrKA+MkJe9wVDMZ3zQ6fdJocUjpCUCI0cNrelWjcvon0S/QK/j0NzL3KA==
   dependencies:
-    "@remix-run/router" "1.6.0"
+    "@remix-run/router" "1.6.1"
 
 react@^18.0.0:
   version "18.2.0"

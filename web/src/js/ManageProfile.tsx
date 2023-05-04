@@ -187,7 +187,7 @@ export const ManageProfile: React.FC = () =>
             Profile: <a target="_blank" href={linkToExplorer(network, 'object', profile.id)}>{profile.id}</a>
         </p>
         <p>
-            Registry: <a target="_blank" href={linkToExplorer(network, 'object', profileManager.getRegistryId())}>{profileManager.getRegistryId()}</a>
+            Registry: <a target="_blank" href={linkToExplorer(network, 'object', profileManager.registryId)}>{profileManager.registryId}</a>
         </p>
     </div>;
 

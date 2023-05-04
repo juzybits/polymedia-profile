@@ -55,10 +55,10 @@ type NetworkName = 'localnet' | 'devnet' | 'testnet' | 'mainnet';
  * Helps you interact with the `polymedia_profile` Sui package
  */
 export class ProfileManager {
-    #cache: Map<SuiAddress, PolymediaProfile|null> = new Map();
-    #rpc: JsonRpcProvider;
-    #packageId: SuiAddress;
-    #registryId: SuiAddress;
+    private readonly cache: Map<SuiAddress, PolymediaProfile|null> = new Map();
+    public readonly rpc: JsonRpcProvider;
+    public readonly packageId: SuiAddress;
+    public readonly registryId: SuiAddress;
 
     constructor({ network, rpcProvider, packageId, registryId }: {
         network: NetworkName,
@@ -66,26 +66,23 @@ export class ProfileManager {
         packageId?: SuiAddress,
         registryId?: SuiAddress
     }) {
-        this.#rpc = rpcProvider;
+        this.rpc = rpcProvider;
         if (network === 'localnet') {
-            this.#packageId = packageId || POLYMEDIA_PROFILE_PACKAGE_ID_LOCALNET;
-            this.#registryId = registryId || POLYMEDIA_PROFILE_REGISTRY_ID_LOCALNET;
+            this.packageId = packageId || POLYMEDIA_PROFILE_PACKAGE_ID_LOCALNET;
+            this.registryId = registryId || POLYMEDIA_PROFILE_REGISTRY_ID_LOCALNET;
         } else if (network === 'devnet') {
-            this.#packageId = packageId || POLYMEDIA_PROFILE_PACKAGE_ID_DEVNET;
-            this.#registryId = registryId || POLYMEDIA_PROFILE_REGISTRY_ID_DEVNET;
+            this.packageId = packageId || POLYMEDIA_PROFILE_PACKAGE_ID_DEVNET;
+            this.registryId = registryId || POLYMEDIA_PROFILE_REGISTRY_ID_DEVNET;
         } else if (network === 'testnet') {
-            this.#packageId = packageId || POLYMEDIA_PROFILE_PACKAGE_ID_TESTNET;
-            this.#registryId = registryId || POLYMEDIA_PROFILE_REGISTRY_ID_TESTNET;
+            this.packageId = packageId || POLYMEDIA_PROFILE_PACKAGE_ID_TESTNET;
+            this.registryId = registryId || POLYMEDIA_PROFILE_REGISTRY_ID_TESTNET;
         } else if (network === 'mainnet') {
-            this.#packageId = packageId || POLYMEDIA_PROFILE_PACKAGE_ID_MAINNET;
-            this.#registryId = registryId || POLYMEDIA_PROFILE_REGISTRY_ID_MAINNET;
+            this.packageId = packageId || POLYMEDIA_PROFILE_PACKAGE_ID_MAINNET;
+            this.registryId = registryId || POLYMEDIA_PROFILE_REGISTRY_ID_MAINNET;
         } else {
             throw new Error('Network not recognized: ' + network);
         }
     }
-
-    public getPackageId(): SuiAddress { return this.#packageId; }
-    public getRegistryId(): SuiAddress { return this.#registryId; }
 
     public async getProfiles({ lookupAddresses, useCache=true }: {
         lookupAddresses: Iterable<SuiAddress>,
@@ -97,8 +94,8 @@ export class ProfileManager {
 
         // Check if addresses are already in cache and add them to the returned map
         for (const addr of lookupAddresses) {
-            if (useCache && this.#cache.has(addr)) {
-                const cachedProfile = this.#cache.get(addr) || null;
+            if (useCache && this.cache.has(addr)) {
+                const cachedProfile = this.cache.get(addr) || null;
                 result.set(addr, cachedProfile);
             } else { // address not seen before so we need to look it up
                 newLookupAddresses.add(addr);
@@ -110,7 +107,7 @@ export class ProfileManager {
         }
 
         // Find the remaining profile object IDs
-        const newObjectIds = await this.#fetchProfileObjectIds({
+        const newObjectIds = await this.fetchProfileObjectIds({
             lookupAddresses: [...newLookupAddresses]
         });
 
@@ -118,21 +115,21 @@ export class ProfileManager {
         for (const addr of newLookupAddresses) {
             if (!newObjectIds.has(addr)) {
                 result.set(addr, null);
-                this.#cache.set(addr, null);
+                this.cache.set(addr, null);
             }
         }
 
         if (newObjectIds.size === 0) return result;
 
         // Retrieve the remaining profile objects
-        const profileObjects = await this.#fetchProfileObjects({
+        const profileObjects = await this.fetchProfileObjects({
             objectIds: [...newObjectIds.values()]
         });
 
         // Add the remaining profile objects to the returned map and cache
         for (const profile of profileObjects) {
             result.set(profile.owner, profile);
-            this.#cache.set(profile.owner, profile);
+            this.cache.set(profile.owner, profile);
         }
 
         return result;
@@ -166,9 +163,9 @@ export class ProfileManager {
     }): Promise<OwnedObjectRef>
     {
         return await sui_createRegistry({
-            rpcProvider: this.#rpc,
+            rpcProvider: this.rpc,
             signTransactionBlock,
-            packageId: this.#packageId,
+            packageId: this.packageId,
             registryName,
         });
     }
@@ -188,10 +185,10 @@ export class ProfileManager {
     }): Promise<PolymediaProfile>
     {
         return await sui_createProfile({
-            rpcProvider: this.#rpc,
+            rpcProvider: this.rpc,
             signTransactionBlock,
-            packageId: this.#packageId,
-            registryId: this.#registryId,
+            packageId: this.packageId,
+            registryId: this.registryId,
             name,
             imageUrl,
             description,
@@ -216,10 +213,10 @@ export class ProfileManager {
     }): Promise<SuiTransactionBlockResponse>
     {
         return await sui_editProfile({
-            rpcProvider: this.#rpc,
+            rpcProvider: this.rpc,
             signTransactionBlock,
             profileId: profileId,
-            packageId: this.#packageId,
+            packageId: this.packageId,
             name,
             imageUrl,
             description,
@@ -227,7 +224,7 @@ export class ProfileManager {
         });
     }
 
-    async #fetchProfileObjectIds({ lookupAddresses }: {
+    private async fetchProfileObjectIds({ lookupAddresses }: {
         lookupAddresses: SuiAddress[]
     }): Promise<Map<SuiAddress,SuiAddress>>
     {
@@ -235,9 +232,9 @@ export class ProfileManager {
         const addressBatches = chunkArray(lookupAddresses, 30);
         const promises = addressBatches.map(async batch => {
             const lookupResults = await sui_fetchProfileObjectIds({
-                rpc: this.#rpc,
-                packageId: this.#packageId,
-                registryId: this.#registryId,
+                rpc: this.rpc,
+                packageId: this.packageId,
+                registryId: this.registryId,
                 lookupAddresses: batch,
             });
             for (const result of lookupResults) {
@@ -248,12 +245,12 @@ export class ProfileManager {
         return results;
     }
 
-    async #fetchProfileObjects({ objectIds }: {
+    private async fetchProfileObjects({ objectIds }: {
         objectIds: SuiAddress[]
     }): Promise<PolymediaProfile[]>
     {
         return await sui_fetchProfileObjects({
-            rpc: this.#rpc,
+            rpc: this.rpc,
             objectIds,
         });
     }
