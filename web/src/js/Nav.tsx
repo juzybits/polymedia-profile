@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useWalletKit } from '@mysten/wallet-kit';
 
-import { NetworkName, NetworkSelector } from '@polymedia/webutils';
+import { NetworkName, NetworkSelector, isLocalhost } from '@polymedia/webutils';
 import { PolymediaProfile } from '@polymedia/profile-sdk';
 import imgLogo from '../img/logo.png';
 import imgAnon from '../img/anon.webp';
@@ -24,6 +24,7 @@ export const Nav: React.FC<{
     const [showMobileNav, setShowMobileNav] = useState(false);
     const toggleMobileNav = () => { setShowMobileNav(!showMobileNav) };
     const closeMobileNav  = () => { setShowMobileNav(false) };
+    const showNetworkSelector = isLocalhost();
 
     return <header id='nav'>
         <div id='mobile-menu-btn-wrap' onClick={toggleMobileNav}>
@@ -51,7 +52,7 @@ export const Nav: React.FC<{
                 :
                 <NavProfile profile={profile} />
             }
-            <NetworkSelector currentNetwork={network} />
+            {showNetworkSelector && <NetworkSelector currentNetwork={network} />}
             </div>
 
             <div id='nav-pages' className='nav-section'>

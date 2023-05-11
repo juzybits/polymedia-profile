@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { Connection, JsonRpcProvider } from '@mysten/sui.js';
 import { ConnectModal, WalletKitProvider, useWalletKit } from '@mysten/wallet-kit';
-import { NetworkName, loadNetwork, loadRpcConfig } from '@polymedia/webutils';
+import { NetworkName, isLocalhost, loadNetwork, loadRpcConfig } from '@polymedia/webutils';
 import { PolymediaProfile, ProfileManager } from '@polymedia/profile-sdk';
 
 import { Nav } from './Nav';
@@ -30,7 +30,7 @@ const App: React.FC = () =>
 
     useEffect(() => {
         async function initialize() {
-            const network = loadNetwork();
+            const network = isLocalhost() ? loadNetwork() : 'mainnet';
             const rpcConfig = await loadRpcConfig({network});
             const rpcProvider = new JsonRpcProvider(new Connection(rpcConfig));
             setNetwork(network);
