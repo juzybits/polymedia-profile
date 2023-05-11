@@ -6,6 +6,7 @@ import { linkToExplorer } from '@polymedia/webutils';
 import { AppContext } from './App';
 import { notifyError, notifyOkay } from './components/Notification';
 import '../css/ManageProfile.less';
+import imgDrake from '../img/drake.webp';
 
 export const ManageProfile: React.FC = () =>
 {
@@ -28,6 +29,7 @@ export const ManageProfile: React.FC = () =>
     // Form errors
     const [isErrorImage, setIsErrorImage] = useState(false);
     const [isErrorForm, setIsErrorForm] = useState(false);
+    const [isErrorImgur, setIsErrorImgur] = useState(false);
     // Other state
     const [waiting, setWaiting] = useState(false);
 
@@ -47,16 +49,20 @@ export const ManageProfile: React.FC = () =>
         if (!e.target.value) {
             setIsErrorImage(false);
             setIsErrorForm(false);
+            setIsErrorImgur(false);
         }
         setInputImage(e.target.value);
     };
     const onImageLoad = () => {
         setIsErrorImage(false);
         setIsErrorForm(false);
+        setIsErrorImgur(false);
     };
+
     const onImageError = () => {
         setIsErrorImage(true);
         setIsErrorForm(true);
+        setIsErrorImgur(inputImage.startsWith('https://imgur.com/'));
         notifyError("That doesn't look like a valid image URL");
     };
 
@@ -150,6 +156,7 @@ export const ManageProfile: React.FC = () =>
                 />
                 {isErrorImage && <div className='field-error'>That doesn't look like a valid image URL</div>}
                 <div className='field-info'>Right click the image, then click 'Copy Image Address'. To use a picture from your device, upload it to a service like <a href='https://imgur.com/upload' target='_blank'>imgur.com</a>, then copy the image address.</div>
+                {isErrorImgur && <div className='field-error-imgur'><img src={imgDrake} /></div>}
             </div>
             <div className='form-field'>
                 <label>Description</label>
