@@ -1,7 +1,7 @@
 {
     "name": "@polymedia/profile-sdk",
     "description": "An SDK to interact with Polymedia Profile objects on the Sui network",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "license": "CC-BY-NC-SA-4.0",
     "author": "@juzybits (https://polymedia.app)",
     "homepage": "https://profile.polymedia.app",

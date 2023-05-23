@@ -5,7 +5,7 @@
     "dependencies": {
         "@mysten/sui.js": "latest",
         "@mysten/wallet-kit": "latest",
-        "@polymedia/profile-sdk": "latest",
+        "@polymedia/profile-sdk": "^1.0.3",
         "@polymedia/webutils": "latest",
         "react": "^18.0.0",
         "react-dom": "^18.0.0",

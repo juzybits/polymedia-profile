@@ -16,10 +16,10 @@
   dependencies:
     bs58 "^5.0.0"
 
-"@mysten/sui.js@0.34.0", "@mysten/sui.js@latest":
-  version "0.34.0"
-  resolved "https://registry.yarnpkg.com/@mysten/sui.js/-/sui.js-0.34.0.tgz#c6b8ef11ce251c12fa408a43278dbc1ea9eedaaf"
-  integrity sha512-mNb4vX+HSm/Y2oJSDeCNOUV7L7IXW1fRQ0zU7fFUAeJdNgf1ObFmxiItVCA7GU0EXoSPtYnpxcdJFiBcSnQtbA==
+"@mysten/sui.js@0.34.1", "@mysten/sui.js@latest":
+  version "0.34.1"
+  resolved "https://registry.yarnpkg.com/@mysten/sui.js/-/sui.js-0.34.1.tgz#2a274ab0c7ee2f7d3826097e3f2ed2ccf6bb5374"
+  integrity sha512-t22i9b3UJW2ZJ7JPD7kSsrr2KxLsDUeV2UsOWbkrj9AiYm2oxIfzF1yzKUJBFcE4RCKDYuKt7nMatXD9aO4+yw==
   dependencies:
     "@mysten/bcs" "0.7.1"
     "@noble/curves" "^1.0.0"
@@ -32,29 +32,29 @@
     superstruct "^1.0.3"
     tweetnacl "^1.0.3"
 
-"@mysten/wallet-adapter-base@0.7.6":
-  version "0.7.6"
-  resolved "https://registry.yarnpkg.com/@mysten/wallet-adapter-base/-/wallet-adapter-base-0.7.6.tgz#19f4b21cd86a5cf48ba1a5ebc97b6bae74ae4aec"
-  integrity sha512-YxEznghc4Mwg6Y1lnCAv5cZYe4Of38hGv53CLrWtuPtyIt2eZWtGSxXIX9GfPrVqR8HuLo+CYCw4StiZ1uvWtg==
+"@mysten/wallet-adapter-base@0.7.7":
+  version "0.7.7"
+  resolved "https://registry.yarnpkg.com/@mysten/wallet-adapter-base/-/wallet-adapter-base-0.7.7.tgz#b9fdb94e26e0cabf3b98c00c818b9b80fb017d79"
+  integrity sha512-aJnUnpXQxY5UuwBSoPVEfWoLfwqBQY5vwJJddEGw1Nk0yLjZoIQGbW0na6RTqfkD0rcPLzQV5j1WsPBx8tGpxA==
   dependencies:
-    "@mysten/sui.js" "0.34.0"
-    "@mysten/wallet-standard" "0.5.6"
+    "@mysten/sui.js" "0.34.1"
+    "@mysten/wallet-standard" "0.5.7"
 
 "@mysten/wallet-kit-core@latest":
-  version "0.4.6"
-  resolved "https://registry.yarnpkg.com/@mysten/wallet-kit-core/-/wallet-kit-core-0.4.6.tgz#d862e2f515788ea40d30402885b041dc6430a4f4"
-  integrity sha512-Ax9LhaWd3oSeOlHrLJlP0TNFG4oaR2Mr5rLzpFjyIvSPMfjcblF8FhNdB53nc9JIMnbHIKncQZYNT84rbsu6Pg==
+  version "0.4.7"
+  resolved "https://registry.yarnpkg.com/@mysten/wallet-kit-core/-/wallet-kit-core-0.4.7.tgz#7be7d25f73ca50c5a6b03ca7b7a1a2222dca9f0e"
+  integrity sha512-cIJPgHivYmZhVe93YvE+p63TIeQ/25vjzHQXGYM4emKZWsNIBFeACC1+OCyERevjP4ZxN6+0hEi4H73k+OLOtw==
   dependencies:
-    "@mysten/sui.js" "0.34.0"
-    "@mysten/wallet-adapter-base" "0.7.6"
-    "@mysten/wallet-standard" "0.5.6"
+    "@mysten/sui.js" "0.34.1"
+    "@mysten/wallet-adapter-base" "0.7.7"
+    "@mysten/wallet-standard" "0.5.7"
 
-"@mysten/wallet-standard@0.5.6":
-  version "0.5.6"
-  resolved "https://registry.yarnpkg.com/@mysten/wallet-standard/-/wallet-standard-0.5.6.tgz#783e4ef0ab7694660b661bcf9ad528a5fd903ecc"
-  integrity sha512-AeIMcYj3exYXS3zdbN4Ia/1pCCdJgHyrtjFwKEBInUKsaz/MGznjKhdfKJHGeMtwD/UV5tiGH2Yk+DufRJ8HPg==
+"@mysten/wallet-standard@0.5.7":
+  version "0.5.7"
+  resolved "https://registry.yarnpkg.com/@mysten/wallet-standard/-/wallet-standard-0.5.7.tgz#792843ab7b2ff6a0ef7eea5a82435a1c2d21f738"
+  integrity sha512-YWCS8txjY5fRKzl1UqlRAAGrzt88R3DvdZuGqylulqVBv91CjwLAxR770o7iPe2Ky706WIpJcoRWoLiOHMVQ2w==
   dependencies:
-    "@mysten/sui.js" "0.34.0"
+    "@mysten/sui.js" "0.34.1"
     "@wallet-standard/core" "1.0.3"
 
 "@noble/curves@^1.0.0", "@noble/curves@~1.0.0":
@@ -104,9 +104,9 @@
     "@types/node" "*"
 
 "@types/node@*":
-  version "20.1.7"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.1.7.tgz#ce10c802f7731909d0a44ac9888e8b3a9125eb62"
-  integrity sha512-WCuw/o4GSwDGMoonES8rcvwsig77dGCMbZDrZr2x4ZZiNW4P/gcoZXe/0twgtobcTkmg9TuKflxYL/DuwDyJzg==
+  version "20.2.3"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.2.3.tgz#b31eb300610c3835ac008d690de6f87e28f9b878"
+  integrity sha512-pg9d0yC4rVNWQzX8U7xb4olIOFuuVL9za3bzMT2pu2SU0SNEi66i2qrvhE2qt0HvkhuCaWJu7pLNOt/Pj8BIrw==
 
 "@types/node@^12.12.54":
   version "12.20.55"
