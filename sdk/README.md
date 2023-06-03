@@ -19,7 +19,6 @@ This library exports only one type and one class:
     description: string;
     data: any;
     owner: SuiAddress;
-    previousTx: string;
   }
   ```
 

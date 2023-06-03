@@ -1,7 +1,8 @@
 {
+    "private": true,
     "name": "@polymedia/profile-web",
     "author": "@juzybits (https://polymedia.app)",
-    "private": true,
+    "description": "https://profile.polymedia.app",
     "dependencies": {
         "@mysten/sui.js": "latest",
         "@mysten/wallet-kit": "latest",

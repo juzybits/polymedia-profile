@@ -14,7 +14,7 @@ export const Home: React.FC = () =>
     const { network, profileManager } = useOutletContext<AppContext>();
 
 
-    return <div id='page' className='page-about'>
+    return <div id='page' className='page-home'>
         <h1>
             HOME
         </h1>

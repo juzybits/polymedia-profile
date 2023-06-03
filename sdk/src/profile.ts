@@ -46,7 +46,6 @@ export type PolymediaProfile = {
     description: string;
     data: any;
     owner: SuiAddress;
-    previousTx: string;
 }
 
 type NetworkName = 'localnet' | 'devnet' | 'testnet' | 'mainnet';
@@ -350,7 +349,6 @@ async function sui_fetchProfileObjects({ rpc, objectIds }: {
                 data: objData.fields.data ? JSON.parse(objData.fields.data) : null,
                 // @ts-ignore
                 owner: objOwner.AddressOwner,
-                previousTx: resp.data.previousTransaction||'',
             });
         }
         allProfiles.push(...profiles);
@@ -472,7 +470,6 @@ async function sui_createProfile({
                     description: description,
                     data: data,
                     owner: event.sender,
-                    previousTx: resp.digest,
                 };
                 return newProfile;
             }

@@ -37,8 +37,6 @@ In addition to its regular fields, a `Profile` can have any number of dynamic (o
 
 ## Mechanics
 
-A `Profile` has a field, `registries: vector<address>`, that lists the registries it belongs to.
-
 A `Registry` has a field, `profiles: Table<address, address>`, that maps profile owners (keys) to profile objects (values).
 
 A `Profile` is guaranteed to be included in at least one `Registry`. A `Profile` can be added to a registry with `add_to_registry`.
