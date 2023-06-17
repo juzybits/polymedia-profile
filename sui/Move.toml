@@ -2,7 +2,7 @@
 name = "PolymediaProfile"
 version = "1.0.0"
 authors = ["juzybits <https://twitter.com/juzybits>"]
-license = "CC-BY-NC-SA-4.0"
+license = "Apache-2.0"
 published-at = "0x57138e18b82cc8ea6e92c3d5737d6078b1304b655f59cf5ae9668cc44aad4ead"
 
 [dependencies]
