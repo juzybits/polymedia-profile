@@ -31,7 +31,7 @@ const App: React.FC = () =>
     useEffect(() => {
         async function initialize() {
             const network = isLocalhost() ? loadNetwork() : 'mainnet';
-            const rpcConfig = await loadRpcConfig({network});
+            const rpcConfig = await loadRpcConfig({network, noFetch: true});
             const rpcProvider = new JsonRpcProvider(new Connection(rpcConfig));
             setNetwork(network);
             setProfileManager( new ProfileManager({network, rpcProvider}) );
