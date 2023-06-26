@@ -1,7 +1,7 @@
 {
     "name": "@polymedia/profile-sdk",
     "description": "An SDK to interact with Polymedia Profile objects on the Sui network",
-    "version": "1.0.5",
+    "version": "1.0.6",
     "license": "Apache-2.0",
     "author": "@juzybits (https://polymedia.app)",
     "homepage": "https://profile.polymedia.app",
@@ -32,6 +32,6 @@
         "@mysten/wallet-kit-core": "latest"
     },
     "devDependencies": {
-        "typescript": "^4.0.0"
+        "typescript": "^4.9.5"
     }
 }

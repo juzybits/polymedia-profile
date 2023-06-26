@@ -10,8 +10,8 @@ import { notifyError } from './components/Notification';
 import '../css/App.less';
 
 export type AppContext = {
-    network: NetworkName,
-    profile: PolymediaProfile|null|undefined,
+    network: NetworkName;
+    profile: PolymediaProfile|null|undefined;
     profileManager: ProfileManager;
     reloadProfile: () => Promise<PolymediaProfile|null|undefined>;
     openConnectModal: () => void;
