@@ -155,7 +155,7 @@ export const ManageProfile: React.FC = () =>
                     onChange={onInputImageChange}
                 />
                 {isErrorImage && <div className='field-error'>That doesn't look like a valid image URL</div>}
-                <div className='field-info'>Right click the image, then click 'Copy Image Address'. To use a picture from your device, upload it to a service like <a href='https://imgur.com/upload' target='_blank'>imgur.com</a>, then copy the image address.</div>
+                <div className='field-info'>Right click the image, then click 'Copy Image Address'. To use a picture from your device, upload it to a service like <a href='https://imgur.com/upload' target='_blank' rel='noopener nofollow noreferrer'>imgur.com</a>, then copy the image address.</div>
                 {isErrorImgur && <div className='field-error-imgur'><img src={imgDrake} /></div>}
             </div>
             <div className='form-field'>
@@ -191,10 +191,10 @@ export const ManageProfile: React.FC = () =>
     <div className='section section-info'>
         <h2>Details</h2>
         <p>
-            Profile: <a target="_blank" href={linkToExplorer(network, 'object', profile.id)}>{profile.id}</a>
+            Profile: <a href={linkToExplorer(network, 'object', profile.id)} target='_blank' rel='noopener'>{profile.id}</a>
         </p>
         <p>
-            Registry: <a target="_blank" href={linkToExplorer(network, 'object', profileManager.registryId)}>{profileManager.registryId}</a>
+            Registry: <a href={linkToExplorer(network, 'object', profileManager.registryId)} target='_blank' rel='noopener'>{profileManager.registryId}</a>
         </p>
     </div>;
 

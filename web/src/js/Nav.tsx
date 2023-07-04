@@ -75,19 +75,19 @@ export const Nav: React.FC<{
 
             <div id='nav-socials' className='nav-section'>
                 <div className='nav-social-link'>
-                    <a href='https://github.com/juzybits/polymedia-profile' target='_blank'>Github</a>
+                    <a href='https://github.com/juzybits/polymedia-profile' target='_blank' rel='noopener'>Github</a>
                 </div>
                 <div className='nav-social-link'>
-                    <a href='https://twitter.com/polymedia_app' target='_blank'>Twitter</a>
+                    <a href='https://twitter.com/polymedia_app' target='_blank' rel='noopener'>Twitter</a>
                 </div>
                 <div className='nav-social-link'>
-                    <a href='https://discord.gg/3ZaE69Eq78' target='_blank'>Discord</a>
+                    <a href='https://discord.gg/3ZaE69Eq78' target='_blank' rel='noopener'>Discord</a>
                 </div>
             </div>
 
             <div id='nav-watermark' className='nav-section'>
                 <div className='nav-social-link'>
-                    <a href='https://polymedia.app' target='_blank'>Polymedia {new Date().getFullYear()}</a>
+                    <a href='https://polymedia.app' target='_blank' rel='noopener'>Polymedia {new Date().getFullYear()}</a>
                 </div>
             </div>
         </div>

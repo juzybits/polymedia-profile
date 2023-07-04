@@ -35,27 +35,27 @@ export const Docs: React.FC = () =>
 
             <li>Profiles are always included in at least one <i>Registry</i> object. A Sui address may own multiple profiles, but can only add one <i>Profile</i> to each <i>Registry</i>.</li>
 
-            <li>The default registry is called <i><a target="_blank" href={linkToExplorer(network, 'object', profileManager.registryId)}>polymedia-main</a></i>, and is used by all our apps. <b>Anyone</b> can create a new registry.</li>
+            <li>The default registry is called <i><a href={linkToExplorer(network, 'object', profileManager.registryId)} target='_blank' rel='noopener'>polymedia-main</a></i>, and is used by all our apps. <b>Anyone</b> can create a new registry.</li>
 
-            <li>Profiles can be used <b>anywhere</b> on Sui. There is a <a href='https://www.npmjs.com/package/@polymedia/profile-sdk' target='_blank'>TypeScript SDK</a> to facilitate 3rd party integrations.</li>
+            <li>Profiles can be used <b>anywhere</b> on Sui. There is a <a href='https://www.npmjs.com/package/@polymedia/profile-sdk' target='_blank' rel='noopener'>TypeScript SDK</a> to facilitate 3rd party integrations.</li>
         </ol>
 
         <p>
             Polymedia Profile is fully <b>open-source</b>:
         </p>
         <ul>
-            <li><a href='https://github.com/juzybits/polymedia-profile/tree/main/sui' target='_blank'>Sui Move code</a></li>
+            <li><a href='https://github.com/juzybits/polymedia-profile/tree/main/sui' target='_blank' rel='noopener'>Sui Move code</a></li>
 
-            <li><a href='https://github.com/juzybits/polymedia-profile/tree/main/sdk' target='_blank'>TypeScript SDK</a></li>
+            <li><a href='https://github.com/juzybits/polymedia-profile/tree/main/sdk' target='_blank' rel='noopener'>TypeScript SDK</a></li>
 
-            <li><a href='https://github.com/juzybits/polymedia-profile/tree/main/web' target='_blank'>Web interface</a></li>
+            <li><a href='https://github.com/juzybits/polymedia-profile/tree/main/web' target='_blank' rel='noopener'>Web interface</a></li>
         </ul>
 
         <p>
             Polymedia Profile is under active development, and the system will evolve in response to the needs of the community.
             <br/>
             <br/>
-            Follow <a href='https://twitter.com/intent/follow?screen_name=polymedia_app' target='_blank'>@polymedia_app</a> on Twitter or join our <a href='https://discord.gg/3ZaE69Eq78' target='_blank'>Discord</a> to stay up to date.
+            Follow <a href='https://twitter.com/intent/follow?screen_name=polymedia_app' target='_blank' rel='noopener'>@polymedia_app</a> on Twitter or join our <a href='https://discord.gg/3ZaE69Eq78' target='_blank' rel='noopener'>Discord</a> to stay up to date.
             <br/>
             <br/>
         </p>
