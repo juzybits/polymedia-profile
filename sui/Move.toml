@@ -3,10 +3,13 @@ name = "PolymediaProfile"
 version = "1.0.0"
 authors = ["juzybits <https://twitter.com/juzybits>"]
 license = "Apache-2.0"
-published-at = "0x57138e18b82cc8ea6e92c3d5737d6078b1304b655f59cf5ae9668cc44aad4ead"
+published-at = "0x57138e18b82cc8ea6e92c3d5737d6078b1304b655f59cf5ae9668cc44aad4ead" # mainnet
+# published-at = "0xe6b9d38ab44c0055b6fda90183b73b7557900e3d7e2215130d152e7b5f5b6f65" # testnet
 
 [dependencies]
 Sui = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "mainnet" }
+# Sui = { local = "../../sui/crates/sui-framework/packages/sui-framework" }
 
 [addresses]
-polymedia_profile = "0x57138e18b82cc8ea6e92c3d5737d6078b1304b655f59cf5ae9668cc44aad4ead"
+polymedia_profile = "0x57138e18b82cc8ea6e92c3d5737d6078b1304b655f59cf5ae9668cc44aad4ead" # mainnet
+# polymedia_profile = "0xe6b9d38ab44c0055b6fda90183b73b7557900e3d7e2215130d152e7b5f5b6f65" # testnet
