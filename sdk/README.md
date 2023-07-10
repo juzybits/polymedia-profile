@@ -6,6 +6,11 @@ For an overview of Polymedia Profile, see _[../README.md](../README.md)_.
 
 For details about the Sui package, see _[../sui/README.md](../sui/README.md)_.
 
+## Installation
+```
+pnpm i @polymedia/profile-sdk
+```
+
 ## Overview
 
 This library exports only one type and one class:

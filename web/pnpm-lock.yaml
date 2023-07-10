@@ -51,7 +51,7 @@ devDependencies:
     version: 0.11.10
   react-devtools:
     specifier: latest
-    version: 4.27.8
+    version: 4.28.0
 
 packages:
 
@@ -479,7 +479,7 @@ packages:
       json5: 2.2.3
       msgpackr: 1.9.5
       nullthrows: 1.1.1
-      semver: 7.5.3
+      semver: 7.5.4
     dev: true
 
   /@parcel/diagnostic@2.9.3:
@@ -563,7 +563,7 @@ packages:
       '@parcel/fs': 2.9.3(@parcel/core@2.9.3)
       '@parcel/utils': 2.9.3
       nullthrows: 1.1.1
-      semver: 7.5.3
+      semver: 7.5.4
     transitivePeerDependencies:
       - '@parcel/core'
     dev: true
@@ -657,7 +657,7 @@ packages:
       '@parcel/types': 2.9.3(@parcel/core@2.9.3)
       '@parcel/utils': 2.9.3
       '@parcel/workers': 2.9.3(@parcel/core@2.9.3)
-      semver: 7.5.3
+      semver: 7.5.4
     dev: true
 
   /@parcel/packager-css@2.9.3(@parcel/core@2.9.3):
@@ -848,7 +848,7 @@ packages:
       browserslist: 4.21.9
       json5: 2.2.3
       nullthrows: 1.1.1
-      semver: 7.5.3
+      semver: 7.5.4
     transitivePeerDependencies:
       - '@parcel/core'
     dev: true
@@ -879,7 +879,7 @@ packages:
       posthtml: 0.16.6
       posthtml-parser: 0.10.2
       posthtml-render: 3.0.0
-      semver: 7.5.3
+      semver: 7.5.4
       srcset: 4.0.0
     transitivePeerDependencies:
       - '@parcel/core'
@@ -914,7 +914,7 @@ packages:
       browserslist: 4.21.9
       nullthrows: 1.1.1
       regenerator-runtime: 0.13.11
-      semver: 7.5.3
+      semver: 7.5.4
     dev: true
 
   /@parcel/transformer-json@2.9.3(@parcel/core@2.9.3):
@@ -950,7 +950,7 @@ packages:
       clone: 2.1.2
       nullthrows: 1.1.1
       postcss-value-parser: 4.2.0
-      semver: 7.5.3
+      semver: 7.5.4
     transitivePeerDependencies:
       - '@parcel/core'
     dev: true
@@ -965,7 +965,7 @@ packages:
       posthtml: 0.16.6
       posthtml-parser: 0.10.2
       posthtml-render: 3.0.0
-      semver: 7.5.3
+      semver: 7.5.4
     transitivePeerDependencies:
       - '@parcel/core'
     dev: true
@@ -1001,7 +1001,7 @@ packages:
       posthtml: 0.16.6
       posthtml-parser: 0.10.2
       posthtml-render: 3.0.0
-      semver: 7.5.3
+      semver: 7.5.4
     transitivePeerDependencies:
       - '@parcel/core'
     dev: true
@@ -1369,15 +1369,15 @@ packages:
   /@types/keyv@3.1.4:
     resolution: {integrity: sha512-BQ5aZNSCpj7D6K2ksrRCTmKRLEpnPvWDiLPfoGyhZ++8YtiK9d/3DBKPJgry359X/P1PfruyYwvnvwFjuEiEIg==}
     dependencies:
-      '@types/node': 20.4.0
+      '@types/node': 20.4.1
     dev: true
 
   /@types/node@16.18.38:
     resolution: {integrity: sha512-6sfo1qTulpVbkxECP+AVrHV9OoJqhzCsfTNp5NIG+enM4HyM3HvZCO798WShIXBN0+QtDIcutJCjsVYnQP5rIQ==}
     dev: true
 
-  /@types/node@20.4.0:
-    resolution: {integrity: sha512-jfT7iTf/4kOQ9S7CHV9BIyRaQqHu67mOjsIQBC3BKZvzvUB6zLxEwJ6sBE3ozcvP8kF6Uk5PXN0Q+c0dfhGX0g==}
+  /@types/node@20.4.1:
+    resolution: {integrity: sha512-JIzsAvJeA/5iY6Y/OxZbv1lUcc8dNSE77lb2gnBH+/PJ3lFR1Ccvgwl5JWnHAkNHcRsT0TbpVOsiMKZ1F/yyJg==}
     dev: true
 
   /@types/prop-types@15.7.5:
@@ -1401,7 +1401,7 @@ packages:
   /@types/responselike@1.0.0:
     resolution: {integrity: sha512-85Y2BjiufFzaMIlvJDvTTB8Fxl2xfLo4HgmHzVBz08w4wDePCTjYw66PdrolO0kzli3yam/YCgRufyo1DdQVTA==}
     dependencies:
-      '@types/node': 20.4.0
+      '@types/node': 16.18.38
     dev: true
 
   /@types/scheduler@0.16.3:
@@ -1533,8 +1533,8 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      caniuse-lite: 1.0.30001513
-      electron-to-chromium: 1.4.453
+      caniuse-lite: 1.0.30001514
+      electron-to-chromium: 1.4.455
       node-releases: 2.0.13
       update-browserslist-db: 1.0.11(browserslist@4.21.9)
     dev: true
@@ -1584,8 +1584,8 @@ packages:
     engines: {node: '>=4'}
     dev: true
 
-  /caniuse-lite@1.0.30001513:
-    resolution: {integrity: sha512-pnjGJo7SOOjAGytZZ203Em95MRM8Cr6jhCXNF/FAXTpCTRTECnqQWLpiTRqrFtdYcth8hf4WECUpkezuYsMVww==}
+  /caniuse-lite@1.0.30001514:
+    resolution: {integrity: sha512-ENcIpYBmwAAOm/V2cXgM7rZUrKKaqisZl4ZAI520FIkqGXUxJjmaIssbRW5HVVR5tyV6ygTLIm15aU8LUmQSaQ==}
     dev: true
 
   /capture-stack-trace@1.0.2:
@@ -1855,8 +1855,8 @@ packages:
     resolution: {integrity: sha512-1A8za6ws41LQgv9HrE/66jyC5yuSjQ3L/KOpFtoBilsAK2iA2wuS5rTt1OCzIvtS2V7nVmedsUU+DGRcjBmOYA==}
     dev: true
 
-  /electron-to-chromium@1.4.453:
-    resolution: {integrity: sha512-BU8UtQz6CB3T7RIGhId4BjmjJVXQDujb0+amGL8jpcluFJr6lwspBOvkUbnttfpZCm4zFMHmjrX1QrdPWBBMjQ==}
+  /electron-to-chromium@1.4.455:
+    resolution: {integrity: sha512-8tgdX0Odl24LtmLwxotpJCVjIndN559AvaOtd67u+2mo+IDsgsTF580NB+uuDCqsHw8yFg53l5+imFV9Fw3cbA==}
     dev: true
 
   /electron@23.3.10:
@@ -2022,7 +2022,7 @@ packages:
       es6-error: 4.1.1
       matcher: 3.0.0
       roarr: 2.15.4
-      semver: 7.5.3
+      semver: 7.5.4
       serialize-error: 7.0.1
     dev: true
     optional: true
@@ -2919,8 +2919,8 @@ packages:
       strip-json-comments: 2.0.1
     dev: true
 
-  /react-devtools-core@4.27.8:
-    resolution: {integrity: sha512-KwoH8/wN/+m5wTItLnsgVraGNmFrcTWR3k1VimP1HjtMMw4CNF+F5vg4S/0tzTEKIdpCi2R7mPNTC+/dswZMgw==}
+  /react-devtools-core@4.28.0:
+    resolution: {integrity: sha512-E3C3X1skWBdBzwpOUbmXG8SgH6BtsluSMe+s6rRcujNKG1DGi8uIfhdhszkgDpAsMoE55hwqRUzeXCmETDBpTg==}
     dependencies:
       shell-quote: 1.8.1
       ws: 7.5.9
@@ -2929,15 +2929,15 @@ packages:
       - utf-8-validate
     dev: true
 
-  /react-devtools@4.27.8:
-    resolution: {integrity: sha512-DeqAofBIZZaEew6lMZStInTukF24CIaMvJ1nwDLWPCbdVHyLDpy4JA7d5AArt97xnE2X7HTKXIFFCMwcannA2A==}
+  /react-devtools@4.28.0:
+    resolution: {integrity: sha512-nagHAiR9ZBZtXdjMdNWSiWCee7i0gYm/hPNYTS3fmxvlfbzU3PfKlID7wdZgSoO00I2/ZzhsPfr9fccg9uk5Yw==}
     hasBin: true
     dependencies:
       cross-spawn: 5.1.0
       electron: 23.3.10
       ip: 1.1.8
       minimist: 1.2.8
-      react-devtools-core: 4.27.8
+      react-devtools-core: 4.28.0
       update-notifier: 2.5.0
     transitivePeerDependencies:
       - bufferutil
@@ -3082,8 +3082,8 @@ packages:
     hasBin: true
     dev: true
 
-  /semver@7.5.3:
-    resolution: {integrity: sha512-QBlUtyVk/5EeHbi7X0fw6liDZc7BBmEaSYn01fMU1OUYbf6GPsbTtd8WmnqbI20SeycoHSeiybkE/q1Q+qlThQ==}
+  /semver@7.5.4:
+    resolution: {integrity: sha512-1bCSESV6Pv+i21Hvpxp3Dx+pSD8lIPt8uVjRrxAUt/nbswYc+tK6Y2btiULjd4+fnq15PX+nqQDC7Oft7WkwcA==}
     engines: {node: '>=10'}
     hasBin: true
     dependencies:
