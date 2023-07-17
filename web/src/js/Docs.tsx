@@ -20,9 +20,6 @@ export const Docs: React.FC = () =>
             Polymedia Profile is a fully on-chain profile/identity system on the Sui Network.
             <br/>
             <br/>
-            Conceptually, it is closer to Discord profiles than to DNS domains. If a Sui address is like a Discord ID (unique, random), then a Polymedia Profile is like a Discord profile.
-            <br/>
-            <br/>
             Key facts about Polymedia Profile:
         </p>
 
@@ -41,7 +38,7 @@ export const Docs: React.FC = () =>
         </ol>
 
         <p>
-            Polymedia Profile is fully <b>open-source</b>:
+            Polymedia Profile is fully <b>open-source</b>. Code and technical docs:
         </p>
         <ul>
             <li><a href='https://github.com/juzybits/polymedia-profile/tree/main/sui' target='_blank' rel='noopener'>Sui Move code</a></li>
@@ -52,9 +49,6 @@ export const Docs: React.FC = () =>
         </ul>
 
         <p>
-            Polymedia Profile is under active development, and the system will evolve in response to the needs of the community.
-            <br/>
-            <br/>
             Follow <a href='https://twitter.com/intent/follow?screen_name=polymedia_app' target='_blank' rel='noopener'>@polymedia_app</a> on Twitter or join our <a href='https://discord.gg/3ZaE69Eq78' target='_blank' rel='noopener'>Discord</a> to stay up to date.
             <br/>
             <br/>
