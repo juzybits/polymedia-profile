@@ -10,10 +10,10 @@ dependencies:
     version: 0.7.3
   '@mysten/sui.js':
     specifier: latest
-    version: 0.37.1
+    version: 0.39.0
   '@mysten/wallet-kit-core':
     specifier: latest
-    version: 0.4.12
+    version: 0.4.14
 
 devDependencies:
   typescript:
@@ -28,8 +28,8 @@ packages:
       bs58: 5.0.0
     dev: false
 
-  /@mysten/sui.js@0.37.1:
-    resolution: {integrity: sha512-nEOqnjUqb/VJcVk23LgZOX1FmBib/mBCwAWaJhtsCHLwv2jIAfCPY/fpB9lJ62QHrM8UFclpWxsLkqcUkKyPgA==}
+  /@mysten/sui.js@0.39.0:
+    resolution: {integrity: sha512-fJu6k7+Qb1z2h9i5Jai0sTWmaGP1UT6d/JIXhEwMZ6cz+13GT/8zRp8kUhP7Oq9Z2hxmwfy1ROptbsrv/x9V8A==}
     engines: {node: '>=16'}
     dependencies:
       '@mysten/bcs': 0.7.3
@@ -48,33 +48,33 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@mysten/wallet-adapter-base@0.7.12:
-    resolution: {integrity: sha512-5xDLaZ11+Sw65I9VSzmsHlue8jV0Kq/HiBJYmQes5TU2clwV0ClNBlw7CCipkMPi6IfhBSaaLXWZ9ftX0KG1TQ==}
+  /@mysten/wallet-adapter-base@0.8.1:
+    resolution: {integrity: sha512-hS1jxxGwNA+pyX9KU95DN4yum63ZDgZP3KH+6wtJfh5Vr8Yxbq9+JYumOqvmAyK0sHzHjxJEYDojNgibggwgrw==}
     dependencies:
-      '@mysten/sui.js': 0.37.1
-      '@mysten/wallet-standard': 0.5.12
+      '@mysten/sui.js': 0.39.0
+      '@mysten/wallet-standard': 0.5.14
     transitivePeerDependencies:
       - bufferutil
       - encoding
       - utf-8-validate
     dev: false
 
-  /@mysten/wallet-kit-core@0.4.12:
-    resolution: {integrity: sha512-h2NXFiUdB3NpBpcHW8SkFCGFyqDkaj3WyML8IgT6otlYgc9v2hl7Wjm7Uc7V4kSf0pM/vwZnG8hh7vMCts7MFA==}
+  /@mysten/wallet-kit-core@0.4.14:
+    resolution: {integrity: sha512-RCMqR8S8spsCdV6QQUfb4LLy3cvhMhtw+MStyH5ruxV5hzZS4oesjxzyNXK2q7I/N5IGfnzy0T0yP0oeCrfmVg==}
     dependencies:
-      '@mysten/sui.js': 0.37.1
-      '@mysten/wallet-adapter-base': 0.7.12
-      '@mysten/wallet-standard': 0.5.12
+      '@mysten/sui.js': 0.39.0
+      '@mysten/wallet-adapter-base': 0.8.1
+      '@mysten/wallet-standard': 0.5.14
     transitivePeerDependencies:
       - bufferutil
       - encoding
       - utf-8-validate
     dev: false
 
-  /@mysten/wallet-standard@0.5.12:
-    resolution: {integrity: sha512-RDKEhBf8aNbCXgTGsDAA7uzpkll24O9M/C48wHFjeb9edIxhaDkiSeGty6flhg9G5ShAHP76dEbz5z6z3ODmCA==}
+  /@mysten/wallet-standard@0.5.14:
+    resolution: {integrity: sha512-O4pBU5nO5zBMuhIpOiMkJinxUo68M1m4ca4AQNM5gYLMpuHipcHDNPpCINIyIsCsff61ilGDzPhZU4R8+zZ/2A==}
     dependencies:
-      '@mysten/sui.js': 0.37.1
+      '@mysten/sui.js': 0.39.0
       '@wallet-standard/core': 1.0.3
     transitivePeerDependencies:
       - bufferutil
@@ -184,7 +184,7 @@ packages:
     resolution: {integrity: sha512-qvUtwJ3j6qwsF3jLxkZ72qCgjMysPzDfeV240JHiGZsANBYd+EEuu35v7dfrJ9Up0Ak07D7GGSkGhCHTqg/5wA==}
     dependencies:
       node-fetch: 2.6.12
-      whatwg-fetch: 3.6.2
+      whatwg-fetch: 3.6.17
     transitivePeerDependencies:
       - encoding
     dev: false
@@ -236,8 +236,8 @@ packages:
     resolution: {integrity: sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ==}
     dev: false
 
-  /whatwg-fetch@3.6.2:
-    resolution: {integrity: sha512-bJlen0FcuU/0EMLrdbJ7zOnW6ITZLrZMIarMUVmdKtsGvZna8vxKYaexICWPfZ8qwf9fzNq+UEIZrnSaApt6RA==}
+  /whatwg-fetch@3.6.17:
+    resolution: {integrity: sha512-c4ghIvG6th0eudYwKZY5keb81wtFz9/WeAHAoy8+r18kcWlitUIrmGFQ2rWEl4UCKUilD3zCLHOIPheHx5ypRQ==}
     dev: false
 
   /whatwg-url@5.0.0:

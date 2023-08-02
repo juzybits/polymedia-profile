@@ -105,12 +105,13 @@ export class ProfileManager {
             return result;
         }
 
-        // Find the remaining profile object IDs
+        // Find the profile object IDs associated to `newLookupAddresses`.
+        // Addresses that don't have a profile won't be included in the returned array.
         const newObjectIds = await this.fetchProfileObjectIds({
             lookupAddresses: [...newLookupAddresses]
         });
 
-        // Add missing addresses to the cache
+        // Add addresses without a profile to the cache with a `null` value
         for (const addr of newLookupAddresses) {
             if (!newObjectIds.has(addr)) {
                 result.set(addr, null);
@@ -118,7 +119,9 @@ export class ProfileManager {
             }
         }
 
-        if (newObjectIds.size === 0) return result;
+        if (newObjectIds.size === 0) {
+            return result;
+        }
 
         // Retrieve the remaining profile objects
         const profileObjects = await this.fetchProfileObjects({
@@ -223,13 +226,17 @@ export class ProfileManager {
         });
     }
 
+    /**
+     * Given one or more Sui addresses, find their associated profile object IDs.
+     * Addresses that don't have a profile won't be included in the returned array.
+     */
     private async fetchProfileObjectIds({ lookupAddresses }: {
         lookupAddresses: SuiAddress[]
     }): Promise<Map<SuiAddress,SuiAddress>>
     {
         const results = new Map<SuiAddress, SuiAddress>();
         const addressBatches = chunkArray(lookupAddresses, 30);
-        const promises = addressBatches.map(async batch => {
+        const promises = addressBatches.map(async (batch) => {
             const lookupResults = await sui_fetchProfileObjectIds({
                 rpc: this.rpc,
                 packageId: this.packageId,
