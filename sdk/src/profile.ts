@@ -156,6 +156,31 @@ export class ProfileManager {
         return profile !== null;
     }
 
+    public async fetchProfileObjects({ objectIds }: {
+        objectIds: SuiAddress[]
+    }): Promise<PolymediaProfile[]>
+    {
+        return await sui_fetchProfileObjects({
+            rpc: this.rpc,
+            objectIds,
+        });
+    }
+
+    public async fetchProfileObject({ objectId }: {
+        objectId: SuiAddress
+    }): Promise<PolymediaProfile|null>
+    {
+        const profiles = await sui_fetchProfileObjects({
+            rpc: this.rpc,
+            objectIds: [ objectId ],
+        });
+        if (profiles.length === 0) {
+            return null;
+        } else {
+            return profiles[0];
+        }
+    }
+
     public async createRegistry({
         signTransactionBlock,
         registryName
@@ -250,16 +275,6 @@ export class ProfileManager {
         await Promise.all(promises);
         return results;
     }
-
-    private async fetchProfileObjects({ objectIds }: {
-        objectIds: SuiAddress[]
-    }): Promise<PolymediaProfile[]>
-    {
-        return await sui_fetchProfileObjects({
-            rpc: this.rpc,
-            objectIds,
-        });
-    }
 }
 
 /* Sui RPC calls and signed transactions */
@@ -338,25 +353,15 @@ async function sui_fetchProfileObjects({ rpc, objectIds }: {
             options: {
                 showContent: true,
                 showOwner: true,
-                showPreviousTransaction: true,
             },
         });
 
         const profiles: PolymediaProfile[] = [];
         for (const resp of resps) {
-            if (resp.error || !resp.data)
-                continue;
-            const objData = resp.data.content as SuiMoveObject;
-            const objOwner = resp.data.owner as ObjectOwner;
-            profiles.push({
-                id: objData.fields.id.id,
-                name: objData.fields.name,
-                imageUrl: objData.fields.image_url,
-                description: objData.fields.description,
-                data: objData.fields.data ? JSON.parse(objData.fields.data) : null,
-                // @ts-ignore
-                owner: objOwner.AddressOwner,
-            });
+            const profile = objectToProfile(resp);
+            if (profile) {
+                profiles.push(profile);
+            }
         }
         allProfiles.push(...profiles);
     });
@@ -551,4 +556,31 @@ function chunkArray<T>(elements: T[], chunkSize: number): T[][] {
         result.push(elements.slice(i, i + chunkSize));
     }
     return result;
+}
+
+/**
+ * Convert a generic `SuiObjectResponse` into a `PolymediaProfile`.
+ *
+ * Note: when fetching `SuiObjectResponse`, call JsonRpcProvider.getObject/multiGetObjects with:
+    options: {
+        showContent: true,
+        showOwner: true,
+    },
+*/
+function objectToProfile(resp: SuiObjectResponse): PolymediaProfile|null
+{
+    if (resp.error || !resp.data) {
+        return null;
+    }
+    const objData = resp.data.content as SuiMoveObject;
+    const objOwner = resp.data.owner as ObjectOwner;
+    return {
+        id: objData.fields.id.id,
+        name: objData.fields.name,
+        imageUrl: objData.fields.image_url,
+        description: objData.fields.description,
+        data: objData.fields.data ? JSON.parse(objData.fields.data) : null,
+        // @ts-ignore
+        owner: objOwner.AddressOwner,
+    };
 }
