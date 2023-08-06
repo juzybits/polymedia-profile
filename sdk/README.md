@@ -56,9 +56,9 @@ const profileManage = new ProfileManager({
 
 ### Find profiles
 
-To search for `Profile` objects associated to Sui addreses, you can use the following methods.
+To search for `Profile` objects associated to Sui addresses, you can use the following methods.
 
-- `ProfileManager.getProfile()` to get a single profile:
+- `ProfileManager.getProfile()` to look for a single profile:
     ```
     profileManager.getProfile({
         lookupAddress: '0x_USER_ADDRESS',
@@ -69,7 +69,7 @@ To search for `Profile` objects associated to Sui addreses, you can use the foll
     });
   ```
 
-- `ProfileManager.getProfiles()` to get multiple profiles:
+- `ProfileManager.getProfiles()` to look for multiple profiles:
     ```
     profileManager.getProfiles({
         lookupAddresses: ['0x_USER_ADDRESS_1', '0x_USER_ADDRESS_2'],
@@ -88,6 +88,33 @@ To search for `Profile` objects associated to Sui addreses, you can use the foll
     ```
 
 `ProfileManager` keeps an internal cache to avoid wasteful RPC requests. You can skip the cache by passing the `useCache: false` argument to any of the three methods above.
+
+### Fetch profiles by ID
+
+If you already know the `Profile` object IDs, you can fetch them with the following methods.
+
+- `ProfileManager.fetchProfileObject()` to fetch a single profile:
+    ```
+    profileManager.fetchProfileObject({
+        objectId: '0x_PROFILE_ID',
+    })
+    .then((profile: PolymediaProfile|null) => {
+        // A null result means the object does not exist
+    })
+    .catch((error: any) => {
+        // Handle RPC error
+    });
+  ```
+
+- `ProfileManager.fetchProfileObjects()` to fetch multiple profiles:
+    ```
+    profileManager.fetchProfileObjects({
+        objectIds: ['0x_PROFILE_1', '0x_PROFILE_2'],
+    })
+    .then((profiles: PolymediaProfile[]) => {
+        // ...
+    });
+    ```
 
 ### Create a profile
 
