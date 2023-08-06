@@ -572,14 +572,19 @@ function objectToProfile(resp: SuiObjectResponse): PolymediaProfile|null
     if (resp.error || !resp.data) {
         return null;
     }
-    const objData = resp.data.content as SuiMoveObject;
+    const objContent = resp.data.content as SuiMoveObject;
     const objOwner = resp.data.owner as ObjectOwner;
+
+    if (!objContent.type.endsWith('::profile::Profile')) {
+        throw new Error('Wrong object type. Expected a Profile but got: ' + objContent.type);
+    }
+
     return {
-        id: objData.fields.id.id,
-        name: objData.fields.name,
-        imageUrl: objData.fields.image_url,
-        description: objData.fields.description,
-        data: objData.fields.data ? JSON.parse(objData.fields.data) : null,
+        id: objContent.fields.id.id,
+        name: objContent.fields.name,
+        imageUrl: objContent.fields.image_url,
+        description: objContent.fields.description,
+        data: objContent.fields.data ? JSON.parse(objContent.fields.data) : null,
         // @ts-ignore
         owner: objOwner.AddressOwner,
     };
