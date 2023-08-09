@@ -206,7 +206,7 @@ export const ManageProfile: React.FC = () =>
     </div>;
 }
 
-const showError = (origin: string, error: any): void =>
+const showError = (origin: string, error: any): void => // TODO: move to @polymedia/webutils
 {
     let errorString = String(error.stack || error.message || error);
     if (errorString.includes('ejected from user') || // Sui, Ethos

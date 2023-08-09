@@ -64,6 +64,9 @@ export const Nav: React.FC<{
                     <Link to='/manage' onClick={closeMobileNav}>PROFILE</Link>
                 </div>
                 <div className='nav-page-link'>
+                    <Link to='/search' onClick={closeMobileNav}>SEARCH</Link>
+                </div>
+                <div className='nav-page-link'>
                     <Link to='/docs' onClick={closeMobileNav}>DOCS</Link>
                 </div>
                 {/*<div className='nav-page-link'>

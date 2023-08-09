@@ -1,0 +1,60 @@
+@import './variables.less';
+
+#page.page-search-profiles {
+    .form-field textarea {
+        margin-top: 0.5em;
+        min-height: 6em;
+    }
+    .error-message {
+        margin-top: 1em;
+        color: @color-red;
+    }
+    .search-loading {
+        margin: 1em 0;
+        padding: .45em 0;
+    }
+    .search-results {
+        margin-top: 1em;
+        th {
+            text-align: left;
+            font-variation-settings: 'wght' 600;
+        }
+        th, td {
+            padding: 0.4em 0;
+        }
+        .td-owner {
+            padding-right: 1em;
+        }
+        .td-profile {
+            .no-profile {
+                font-style: italic;
+                color: #aaa;
+                font-size: 0.9em;
+
+            }
+            .profile-name {
+                overflow-wrap: anywhere;
+                vertical-align: middle;
+            }
+            @image-size: 1.2em;
+            .profile-img-wrap {
+                display: inline-block;
+                margin-right: 0.5em;
+                height: @image-size;
+                width: @image-size;
+                vertical-align: middle;
+                .profile-img {
+                    display: block;
+                    background-image: url('../img/anon.webp');
+                    background-size: cover;
+                    background-position: center;
+                    height: @image-size;
+                    width: @image-size;
+                    box-sizing: border-box;
+                    object-fit: cover;
+                    border-radius: 10%;
+                }
+            }
+        }
+    }
+}
