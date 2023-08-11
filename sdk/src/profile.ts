@@ -124,9 +124,11 @@ export class ProfileManager {
                 });
 
                 // Add the remaining profile objects to the returned map and cache
-                for (const profile of profileObjects) {
-                    result.set(profile.owner, profile);
-                    this.cachedAddresses.set(profile.owner, profile);
+                for (const profile of profileObjects.values()) {
+                    if (profile) { // nulls have already been added to the result and cache above
+                        result.set(profile.owner, profile);
+                        this.cachedAddresses.set(profile.owner, profile);
+                    }
                 }
             }
 
@@ -161,29 +163,39 @@ export class ProfileManager {
     }
 
     public async fetchProfileObjects({ lookupObjectIds }: {
-        lookupObjectIds: SuiAddress[]
-    }): Promise<PolymediaProfile[]>
+        lookupObjectIds: ObjectId[]
+    }): Promise<Map<ObjectId, PolymediaProfile|null>>
     {
         // TODO: cache by objectId
-        return await sui_fetchProfileObjects({
+
+        const existingProfiles =
+        (await sui_fetchProfileObjects({
             rpc: this.rpc,
             lookupObjectIds,
-        });
+        }))
+        .reduce((map, profile) => {
+            map.set(profile.id, profile);
+            return map;
+        }, new Map<ObjectId, PolymediaProfile>());
+
+        // Sort the results in the same order as `lookupObjectIds`.
+        // Use `null` for missing profiles.
+        const profilesOrNull = new Map<ObjectId, PolymediaProfile|null>();
+        for (const objectId of lookupObjectIds) {
+            const profile = existingProfiles.get(objectId) || null;
+            profilesOrNull.set(objectId, profile);
+        }
+        return profilesOrNull;
     }
 
     public async fetchProfileObject({ objectId }: {
-        objectId: SuiAddress
+        objectId: ObjectId
     }): Promise<PolymediaProfile|null>
     {
-        const profiles = await sui_fetchProfileObjects({
-            rpc: this.rpc,
+        const profiles = await this.fetchProfileObjects({
             lookupObjectIds: [ objectId ],
         });
-        if (profiles.length === 0) {
-            return null;
-        } else {
-            return profiles[0];
-        }
+        return profiles.get(objectId) || null;
     }
 
     public async createRegistry({
@@ -343,6 +355,7 @@ function sui_fetchProfileObjectIds({
 
 /**
  * Fetch one or more Sui objects and return them as PolymediaProfile instances
+ * Object IDs that don't exist or are not a Profile won't be included in the returned array.
  */
 async function sui_fetchProfileObjects({ rpc, lookupObjectIds }: {
     rpc: JsonRpcProvider,
