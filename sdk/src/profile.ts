@@ -88,7 +88,7 @@ export class ProfileManager {
         useCache?: boolean,
     }): Promise<Map<SuiAddress, PolymediaProfile|null>>
     {
-        const result = new Map<SuiAddress, PolymediaProfile|null>();
+        let result = new Map<SuiAddress, PolymediaProfile|null>();
         const newLookupAddresses = new Set<SuiAddress>(); // unseen addresses (i.e. not cached)
 
         // Check if addresses are already in cache and add them to the returned map
@@ -101,37 +101,40 @@ export class ProfileManager {
             }
         }
 
-        if (newLookupAddresses.size === 0) {
-            return result;
-        }
+        if (newLookupAddresses.size > 0) {
+            // Find the profile object IDs associated to `newLookupAddresses`.
+            // Addresses that don't have a profile won't be included in the returned array.
+            const newObjectIds = await this.fetchProfileObjectIds({
+                lookupAddresses: [...newLookupAddresses]
+            });
 
-        // Find the profile object IDs associated to `newLookupAddresses`.
-        // Addresses that don't have a profile won't be included in the returned array.
-        const newObjectIds = await this.fetchProfileObjectIds({
-            lookupAddresses: [...newLookupAddresses]
-        });
-
-        // Add addresses without a profile to the cache with a `null` value
-        for (const addr of newLookupAddresses) {
-            if (!newObjectIds.has(addr)) {
-                result.set(addr, null);
-                this.cache.set(addr, null);
+            // Add addresses without a profile to the cache with a `null` value
+            for (const addr of newLookupAddresses) {
+                if (!newObjectIds.has(addr)) {
+                    result.set(addr, null);
+                    this.cache.set(addr, null);
+                }
             }
-        }
 
-        if (newObjectIds.size === 0) {
-            return result;
-        }
+            if (newObjectIds.size > 0) {
+                // Retrieve the remaining profile objects
+                const profileObjects = await this.fetchProfileObjects({
+                    objectIds: [...newObjectIds.values()]
+                });
 
-        // Retrieve the remaining profile objects
-        const profileObjects = await this.fetchProfileObjects({
-            objectIds: [...newObjectIds.values()]
-        });
+                // Add the remaining profile objects to the returned map and cache
+                for (const profile of profileObjects) {
+                    result.set(profile.owner, profile);
+                    this.cache.set(profile.owner, profile);
+                }
+            }
 
-        // Add the remaining profile objects to the returned map and cache
-        for (const profile of profileObjects) {
-            result.set(profile.owner, profile);
-            this.cache.set(profile.owner, profile);
+            // Sort the results in the same order as `lookupAddresses`
+            const sortedResult = new Map<SuiAddress, PolymediaProfile|null>();
+            for (const addr of lookupAddresses) {
+                sortedResult.set(addr, result.get(addr) || null);
+            }
+            result = sortedResult;
         }
 
         return result;
