@@ -13,6 +13,7 @@ import { BCS, getSuiMoveConfig } from '@mysten/bcs';
 import {
     DevInspectResults,
     JsonRpcProvider,
+    ObjectId,
     ObjectOwner,
     OwnedObjectRef,
     SuiAddress,
@@ -119,7 +120,7 @@ export class ProfileManager {
             if (newObjectIds.size > 0) {
                 // Retrieve the remaining profile objects
                 const profileObjects = await this.fetchProfileObjects({
-                    objectIds: [...newObjectIds.values()]
+                    lookupObjectIds: [...newObjectIds.values()]
                 });
 
                 // Add the remaining profile objects to the returned map and cache
@@ -159,13 +160,14 @@ export class ProfileManager {
         return profile !== null;
     }
 
-    public async fetchProfileObjects({ objectIds }: {
-        objectIds: SuiAddress[]
+    public async fetchProfileObjects({ lookupObjectIds }: {
+        lookupObjectIds: SuiAddress[]
     }): Promise<PolymediaProfile[]>
     {
+        // TODO: cache by objectId
         return await sui_fetchProfileObjects({
             rpc: this.rpc,
-            objectIds,
+            lookupObjectIds,
         });
     }
 
@@ -175,7 +177,7 @@ export class ProfileManager {
     {
         const profiles = await sui_fetchProfileObjects({
             rpc: this.rpc,
-            objectIds: [ objectId ],
+            lookupObjectIds: [ objectId ],
         });
         if (profiles.length === 0) {
             return null;
@@ -342,17 +344,17 @@ function sui_fetchProfileObjectIds({
 /**
  * Fetch one or more Sui objects and return them as PolymediaProfile instances
  */
-async function sui_fetchProfileObjects({ rpc, objectIds }: {
+async function sui_fetchProfileObjects({ rpc, lookupObjectIds }: {
     rpc: JsonRpcProvider,
-    objectIds: SuiAddress[],
+    lookupObjectIds: ObjectId[],
 }): Promise<PolymediaProfile[]>
 {
     const allProfiles = new Array<PolymediaProfile>();
-    const objectIdBatches = chunkArray(objectIds, 50);
-    const promises = objectIdBatches.map(async objectIds =>
+    const objectIdBatches = chunkArray(lookupObjectIds, 50);
+    const promises = objectIdBatches.map(async lookupObjectIds =>
     {
         const resps: SuiObjectResponse[] = await rpc.multiGetObjects({
-            ids: objectIds,
+            ids: lookupObjectIds,
             options: {
                 showContent: true,
                 showOwner: true,
