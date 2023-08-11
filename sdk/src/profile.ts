@@ -54,7 +54,7 @@ type NetworkName = 'localnet' | 'devnet' | 'testnet' | 'mainnet';
  * Helps you interact with the `polymedia_profile` Sui package
  */
 export class ProfileManager {
-    private readonly cache: Map<SuiAddress, PolymediaProfile|null> = new Map();
+    private readonly cachedAddresses: Map<SuiAddress, PolymediaProfile|null> = new Map();
     public readonly rpc: JsonRpcProvider;
     public readonly packageId: SuiAddress;
     public readonly registryId: SuiAddress;
@@ -93,8 +93,8 @@ export class ProfileManager {
 
         // Check if addresses are already in cache and add them to the returned map
         for (const addr of lookupAddresses) {
-            if (useCache && this.cache.has(addr)) {
-                const cachedProfile = this.cache.get(addr) || null;
+            if (useCache && this.cachedAddresses.has(addr)) {
+                const cachedProfile = this.cachedAddresses.get(addr) || null;
                 result.set(addr, cachedProfile);
             } else { // address not seen before so we need to look it up
                 newLookupAddresses.add(addr);
@@ -112,7 +112,7 @@ export class ProfileManager {
             for (const addr of newLookupAddresses) {
                 if (!newObjectIds.has(addr)) {
                     result.set(addr, null);
-                    this.cache.set(addr, null);
+                    this.cachedAddresses.set(addr, null);
                 }
             }
 
@@ -125,7 +125,7 @@ export class ProfileManager {
                 // Add the remaining profile objects to the returned map and cache
                 for (const profile of profileObjects) {
                     result.set(profile.owner, profile);
-                    this.cache.set(profile.owner, profile);
+                    this.cachedAddresses.set(profile.owner, profile);
                 }
             }
 
