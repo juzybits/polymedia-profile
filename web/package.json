@@ -7,6 +7,7 @@
         "@mysten/sui.js": "latest",
         "@mysten/wallet-kit": "latest",
         "@polymedia/profile-sdk": "latest",
+        "@polymedia/react-components": "latest",
         "@polymedia/webutils": "latest",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",

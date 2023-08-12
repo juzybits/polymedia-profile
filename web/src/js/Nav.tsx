@@ -4,7 +4,8 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useWalletKit } from '@mysten/wallet-kit';
 
-import { NetworkName, NetworkSelector, isLocalhost } from '@polymedia/webutils';
+import { NetworkSelector } from '@polymedia/react-components';
+import { NetworkName, isLocalhost } from '@polymedia/webutils';
 import { PolymediaProfile } from '@polymedia/profile-sdk';
 import imgLogo from '../img/logo.png';
 import imgAnon from '../img/anon.webp';

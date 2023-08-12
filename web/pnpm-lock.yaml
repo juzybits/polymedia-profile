@@ -13,10 +13,13 @@ dependencies:
     version: 0.6.0(react-dom@18.2.0)(react@18.2.0)
   '@polymedia/profile-sdk':
     specifier: latest
-    version: 1.0.8
+    version: 1.0.9
+  '@polymedia/react-components':
+    specifier: latest
+    version: 1.1.1(react-dom@18.2.0)(react@18.2.0)
   '@polymedia/webutils':
     specifier: latest
-    version: 1.0.5(react-dom@18.2.0)(react@18.2.0)
+    version: 2.0.1
   react:
     specifier: ^18.2.0
     version: 18.2.0
@@ -1151,8 +1154,8 @@ packages:
       nullthrows: 1.1.1
     dev: true
 
-  /@polymedia/profile-sdk@1.0.8:
-    resolution: {integrity: sha512-vp167D+RnKYaU5EoROK298E9S6V7Zm6GP6dU9LsvnaMPwdQ9yheAcEg7caXdh5sp6zGtfFHAk+EopEmv9AYCGg==}
+  /@polymedia/profile-sdk@1.0.9:
+    resolution: {integrity: sha512-Vll5QGRfjxu78kH/amS/wZCrYU6Co5VuK4Mt31PDIQg5Rdd/gf+G4lUIEo+dHbb+Z63aiP7CelBAOG/EzVSwmw==}
     dependencies:
       '@mysten/bcs': 0.7.3
       '@mysten/sui.js': 0.40.0
@@ -1163,14 +1166,19 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@polymedia/webutils@1.0.5(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-RrpC3ockCWkviGz994ygeMI4Z9bzU1U7qRB0oCdxwbspnN4GnTzDsbzEAE1xUZ07yBNURCYfTZuHEDzBi/AZeQ==}
+  /@polymedia/react-components@1.1.1(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-CHH8pPvEwsdIKZx6DqH1KBFGKtuJGyyWa9yw9/r9O8PfJcvR5J1/lwrmOyPM9r78JVO5vUejnPQW2rzqM6lbyw==}
     peerDependencies:
       react: ^18.0.0
       react-dom: ^18.0.0
     dependencies:
+      '@polymedia/webutils': 2.0.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
+  /@polymedia/webutils@2.0.1:
+    resolution: {integrity: sha512-Ym3bev447KUZ8Lmd79X1G0OfmvC5InoRzu/WwmRCcmtoYOqk88BSD8pdTab0OvVXdP2hi/a0wy/V11bTJlQkiw==}
     dev: false
 
   /@remix-run/router@1.8.0:
@@ -1360,11 +1368,15 @@ packages:
   /@types/keyv@3.1.4:
     resolution: {integrity: sha512-BQ5aZNSCpj7D6K2ksrRCTmKRLEpnPvWDiLPfoGyhZ++8YtiK9d/3DBKPJgry359X/P1PfruyYwvnvwFjuEiEIg==}
     dependencies:
-      '@types/node': 16.18.40
+      '@types/node': 20.4.10
     dev: true
 
   /@types/node@16.18.40:
     resolution: {integrity: sha512-+yno3ItTEwGxXiS/75Q/aHaa5srkpnJaH+kdkTVJ3DtJEwv92itpKbxU+FjPoh2m/5G9zmUQfrL4A4C13c+iGA==}
+    dev: true
+
+  /@types/node@20.4.10:
+    resolution: {integrity: sha512-vwzFiiy8Rn6E0MtA13/Cxxgpan/N6UeNYR9oUu6kuJWxu6zCk98trcDp8CBhbtaeuq9SykCmXkFr2lWLoPcvLg==}
     dev: true
 
   /@types/prop-types@15.7.5:
@@ -1521,7 +1533,7 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      caniuse-lite: 1.0.30001519
+      caniuse-lite: 1.0.30001520
       electron-to-chromium: 1.4.490
       node-releases: 2.0.13
       update-browserslist-db: 1.0.11(browserslist@4.21.10)
@@ -1572,8 +1584,8 @@ packages:
     engines: {node: '>=4'}
     dev: true
 
-  /caniuse-lite@1.0.30001519:
-    resolution: {integrity: sha512-0QHgqR+Jv4bxHMp8kZ1Kn8CH55OikjKJ6JmKkZYP1F3D7w+lnFXF70nG5eNfsZS89jadi5Ywy5UCSKLAglIRkg==}
+  /caniuse-lite@1.0.30001520:
+    resolution: {integrity: sha512-tahF5O9EiiTzwTUqAeFjIZbn4Dnqxzz7ktrgGlMYNLH43Ul26IgTMH/zvL3DG0lZxBYnlT04axvInszUsZULdA==}
     dev: true
 
   /capture-stack-trace@1.0.2:
