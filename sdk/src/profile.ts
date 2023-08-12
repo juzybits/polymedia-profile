@@ -56,6 +56,7 @@ type NetworkName = 'localnet' | 'devnet' | 'testnet' | 'mainnet';
  */
 export class ProfileManager {
     private readonly cachedAddresses: Map<SuiAddress, PolymediaProfile|null> = new Map();
+    private readonly cachedObjects: Map<ObjectId, PolymediaProfile|null> = new Map();
     public readonly rpc: JsonRpcProvider;
     public readonly packageId: SuiAddress;
     public readonly registryId: SuiAddress;
@@ -104,7 +105,7 @@ export class ProfileManager {
 
         if (newLookupAddresses.size > 0) {
             // Find the profile object IDs associated to `newLookupAddresses`.
-            // Addresses that don't have a profile won't be included in the returned array.
+            // Addresses that don't have a profile are not included in the returned array.
             const newObjectIds = await this.fetchProfileObjectIds({
                 lookupAddresses: [...newLookupAddresses]
             });
@@ -162,30 +163,54 @@ export class ProfileManager {
         return profile !== null;
     }
 
-    public async fetchProfileObjects({ lookupObjectIds }: {
-        lookupObjectIds: ObjectId[]
+    public async fetchProfileObjects({ lookupObjectIds, useCache=true }: {
+        lookupObjectIds: ObjectId[],
+        useCache?: boolean,
     }): Promise<Map<ObjectId, PolymediaProfile|null>>
     {
-        // TODO: cache by objectId
+        let result = new Map<ObjectId, PolymediaProfile|null>();
+        const newLookupObjectIds = new Set<ObjectId>(); // unseen objects (i.e. not cached)
 
-        const existingProfiles =
-        (await sui_fetchProfileObjects({
-            rpc: this.rpc,
-            lookupObjectIds,
-        }))
-        .reduce((map, profile) => {
-            map.set(profile.id, profile);
-            return map;
-        }, new Map<ObjectId, PolymediaProfile>());
-
-        // Sort the results in the same order as `lookupObjectIds`.
-        // Use `null` for missing profiles.
-        const profilesOrNull = new Map<ObjectId, PolymediaProfile|null>();
+        // Check if objects are already in cache and add them to the returned map
         for (const objectId of lookupObjectIds) {
-            const profile = existingProfiles.get(objectId) || null;
-            profilesOrNull.set(objectId, profile);
+            if (useCache && this.cachedObjects.has(objectId)) {
+                const cachedProfile = this.cachedObjects.get(objectId) || null;
+                result.set(objectId, cachedProfile);
+            } else { // object not seen before so we need to look it up
+                newLookupObjectIds.add(objectId);
+            }
         }
-        return profilesOrNull;
+
+        if (newLookupObjectIds.size > 0) {
+            // Add to the results the profile objects associated to `newLookupObjectIds`.
+            // Profile objects that don't exist are not included in the returned array.
+            const newProfiles = await sui_fetchProfileObjects({
+                rpc: this.rpc,
+                lookupObjectIds,
+            });
+            for (const profile of newProfiles) {
+                result.set(profile.id, profile);
+            }
+
+            // Add to the results the object IDs without associated profile objects as `null`.
+            for (const objectId of newLookupObjectIds) {
+                if (!result.has(objectId)) {
+                    result.set(objectId, null);
+                }
+            }
+
+            // Sort results in the same order as `lookupObjectIds`.
+            // Add results to cache (as `null` for object IDs without associated profile objects).
+            const sortedResult = new Map<ObjectId, PolymediaProfile|null>();
+            for (const objectId of lookupObjectIds) {
+                const profile = result.get(objectId) || null;
+                sortedResult.set(objectId, profile);
+                this.cachedObjects.set(objectId, profile);
+            }
+            result = sortedResult;
+        }
+
+        return result;
     }
 
     public async fetchProfileObject({ objectId }: {
@@ -274,9 +299,9 @@ export class ProfileManager {
      */
     private async fetchProfileObjectIds({ lookupAddresses }: {
         lookupAddresses: SuiAddress[]
-    }): Promise<Map<SuiAddress,SuiAddress>>
+    }): Promise<Map<SuiAddress, ObjectId>>
     {
-        const results = new Map<SuiAddress, SuiAddress>();
+        const results = new Map<SuiAddress, ObjectId>();
         const addressBatches = chunkArray(lookupAddresses, 30);
         const promises = addressBatches.map(async (batch) => {
             const lookupResults = await sui_fetchProfileObjectIds({
