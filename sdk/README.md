@@ -58,9 +58,9 @@ const profileManage = new ProfileManager({
 
 To search for `Profile` objects associated to Sui addresses, you can use the following methods.
 
-- `ProfileManager.getProfile()` to look for a single profile:
+- `ProfileManager.getProfileByOwner()` to look for a single profile:
     ```
-    profileManager.getProfile({
+    profileManager.getProfileByOwner({
         lookupAddress: '0x_USER_ADDRESS',
     }).then((profile: PolymediaProfile|null) => {
         // A null result means lookupAddress does not have a Profile in this Registry
@@ -69,9 +69,9 @@ To search for `Profile` objects associated to Sui addresses, you can use the fol
     });
   ```
 
-- `ProfileManager.getProfiles()` to look for multiple profiles:
+- `ProfileManager.getProfilesByOwner()` to look for multiple profiles:
     ```
-    profileManager.getProfiles({
+    profileManager.getProfilesByOwner({
         lookupAddresses: ['0x_USER_ADDRESS_1', '0x_USER_ADDRESS_2'],
     }).then((profiles: Map<SuiAddress, PolymediaProfile|null>) => {
         // ...
@@ -93,9 +93,9 @@ To search for `Profile` objects associated to Sui addresses, you can use the fol
 
 If you already know the `Profile` object IDs, you can fetch them with the following methods.
 
-- `ProfileManager.fetchProfileObject()` to fetch a single profile:
+- `ProfileManager.getProfilesById()` to fetch a single profile:
     ```
-    profileManager.fetchProfileObject({
+    profileManager.getProfilesById({
         objectId: '0x_PROFILE_ID',
     })
     .then((profile: PolymediaProfile|null) => {
@@ -106,9 +106,9 @@ If you already know the `Profile` object IDs, you can fetch them with the follow
     });
   ```
 
-- `ProfileManager.fetchProfileObjects()` to fetch multiple profiles:
+- `ProfileManager.getProfilesById()` to fetch multiple profiles:
     ```
-    profileManager.fetchProfileObjects({
+    profileManager.getProfilesById({
         objectIds: ['0x_PROFILE_1', '0x_PROFILE_2'],
     })
     .then((profiles: PolymediaProfile[]) => {

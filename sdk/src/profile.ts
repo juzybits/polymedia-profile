@@ -85,7 +85,16 @@ export class ProfileManager {
         }
     }
 
+    /** @deprecated Use `getProfilesByOwner` instead. */
     public async getProfiles({ lookupAddresses, useCache=true }: {
+        lookupAddresses: Iterable<SuiAddress>,
+        useCache?: boolean,
+    }): Promise<Map<SuiAddress, PolymediaProfile|null>>
+    {
+       return this.getProfilesByOwner({lookupAddresses, useCache});
+    }
+
+    public async getProfilesByOwner({ lookupAddresses, useCache=true }: {
         lookupAddresses: Iterable<SuiAddress>,
         useCache?: boolean,
     }): Promise<Map<SuiAddress, PolymediaProfile|null>>
@@ -144,7 +153,16 @@ export class ProfileManager {
         return result;
     }
 
+    /** @deprecated Use `getProfileByOwner` instead. */
     public async getProfile({ lookupAddress, useCache=true }: {
+        lookupAddress: SuiAddress,
+        useCache?: boolean,
+    }): Promise<PolymediaProfile|null>
+    {
+        return this.getProfileByOwner({lookupAddress, useCache});
+    }
+
+    public async getProfileByOwner({ lookupAddress, useCache=true }: {
         lookupAddress: SuiAddress,
         useCache?: boolean,
     }): Promise<PolymediaProfile|null>
@@ -163,7 +181,16 @@ export class ProfileManager {
         return profile !== null;
     }
 
+    /** @deprecated Use `getProfilesById` instead. */
     public async fetchProfileObjects({ lookupObjectIds, useCache=true }: {
+        lookupObjectIds: ObjectId[],
+        useCache?: boolean,
+    }): Promise<Map<ObjectId, PolymediaProfile|null>>
+    {
+        return this.getProfilesById({ lookupObjectIds, useCache });
+    }
+
+    public async getProfilesById({ lookupObjectIds, useCache=true }: {
         lookupObjectIds: ObjectId[],
         useCache?: boolean,
     }): Promise<Map<ObjectId, PolymediaProfile|null>>
@@ -213,7 +240,15 @@ export class ProfileManager {
         return result;
     }
 
+    /** @deprecated Use `getProfileObjectById` instead. */
     public async fetchProfileObject({ objectId }: {
+        objectId: ObjectId
+    }): Promise<PolymediaProfile|null>
+    {
+        return this.getProfileObjectById({ objectId });
+    }
+
+    public async getProfileObjectById({ objectId }: {
         objectId: ObjectId
     }): Promise<PolymediaProfile|null>
     {
