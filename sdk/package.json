@@ -8,6 +8,7 @@
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "scripts": {
+        "lint": "eslint ./src --ext .ts,.tsx",
         "build": "tsc",
         "prepublishOnly": "rm -rf dist/ && pnpm build"
     },
@@ -32,6 +33,10 @@
         "@mysten/wallet-kit-core": "latest"
     },
     "devDependencies": {
+        "@typescript-eslint/eslint-plugin": "^6.3.0",
+        "@typescript-eslint/parser": "^6.3.0",
+        "eslint": "^8.47.0",
+        "eslint-plugin-deprecation": "^1.5.0",
         "typescript": "^4.9.5"
     }
 }
