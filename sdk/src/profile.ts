@@ -13,10 +13,8 @@ import { BCS, getSuiMoveConfig } from '@mysten/bcs';
 import {
     DevInspectResults,
     JsonRpcProvider,
-    ObjectId,
     ObjectOwner,
     OwnedObjectRef,
-    SuiAddress,
     SuiMoveObject,
     SuiObjectResponse,
     SuiTransactionBlockResponse,
@@ -41,12 +39,12 @@ export const POLYMEDIA_PROFILE_REGISTRY_ID_MAINNET = '0xd6eb0ca817dfe0763af9303a
  * Represents a `polymedia_profile::profile::Profile` Sui object
  */
 export type PolymediaProfile = {
-    id: SuiAddress;
+    id: string;
     name: string;
     imageUrl: string;
     description: string;
     data: any;
-    owner: SuiAddress;
+    owner: string;
 }
 
 type NetworkName = 'localnet' | 'devnet' | 'testnet' | 'mainnet';
@@ -55,17 +53,17 @@ type NetworkName = 'localnet' | 'devnet' | 'testnet' | 'mainnet';
  * Helps you interact with the `polymedia_profile` Sui package
  */
 export class ProfileManager {
-    private readonly cachedAddresses: Map<SuiAddress, PolymediaProfile|null> = new Map();
-    private readonly cachedObjects: Map<ObjectId, PolymediaProfile|null> = new Map();
+    private readonly cachedAddresses: Map<string, PolymediaProfile|null> = new Map();
+    private readonly cachedObjects: Map<string, PolymediaProfile|null> = new Map();
     public readonly rpc: JsonRpcProvider;
-    public readonly packageId: SuiAddress;
-    public readonly registryId: SuiAddress;
+    public readonly packageId: string;
+    public readonly registryId: string;
 
     constructor({ network, rpcProvider, packageId, registryId }: {
         network: NetworkName,
         rpcProvider: JsonRpcProvider,
-        packageId?: SuiAddress,
-        registryId?: SuiAddress
+        packageId?: string,
+        registryId?: string
     }) {
         this.rpc = rpcProvider;
         if (network === 'localnet') {
@@ -87,20 +85,20 @@ export class ProfileManager {
 
     /** @deprecated Use `getProfilesByOwner` instead. */
     public async getProfiles({ lookupAddresses, useCache=true }: {
-        lookupAddresses: Iterable<SuiAddress>,
+        lookupAddresses: Iterable<string>,
         useCache?: boolean,
-    }): Promise<Map<SuiAddress, PolymediaProfile|null>>
+    }): Promise<Map<string, PolymediaProfile|null>>
     {
        return this.getProfilesByOwner({lookupAddresses, useCache});
     }
 
     public async getProfilesByOwner({ lookupAddresses, useCache=true }: {
-        lookupAddresses: Iterable<SuiAddress>,
+        lookupAddresses: Iterable<string>,
         useCache?: boolean,
-    }): Promise<Map<SuiAddress, PolymediaProfile|null>>
+    }): Promise<Map<string, PolymediaProfile|null>>
     {
-        let result = new Map<SuiAddress, PolymediaProfile|null>();
-        const newLookupAddresses = new Set<SuiAddress>(); // unseen addresses (i.e. not cached)
+        let result = new Map<string, PolymediaProfile|null>();
+        const newLookupAddresses = new Set<string>(); // unseen addresses (i.e. not cached)
 
         // Check if addresses are already in cache and add them to the returned map
         for (const addr of lookupAddresses) {
@@ -143,7 +141,7 @@ export class ProfileManager {
             }
 
             // Sort the results in the same order as `lookupAddresses`
-            const sortedResult = new Map<SuiAddress, PolymediaProfile|null>();
+            const sortedResult = new Map<string, PolymediaProfile|null>();
             for (const addr of lookupAddresses) {
                 sortedResult.set(addr, result.get(addr) || null);
             }
@@ -155,7 +153,7 @@ export class ProfileManager {
 
     /** @deprecated Use `getProfileByOwner` instead. */
     public async getProfile({ lookupAddress, useCache=true }: {
-        lookupAddress: SuiAddress,
+        lookupAddress: string,
         useCache?: boolean,
     }): Promise<PolymediaProfile|null>
     {
@@ -163,7 +161,7 @@ export class ProfileManager {
     }
 
     public async getProfileByOwner({ lookupAddress, useCache=true }: {
-        lookupAddress: SuiAddress,
+        lookupAddress: string,
         useCache?: boolean,
     }): Promise<PolymediaProfile|null>
     {
@@ -173,7 +171,7 @@ export class ProfileManager {
     }
 
     public async hasProfile({ lookupAddress, useCache=true }: {
-        lookupAddress: SuiAddress,
+        lookupAddress: string,
         useCache?: boolean,
     }): Promise<boolean>
     {
@@ -183,20 +181,20 @@ export class ProfileManager {
 
     /** @deprecated Use `getProfilesById` instead. */
     public async fetchProfileObjects({ lookupObjectIds, useCache=true }: {
-        lookupObjectIds: ObjectId[],
+        lookupObjectIds: string[],
         useCache?: boolean,
-    }): Promise<Map<ObjectId, PolymediaProfile|null>>
+    }): Promise<Map<string, PolymediaProfile|null>>
     {
         return this.getProfilesById({ lookupObjectIds, useCache });
     }
 
     public async getProfilesById({ lookupObjectIds, useCache=true }: {
-        lookupObjectIds: ObjectId[],
+        lookupObjectIds: string[],
         useCache?: boolean,
-    }): Promise<Map<ObjectId, PolymediaProfile|null>>
+    }): Promise<Map<string, PolymediaProfile|null>>
     {
-        let result = new Map<ObjectId, PolymediaProfile|null>();
-        const newLookupObjectIds = new Set<ObjectId>(); // unseen objects (i.e. not cached)
+        let result = new Map<string, PolymediaProfile|null>();
+        const newLookupObjectIds = new Set<string>(); // unseen objects (i.e. not cached)
 
         // Check if objects are already in cache and add them to the returned map
         for (const objectId of lookupObjectIds) {
@@ -228,7 +226,7 @@ export class ProfileManager {
 
             // Sort results in the same order as `lookupObjectIds`.
             // Add results to cache (as `null` for object IDs without associated profile objects).
-            const sortedResult = new Map<ObjectId, PolymediaProfile|null>();
+            const sortedResult = new Map<string, PolymediaProfile|null>();
             for (const objectId of lookupObjectIds) {
                 const profile = result.get(objectId) || null;
                 sortedResult.set(objectId, profile);
@@ -242,17 +240,17 @@ export class ProfileManager {
 
     /** @deprecated Use `getProfileObjectById` instead. */
     public async fetchProfileObject({ objectId }: {
-        objectId: ObjectId
+        objectId: string
     }): Promise<PolymediaProfile|null>
     {
         return this.getProfileObjectById({ objectId });
     }
 
     public async getProfileObjectById({ objectId }: {
-        objectId: ObjectId
+        objectId: string
     }): Promise<PolymediaProfile|null>
     {
-        const profiles = await this.fetchProfileObjects({
+        const profiles = await this.getProfilesById({
             lookupObjectIds: [ objectId ],
         });
         return profiles.get(objectId) || null;
@@ -309,7 +307,7 @@ export class ProfileManager {
         data=null,
     }: {
         signTransactionBlock: WalletKitCore['signTransactionBlock'],
-        profileId: SuiAddress,
+        profileId: string,
         name: string,
         imageUrl?: string,
         description?: string,
@@ -333,10 +331,10 @@ export class ProfileManager {
      * Addresses that don't have a profile won't be included in the returned array.
      */
     private async fetchProfileObjectIds({ lookupAddresses }: {
-        lookupAddresses: SuiAddress[]
-    }): Promise<Map<SuiAddress, ObjectId>>
+        lookupAddresses: string[]
+    }): Promise<Map<string, string>>
     {
-        const results = new Map<SuiAddress, ObjectId>();
+        const results = new Map<string, string>();
         const addressBatches = chunkArray(lookupAddresses, 30);
         const promises = addressBatches.map(async (batch) => {
             const lookupResults = await sui_fetchProfileObjectIds({
@@ -379,9 +377,9 @@ function sui_fetchProfileObjectIds({
     lookupAddresses,
 }: {
     rpc: JsonRpcProvider,
-    packageId: SuiAddress,
-    registryId: SuiAddress,
-    lookupAddresses: SuiAddress[],
+    packageId: string,
+    registryId: string,
+    lookupAddresses: string[],
 }): Promise<Array<TypeOfLookupResult>>
 {
     const tx = new TransactionBlock();
@@ -419,7 +417,7 @@ function sui_fetchProfileObjectIds({
  */
 async function sui_fetchProfileObjects({ rpc, lookupObjectIds }: {
     rpc: JsonRpcProvider,
-    lookupObjectIds: ObjectId[],
+    lookupObjectIds: string[],
 }): Promise<PolymediaProfile[]>
 {
     const allProfiles = new Array<PolymediaProfile>();
@@ -455,7 +453,7 @@ async function sui_createRegistry({
 } : {
     rpcProvider: JsonRpcProvider,
     signTransactionBlock: WalletKitCore['signTransactionBlock'],
-    packageId: SuiAddress,
+    packageId: string,
     registryName: string,
 }): Promise<OwnedObjectRef>
 {
@@ -504,8 +502,8 @@ async function sui_createProfile({
 } : {
     rpcProvider: JsonRpcProvider,
     signTransactionBlock: WalletKitCore['signTransactionBlock'],
-    packageId: SuiAddress,
-    registryId: SuiAddress,
+    packageId: string,
+    registryId: string,
     name: string,
     imageUrl?: string,
     description?: string,
@@ -580,8 +578,8 @@ async function sui_editProfile({
 } : {
     rpcProvider: JsonRpcProvider,
     signTransactionBlock: WalletKitCore['signTransactionBlock'],
-    profileId: SuiAddress,
-    packageId: SuiAddress,
+    profileId: string,
+    packageId: string,
     name: string,
     imageUrl?: string,
     description?: string,
