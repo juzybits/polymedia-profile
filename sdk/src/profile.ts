@@ -12,15 +12,15 @@
 import { BCS, getSuiMoveConfig } from '@mysten/bcs';
 import {
     DevInspectResults,
-    JsonRpcProvider,
-    ObjectOwner,
     OwnedObjectRef,
-    SuiMoveObject,
+    SuiClient,
     SuiObjectResponse,
     SuiTransactionBlockResponse,
-    TransactionBlock,
     TransactionEffects,
-} from '@mysten/sui.js';
+} from '@mysten/sui.js/client';
+import {
+    TransactionBlock,
+} from '@mysten/sui.js/transactions';
 import { WalletKitCore } from '@mysten/wallet-kit-core';
 
 export const POLYMEDIA_PROFILE_PACKAGE_ID_LOCALNET = '0x6ced420f60b41fa73ccedde9057ac7d382506e007f9ddb59fcce9b314f35d696';
@@ -55,13 +55,13 @@ type NetworkName = 'localnet' | 'devnet' | 'testnet' | 'mainnet';
 export class ProfileManager {
     private readonly cachedAddresses: Map<string, PolymediaProfile|null> = new Map();
     private readonly cachedObjects: Map<string, PolymediaProfile|null> = new Map();
-    public readonly rpc: JsonRpcProvider;
+    public readonly rpc: SuiClient;
     public readonly packageId: string;
     public readonly registryId: string;
 
     constructor({ network, rpcProvider, packageId, registryId }: {
         network: NetworkName,
-        rpcProvider: JsonRpcProvider,
+        rpcProvider: SuiClient,
         packageId?: string,
         registryId?: string
     }) {
@@ -376,7 +376,7 @@ function sui_fetchProfileObjectIds({
     registryId,
     lookupAddresses,
 }: {
-    rpc: JsonRpcProvider,
+    rpc: SuiClient,
     packageId: string,
     registryId: string,
     lookupAddresses: string[],
@@ -416,7 +416,7 @@ function sui_fetchProfileObjectIds({
  * Object IDs that don't exist or are not a Profile won't be included in the returned array.
  */
 async function sui_fetchProfileObjects({ rpc, lookupObjectIds }: {
-    rpc: JsonRpcProvider,
+    rpc: SuiClient,
     lookupObjectIds: string[],
 }): Promise<PolymediaProfile[]>
 {
@@ -451,7 +451,7 @@ async function sui_createRegistry({
     packageId,
     registryName,
 } : {
-    rpcProvider: JsonRpcProvider,
+    rpcProvider: SuiClient,
     signTransactionBlock: WalletKitCore['signTransactionBlock'],
     packageId: string,
     registryName: string,
@@ -500,7 +500,7 @@ async function sui_createProfile({
     description = '',
     data = null,
 } : {
-    rpcProvider: JsonRpcProvider,
+    rpcProvider: SuiClient,
     signTransactionBlock: WalletKitCore['signTransactionBlock'],
     packageId: string,
     registryId: string,
@@ -576,7 +576,7 @@ async function sui_editProfile({
     description = '',
     data = null,
 } : {
-    rpcProvider: JsonRpcProvider,
+    rpcProvider: SuiClient,
     signTransactionBlock: WalletKitCore['signTransactionBlock'],
     profileId: string,
     packageId: string,
@@ -637,7 +637,7 @@ function chunkArray<T>(elements: T[], chunkSize: number): T[][] {
 /**
  * Convert a generic `SuiObjectResponse` into a `PolymediaProfile`.
  *
- * Note: when fetching `SuiObjectResponse`, call JsonRpcProvider.getObject/multiGetObjects with:
+ * Note: when fetching `SuiObjectResponse`, call SuiClient.getObject/multiGetObjects with:
     options: {
         showContent: true,
         showOwner: true,
