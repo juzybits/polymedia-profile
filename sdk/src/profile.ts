@@ -127,7 +127,7 @@ export class ProfileManager {
 
             if (newObjectIds.size > 0) {
                 // Retrieve the remaining profile objects
-                const profileObjects = await this.fetchProfileObjects({
+                const profileObjects = await this.getProfilesById({
                     lookupObjectIds: [...newObjectIds.values()]
                 });
 
@@ -166,7 +166,7 @@ export class ProfileManager {
     }): Promise<PolymediaProfile|null>
     {
         const lookupAddresses = [lookupAddress];
-        const profiles = await this.getProfiles({lookupAddresses, useCache});
+        const profiles = await this.getProfilesByOwner({lookupAddresses, useCache});
         return profiles.get(lookupAddress) || null;
     }
 
@@ -175,7 +175,7 @@ export class ProfileManager {
         useCache?: boolean,
     }): Promise<boolean>
     {
-        const profile = await this.getProfile({lookupAddress, useCache});
+        const profile = await this.getProfileByOwner({lookupAddress, useCache});
         return profile !== null;
     }
 
@@ -434,7 +434,7 @@ async function sui_fetchProfileObjects({ rpc, lookupObjectIds }: {
 
         const profiles: PolymediaProfile[] = [];
         for (const resp of resps) {
-            const profile = objectToProfile(resp);
+            const profile = suiObjectToProfile(resp);
             if (profile) {
                 profiles.push(profile);
             }
@@ -552,7 +552,7 @@ async function sui_createProfile({
         for (const event of resp.events) {
             if (event.type.endsWith('::profile::EventCreateProfile')) {
                 const newProfile: PolymediaProfile = {
-                    id: event.parsedJson?.profile_id,
+                    id: (event.parsedJson as any).profile_id,
                     name: name,
                     imageUrl: imageUrl,
                     description: description,
@@ -643,25 +643,39 @@ function chunkArray<T>(elements: T[], chunkSize: number): T[][] {
         showOwner: true,
     },
 */
-function objectToProfile(resp: SuiObjectResponse): PolymediaProfile|null
+function suiObjectToProfile(resp: SuiObjectResponse): PolymediaProfile|null
 {
     if (resp.error || !resp.data) {
         return null;
     }
-    const objContent = resp.data.content as SuiMoveObject;
-    const objOwner = resp.data.owner as ObjectOwner;
 
-    if (!objContent.type.endsWith('::profile::Profile')) {
-        throw new Error('Wrong object type. Expected a Profile but got: ' + objContent.type);
+    const content = resp.data.content;
+    if (!content) {
+        throw new Error('Missing object content. Make sure to fetch the object with `showContent: true`');
+    }
+    if (content.dataType !== 'moveObject') {
+        throw new Error(`Wrong object dataType. Expected 'moveObject' but got: '${content.dataType}'`);
+    }
+    if (!content.type.endsWith('::profile::Profile')) {
+        throw new Error('Wrong object type. Expected a Profile but got: ' + content.type);
     }
 
+    const owner = resp.data.owner;
+    if (!owner) {
+        throw new Error('Missing object owner. Make sure to fetch the object with `showOwner: true`');
+    }
+    const isOwnedObject = typeof owner === 'object' && (('AddressOwner' in owner) || ('ObjectOwner' in owner));
+    if (!isOwnedObject) {
+        throw new Error('Expected an owned object');
+    }
+
+    const fields = content.fields as any;
     return {
-        id: objContent.fields.id.id,
-        name: objContent.fields.name,
-        imageUrl: objContent.fields.image_url,
-        description: objContent.fields.description,
-        data: objContent.fields.data ? JSON.parse(objContent.fields.data) : null,
-        // @ts-ignore
-        owner: objOwner.AddressOwner,
+        id: fields.id.id,
+        name: fields.name,
+        imageUrl: fields.image_url,
+        description: fields.description,
+        data: fields.data ? JSON.parse(fields.data) : null,
+        owner: ('AddressOwner' in owner) ? owner.AddressOwner : owner.ObjectOwner,
     };
 }
