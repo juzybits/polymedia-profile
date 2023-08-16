@@ -28,7 +28,7 @@ export const ViewProfile: React.FC = () =>
     }, []);
 
     const loadProfile = async (): Promise<void> => {
-        return await profileManager.fetchProfileObject({
+        return await profileManager.getProfileObjectById({
             objectId: profileId,
         })
         .then((profile: PolymediaProfile|null) => {

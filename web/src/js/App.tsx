@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import { Connection, JsonRpcProvider } from '@mysten/sui.js';
+import { SuiClient } from '@mysten/sui.js/client';
 import { ConnectModal, WalletKitProvider, useWalletKit } from '@mysten/wallet-kit';
 import { NetworkName, isLocalhost, loadNetwork, loadRpcConfig } from '@polymedia/webutils';
 import { PolymediaProfile, ProfileManager } from '@polymedia/profile-sdk';
@@ -32,9 +32,9 @@ const App: React.FC = () =>
         async function initialize() {
             const network = isLocalhost() ? loadNetwork() : 'mainnet';
             const rpcConfig = await loadRpcConfig({network, noFetch: true});
-            const rpcProvider = new JsonRpcProvider(new Connection(rpcConfig));
+            const suiClient = new SuiClient({url: rpcConfig.fullnode});
             setNetwork(network);
-            setProfileManager( new ProfileManager({network, rpcProvider}) );
+            setProfileManager( new ProfileManager({network, suiClient}) );
         };
         initialize();
     }, []);
@@ -48,7 +48,7 @@ const App: React.FC = () =>
             setProfile(undefined);
             return undefined;
         }
-        return await profileManager.getProfile({
+        return await profileManager.getProfileByOwner({
             lookupAddress: currentAccount.address,
             useCache: false,
         })
