@@ -55,17 +55,17 @@ type NetworkName = 'localnet' | 'devnet' | 'testnet' | 'mainnet';
 export class ProfileManager {
     private readonly cachedAddresses: Map<string, PolymediaProfile|null> = new Map();
     private readonly cachedObjects: Map<string, PolymediaProfile|null> = new Map();
-    public readonly rpc: SuiClient;
+    public readonly suiClient: SuiClient;
     public readonly packageId: string;
     public readonly registryId: string;
 
-    constructor({ network, rpcProvider, packageId, registryId }: {
+    constructor({ network, suiClient, packageId, registryId }: {
         network: NetworkName,
-        rpcProvider: SuiClient,
+        suiClient: SuiClient,
         packageId?: string,
         registryId?: string
     }) {
-        this.rpc = rpcProvider;
+        this.suiClient = suiClient;
         if (network === 'localnet') {
             this.packageId = packageId || POLYMEDIA_PROFILE_PACKAGE_ID_LOCALNET;
             this.registryId = registryId || POLYMEDIA_PROFILE_REGISTRY_ID_LOCALNET;
@@ -210,7 +210,7 @@ export class ProfileManager {
             // Add to the results the profile objects associated to `newLookupObjectIds`.
             // Profile objects that don't exist are not included in the returned array.
             const newProfiles = await sui_fetchProfileObjects({
-                rpc: this.rpc,
+                suiClient: this.suiClient,
                 lookupObjectIds,
             });
             for (const profile of newProfiles) {
@@ -265,7 +265,7 @@ export class ProfileManager {
     }): Promise<OwnedObjectRef>
     {
         return await sui_createRegistry({
-            rpcProvider: this.rpc,
+            suiClient: this.suiClient,
             signTransactionBlock,
             packageId: this.packageId,
             registryName,
@@ -287,7 +287,7 @@ export class ProfileManager {
     }): Promise<PolymediaProfile>
     {
         return await sui_createProfile({
-            rpcProvider: this.rpc,
+            suiClient: this.suiClient,
             signTransactionBlock,
             packageId: this.packageId,
             registryId: this.registryId,
@@ -315,7 +315,7 @@ export class ProfileManager {
     }): Promise<SuiTransactionBlockResponse>
     {
         return await sui_editProfile({
-            rpcProvider: this.rpc,
+            suiClient: this.suiClient,
             signTransactionBlock,
             profileId: profileId,
             packageId: this.packageId,
@@ -338,7 +338,7 @@ export class ProfileManager {
         const addressBatches = chunkArray(lookupAddresses, 30);
         const promises = addressBatches.map(async (batch) => {
             const lookupResults = await sui_fetchProfileObjectIds({
-                rpc: this.rpc,
+                suiClient: this.suiClient,
                 packageId: this.packageId,
                 registryId: this.registryId,
                 lookupAddresses: batch,
@@ -371,12 +371,12 @@ type TypeOfLookupResult = typeof LookupResult;
  * Addresses that don't have a profile won't be included in the returned array.
  */
 function sui_fetchProfileObjectIds({
-    rpc,
+    suiClient,
     packageId,
     registryId,
     lookupAddresses,
 }: {
-    rpc: SuiClient,
+    suiClient: SuiClient,
     packageId: string,
     registryId: string,
     lookupAddresses: string[],
@@ -392,7 +392,7 @@ function sui_fetchProfileObjectIds({
         ],
     });
 
-    return rpc.devInspectTransactionBlock({
+    return suiClient.devInspectTransactionBlock({
         transactionBlock: tx,
         sender: '0x7777777777777777777777777777777777777777777777777777777777777777',
     })
@@ -415,8 +415,8 @@ function sui_fetchProfileObjectIds({
  * Fetch one or more Sui objects and return them as PolymediaProfile instances
  * Object IDs that don't exist or are not a Profile won't be included in the returned array.
  */
-async function sui_fetchProfileObjects({ rpc, lookupObjectIds }: {
-    rpc: SuiClient,
+async function sui_fetchProfileObjects({ suiClient, lookupObjectIds }: {
+    suiClient: SuiClient,
     lookupObjectIds: string[],
 }): Promise<PolymediaProfile[]>
 {
@@ -424,7 +424,7 @@ async function sui_fetchProfileObjects({ rpc, lookupObjectIds }: {
     const objectIdBatches = chunkArray(lookupObjectIds, 50);
     const promises = objectIdBatches.map(async lookupObjectIds =>
     {
-        const resps: SuiObjectResponse[] = await rpc.multiGetObjects({
+        const resps: SuiObjectResponse[] = await suiClient.multiGetObjects({
             ids: lookupObjectIds,
             options: {
                 showContent: true,
@@ -446,12 +446,12 @@ async function sui_fetchProfileObjects({ rpc, lookupObjectIds }: {
 }
 
 async function sui_createRegistry({
-    rpcProvider,
+    suiClient,
     signTransactionBlock,
     packageId,
     registryName,
 } : {
-    rpcProvider: SuiClient,
+    suiClient: SuiClient,
     signTransactionBlock: WalletKitCore['signTransactionBlock'],
     packageId: string,
     registryName: string,
@@ -469,7 +469,7 @@ async function sui_createRegistry({
     const signedTx = await signTransactionBlock({
         transactionBlock: tx,
     });
-    return rpcProvider.executeTransactionBlock({
+    return suiClient.executeTransactionBlock({
         transactionBlock: signedTx.transactionBlockBytes,
         signature: signedTx.signature,
         options: {
@@ -491,7 +491,7 @@ async function sui_createRegistry({
 }
 
 async function sui_createProfile({
-    rpcProvider,
+    suiClient,
     signTransactionBlock,
     packageId,
     registryId,
@@ -500,7 +500,7 @@ async function sui_createProfile({
     description = '',
     data = null,
 } : {
-    rpcProvider: SuiClient,
+    suiClient: SuiClient,
     signTransactionBlock: WalletKitCore['signTransactionBlock'],
     packageId: string,
     registryId: string,
@@ -533,7 +533,7 @@ async function sui_createProfile({
     const signedTx = await signTransactionBlock({
         transactionBlock: tx,
     });
-    const resp = await rpcProvider.executeTransactionBlock({
+    const resp = await suiClient.executeTransactionBlock({
         transactionBlock: signedTx.transactionBlockBytes,
         signature: signedTx.signature,
         options: {
@@ -567,7 +567,7 @@ async function sui_createProfile({
 }
 
 async function sui_editProfile({
-    rpcProvider,
+    suiClient,
     signTransactionBlock,
     profileId,
     packageId,
@@ -576,7 +576,7 @@ async function sui_editProfile({
     description = '',
     data = null,
 } : {
-    rpcProvider: SuiClient,
+    suiClient: SuiClient,
     signTransactionBlock: WalletKitCore['signTransactionBlock'],
     profileId: string,
     packageId: string,
@@ -608,7 +608,7 @@ async function sui_editProfile({
     const signedTx = await signTransactionBlock({
         transactionBlock: tx,
     });
-    const resp = await rpcProvider.executeTransactionBlock({
+    const resp = await suiClient.executeTransactionBlock({
         transactionBlock: signedTx.transactionBlockBytes,
         signature: signedTx.signature,
         options: {
