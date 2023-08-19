@@ -1,7 +1,7 @@
 {
     "name": "@polymedia/profile-sdk",
     "description": "An SDK to interact with Polymedia Profile objects on the Sui network",
-    "version": "1.2.0",
+    "version": "1.3.0",
     "license": "Apache-2.0",
     "author": "@juzybits (https://polymedia.app)",
     "homepage": "https://profile.polymedia.app",
@@ -33,8 +33,8 @@
         "@mysten/wallet-kit-core": "latest"
     },
     "devDependencies": {
-        "@typescript-eslint/eslint-plugin": "^6.3.0",
-        "@typescript-eslint/parser": "^6.3.0",
+        "@typescript-eslint/eslint-plugin": "^6.4.0",
+        "@typescript-eslint/parser": "^6.4.0",
         "eslint": "^8.47.0",
         "eslint-plugin-deprecation": "^1.5.0",
         "typescript": "^4.9.5"
