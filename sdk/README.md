@@ -18,12 +18,12 @@ This library exports only one type and one class:
 - The `PolymediaProfile` type represents a `Profile` Sui object:
   ```
   export type PolymediaProfile = {
-    id: SuiAddress;
-    name: string;
-    imageUrl: string;
-    description: string;
-    data: any;
-    owner: SuiAddress;
+      id: string;
+      name: string;
+      imageUrl: string;
+      description: string;
+      data: any;
+      owner: string;
   }
   ```
 
@@ -33,24 +33,21 @@ This library exports only one type and one class:
 
 ### Instantiate `ProfileManager`
 ```
-import { Connection, JsonRpcProvider } from '@mysten/sui.js';
-import { PolymediaProfile, ProfileManager } from '@polymedia/profile-sdk';
+import { SuiClient } from '@mysten/sui.js/client';
+import { ProfileManager } from '@polymedia/profile-sdk';
 
 const profileManager = new ProfileManager({
-    network: 'testnet',
-    rpcProvider: new JsonRpcProvider(new Connection({
-        fullnode: 'https://fullnode.testnet.sui.io',
-        faucet: 'https://faucet.testnet.sui.io/gas',
-    })),
+    network: 'mainnet',
+    suiClient: new SuiClient({url: 'https://YOUR_RPC_ENDPOINT'}),
 });
 ```
 `ProfileManager` uses Polymedia's package and registry by default, but you can change that:
 ```
-const profileManage = new ProfileManager({
-    network: 'testnet',
-    rpcProvider: new JsonRpcProvider(/*...*/)
-    packageId: `0x_PACKAGE_ID`,
-    registryId: `0x_REGISTRY_ID`,
+const profileManager = new ProfileManager({
+    network: 'mainnet',
+    suiClient: new SuiClient({url: 'https://YOUR_RPC_ENDPOINT'}),
+    packageId: '0x_PACKAGE_ID',
+    registryId: '0x_REGISTRY_ID'
 });
 ```
 
@@ -73,7 +70,7 @@ To search for `Profile` objects associated to Sui addresses, you can use the fol
     ```
     profileManager.getProfilesByOwner({
         lookupAddresses: ['0x_USER_ADDRESS_1', '0x_USER_ADDRESS_2'],
-    }).then((profiles: Map<SuiAddress, PolymediaProfile|null>) => {
+    }).then((profiles: Map<string, PolymediaProfile|null>) => {
         // ...
     });
     ```
