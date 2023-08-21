@@ -1,7 +1,7 @@
 {
     "name": "@polymedia/profile-sdk",
     "description": "An SDK to interact with Polymedia Profile objects on the Sui network",
-    "version": "1.4.0",
+    "version": "1.4.0-mysten033",
     "license": "Apache-2.0",
     "author": "@juzybits (https://polymedia.app)",
     "homepage": "https://profile.polymedia.app",
@@ -29,9 +29,9 @@
         "profile"
     ],
     "dependencies": {
-        "@mysten/bcs": "latest",
-        "@mysten/sui.js": "latest",
-        "@mysten/wallet-kit-core": "latest"
+        "@mysten/bcs": "^0.7.3",
+        "@mysten/sui.js": "^0.33.0",
+        "@mysten/wallet-kit-core": "0.4.5"
     },
     "devDependencies": {
         "@typescript-eslint/eslint-plugin": "^6.4.0",

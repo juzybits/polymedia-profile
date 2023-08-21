@@ -12,15 +12,13 @@
 import { BCS, getSuiMoveConfig } from '@mysten/bcs';
 import {
     DevInspectResults,
+    JsonRpcProvider as SuiClient,
     OwnedObjectRef,
-    SuiClient,
     SuiObjectResponse,
     SuiTransactionBlockResponse,
-    TransactionEffects,
-} from '@mysten/sui.js/client';
-import {
     TransactionBlock,
-} from '@mysten/sui.js/transactions';
+    TransactionEffects,
+} from '@mysten/sui.js';
 import { WalletKitCore } from '@mysten/wallet-kit-core';
 
 export const POLYMEDIA_PROFILE_PACKAGE_ID_LOCALNET = '0x6ced420f60b41fa73ccedde9057ac7d382506e007f9ddb59fcce9b314f35d696';

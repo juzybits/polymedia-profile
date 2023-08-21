@@ -1,3 +1,8 @@
+# WARNING
+
+This version of the SDK uses old @mysten dependencies in order to be compatible with the codebase
+of Ethos' Sui 8192 Daily Contest: https://sui8192.ethoswallet.xyz/?leaderboard=all-time
+
 # Polymedia Profile: TypeScript SDK
 
 A library to interact with the _PolymediaProfile_ package on Sui.
