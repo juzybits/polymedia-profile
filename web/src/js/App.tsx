@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { SuiClient } from '@mysten/sui.js/client';
 import { ConnectModal, WalletKitProvider, useWalletKit } from '@mysten/wallet-kit';
-import { NetworkName, isLocalhost, loadNetwork, loadRpcConfig } from '@polymedia/webutils';
+import { NetworkName, isLocalhost, loadNetwork, getRpcConfig } from '@polymedia/webutils';
 import { PolymediaProfile, ProfileManager } from '@polymedia/profile-sdk';
 
 import { Nav } from './Nav';
@@ -31,7 +31,7 @@ const App: React.FC = () =>
     useEffect(() => {
         async function initialize() {
             const network = isLocalhost() ? loadNetwork() : 'mainnet';
-            const rpcConfig = await loadRpcConfig({network, noFetch: true});
+            const rpcConfig = await getRpcConfig({network, fetch: false});
             const suiClient = new SuiClient({url: rpcConfig.fullnode});
             setNetwork(network);
             setProfileManager( new ProfileManager({network, suiClient}) );
