@@ -13,13 +13,13 @@ dependencies:
     version: 0.7.2(react-dom@18.2.0)(react@18.2.0)
   '@polymedia/profile-sdk':
     specifier: latest
-    version: 1.4.3
+    version: 1.4.4
   '@polymedia/react-components':
     specifier: latest
     version: 1.2.0(react-dom@18.2.0)(react@18.2.0)
   '@polymedia/webutils':
     specifier: latest
-    version: 2.3.0
+    version: 2.3.1
   react:
     specifier: ^18.2.0
     version: 18.2.0
@@ -1231,8 +1231,8 @@ packages:
       nullthrows: 1.1.1
     dev: true
 
-  /@polymedia/profile-sdk@1.4.3:
-    resolution: {integrity: sha512-GRzYnRov/1UCkNwFon+N1FilAsJkyQFUixvI9NfLBgZyj1YANhezskZ3ctF6fQqAxWBqLA0UgY6g2biX93/Rzw==}
+  /@polymedia/profile-sdk@1.4.4:
+    resolution: {integrity: sha512-qtkUKIl5rWbFO+y7+1hw+YmF9hkAP2k2WkYpNwaScCxkFyP6jMMMoCQQML7f7z+dYmtpQoh05ZbVPBSIeYjODg==}
     dependencies:
       '@mysten/bcs': 0.7.4
       '@mysten/sui.js': 0.41.2
@@ -1249,13 +1249,13 @@ packages:
       react: ^18.0.0
       react-dom: ^18.0.0
     dependencies:
-      '@polymedia/webutils': 2.3.0
+      '@polymedia/webutils': 2.3.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
-  /@polymedia/webutils@2.3.0:
-    resolution: {integrity: sha512-y8WW1X3MRZq4y1eRQPuFG4IUOAwHqI8FD6o1S3vq4ktrmrZkL2FU3/XW3FlKvd79ZqCrkEhqbeGA9ZhrpBqj0g==}
+  /@polymedia/webutils@2.3.1:
+    resolution: {integrity: sha512-Pi7Whe1cAp8HaZ0ydY/BpqTAiUEZx8eTVGBJn6ofTICDziHhIefLkGdXfe4Xe5PXpqxRsjhARWvymSD9LHvpgg==}
     dev: false
 
   /@remix-run/router@1.8.0:
@@ -1861,7 +1861,7 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      caniuse-lite: 1.0.30001529
+      caniuse-lite: 1.0.30001532
       electron-to-chromium: 1.4.513
       node-releases: 2.0.13
       update-browserslist-db: 1.0.11(browserslist@4.21.10)
@@ -1912,8 +1912,8 @@ packages:
     engines: {node: '>=4'}
     dev: true
 
-  /caniuse-lite@1.0.30001529:
-    resolution: {integrity: sha512-n2pUQYGAkrLG4QYj2desAh+NqsJpHbNmVZz87imptDdxLAtjxary7Df/psdfyDGmskJK/9Dt9cPnx5RZ3CU4Og==}
+  /caniuse-lite@1.0.30001532:
+    resolution: {integrity: sha512-FbDFnNat3nMnrROzqrsg314zhqN5LGQ1kyyMk2opcrwGbVGpHRhgCWtAgD5YJUqNAiQ+dklreil/c3Qf1dfCTw==}
     dev: true
 
   /capture-stack-trace@1.0.2:
