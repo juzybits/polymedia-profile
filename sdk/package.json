@@ -1,29 +1,11 @@
 {
+    "private": false,
     "name": "@polymedia/profile-sdk",
+    "version": "1.4.4",
     "description": "An SDK to interact with Polymedia Profile objects on the Sui network",
-    "version": "1.4.3",
     "license": "Apache-2.0",
     "author": "@juzybits (https://polymedia.app)",
     "homepage": "https://profile.polymedia.app",
-    "main": "dist/cjs/index.js",
-    "module": "dist/esm/index.js",
-    "types": "dist/esm/index.d.ts",
-    "exports": {
-        "source": "./src/index.ts",
-        "import": "./dist/esm/index.js",
-        "require": "./dist/cjs/index.js"
-    },
-    "scripts": {
-        "lint": "eslint ./src --ext .ts,.tsx",
-        "build": "rm -rf dist/ && tsc -p tsconfig.cjs.json && tsc -p tsconfig.esm.json",
-        "prepublishOnly": "pnpm build"
-    },
-    "files": [
-        "dist/",
-        "src/",
-        "LICENSE",
-        "README.md"
-    ],
     "repository": {
         "type": "git",
         "url": "https://github.com/juzybits/polymedia-profile"
@@ -33,6 +15,11 @@
         "sui",
         "profile"
     ],
+    "scripts": {
+        "lint": "eslint ./src --ext .ts,.tsx",
+        "build": "rm -rf dist/ && tsc -p tsconfig.cjs.json && tsc -p tsconfig.esm.json",
+        "prepublishOnly": "pnpm build"
+    },
     "dependencies": {
         "@mysten/bcs": "^0.7.4",
         "@mysten/sui.js": "^0.41.2",
@@ -44,5 +31,19 @@
         "eslint": "^8.49.0",
         "eslint-plugin-deprecation": "^1.5.0",
         "typescript": "^4.9.5"
+    },
+    "files": [
+        "dist/",
+        "src/",
+        "LICENSE",
+        "README.md"
+    ],
+    "main": "dist/cjs/index.js",
+    "module": "dist/esm/index.js",
+    "types": "dist/esm/index.d.ts",
+    "exports": {
+        "source": "./src/index.ts",
+        "import": "./dist/esm/index.js",
+        "require": "./dist/cjs/index.js"
     }
 }
