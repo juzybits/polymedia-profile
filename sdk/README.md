@@ -1,7 +1,7 @@
 # WARNING
 
-This version of the SDK uses old @mysten dependencies in order to be compatible with the codebase
-of Ethos' Sui 8192 Daily Contest: https://sui8192.ethoswallet.xyz/?leaderboard=all-time
+This version of the SDK uses old @mysten dependencies in order to be compatible with
+DeSuiLabs/DeSuiCoinFlip-Frontend-V2.0
 
 # Polymedia Profile: TypeScript SDK
 
