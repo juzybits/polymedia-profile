@@ -6,7 +6,10 @@
     "license": "Apache-2.0",
     "author": "@juzybits (https://polymedia.app)",
     "homepage": "https://profile.polymedia.app",
-    "repository": { "type": "git", "url": "https://github.com/juzybits/polymedia-profile" },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/juzybits/polymedia-profile"
+    },
     "keywords": [],
     "scripts": {
         "lint": "eslint ./src --ext .ts,.tsx",
@@ -23,14 +26,14 @@
         "@polymedia/webutils": "latest",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
-        "react-router-dom": "^6.15.0"
+        "react-router-dom": "^6.16.0"
     },
     "devDependencies": {
         "@parcel/transformer-less": "latest",
         "@types/react": "^18.2.21",
         "@types/react-dom": "^18.2.7",
-        "@typescript-eslint/eslint-plugin": "^6.6.0",
-        "@typescript-eslint/parser": "^6.6.0",
+        "@typescript-eslint/eslint-plugin": "^6.7.0",
+        "@typescript-eslint/parser": "^6.7.0",
         "buffer": "^5.7.1",
         "eslint": "^8.49.0",
         "eslint-plugin-deprecation": "^1.5.0",
