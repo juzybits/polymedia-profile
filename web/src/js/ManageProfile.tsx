@@ -63,7 +63,6 @@ export const ManageProfile: React.FC = () =>
         setIsErrorImage(true);
         setIsErrorForm(true);
         setIsErrorImgur(inputImage.startsWith('https://imgur.com/'));
-        notifyError("That doesn't look like a valid image URL");
     };
 
     const onSubmitCreateProfile = async (e: SyntheticEvent) => {
@@ -127,7 +126,7 @@ export const ManageProfile: React.FC = () =>
     if (!currentAccount) {
         view = <div>
             <p>
-                Connect your Sui wallet to get started.
+                Connect your Sui wallet to create your profile.<br/>It's free and only takes a few seconds!
             </p>
             <button onClick={openConnectModal}>LOG IN</button>
         </div>;
@@ -148,7 +147,15 @@ export const ManageProfile: React.FC = () =>
                 />
             </div>
             <div className='form-field'>
-                <label>Image URL</label>
+                <label>Description<span className='field-optional'>[optional]</span></label>
+                <textarea value={inputDescription} maxLength={10000}
+                    className={waiting ? 'waiting' : ''} disabled={waiting}
+                    spellCheck='true' autoCorrect='off' autoComplete='off'
+                    onChange={e => setInputDescription(e.target.value)}
+                />
+            </div>
+            <div className='form-field'>
+                <label>Image URL<span className='field-optional'>[optional]</span></label>
                 <input value={inputImage} type='text'
                     className={waiting ? 'waiting' : ''} disabled={waiting}
                     spellCheck='false' autoCorrect='off' autoComplete='off'
@@ -157,14 +164,6 @@ export const ManageProfile: React.FC = () =>
                 {isErrorImage && <div className='field-error'>That doesn't look like a valid image URL</div>}
                 <div className='field-info'>Right click the image, then click 'Copy Image Address'. To use a picture from your device, upload it to a service like <a href='https://imgur.com/upload' target='_blank' rel='noopener nofollow noreferrer'>imgur.com</a>, then copy the image address.</div>
                 {isErrorImgur && <div className='field-error-imgur'><img src={imgDrake} /></div>}
-            </div>
-            <div className='form-field'>
-                <label>Description</label>
-                <textarea value={inputDescription} maxLength={10000}
-                    className={waiting ? 'waiting' : ''} disabled={waiting}
-                    spellCheck='true' autoCorrect='off' autoComplete='off'
-                    onChange={e => setInputDescription(e.target.value)}
-                />
             </div>
             <button
                 type='submit'
