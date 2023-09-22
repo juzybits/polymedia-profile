@@ -19,11 +19,11 @@ export const Home: React.FC = () =>
             HOME
         </h1>
         <p>
-            Polymedia Profile is a fully on-chain profile/identity system on the <a href='https://sui.io' target='_blank' rel='noopener'>Sui Network</a> that is used in all Polymedia <a href='https://polymedia.app' target='_blank' rel='noopener'>apps</a>.
+            Polymedia Profile is a fully on-chain profile system on <a href='https://sui.io' target='_blank' rel='noopener'>Sui</a>. It lets users attach a profile (name, picture, etc) to their Sui address. Over 137,000 profiles have been created to date.
             <br/>
             <br/>
 
-            This web app lets users manage their profiles on the default registry, called <i><a href={linkToExplorer(network, 'object', profileManager.registryId)} target='_blank' rel='noopener'>polymedia-main</a></i>. Over 137,000 profiles have been created to date.
+            This web app lets users manage their profiles on the default registry, called <i><a href={linkToExplorer(network, 'object', profileManager.registryId)} target='_blank' rel='noopener'>polymedia-main</a></i>.
             <br/>
             <br/>
             The code is fully <a href='https://github.com/juzybits/polymedia-profile' target='_blank' rel='noopener'>open-source</a>, and there is a <a href='https://www.npmjs.com/package/@polymedia/profile-sdk' target='_blank' rel='noopener'>TypeScript SDK</a> to facilitate 3rd party integrations.

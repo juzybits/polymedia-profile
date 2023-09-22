@@ -1,10 +1,16 @@
 # Polymedia Profile: Sui Move
 
-A simple yet flexible profile system on the Sui Network.
+A simple and flexible profile system on Sui.
 
 For an overview of Polymedia Profile, see _[../README.md](../README.md)_.
 
 For details about the TypeScript SDK, see _[../sdk/README.md](../sdk/README.md)_.
+
+## Mainnet objects
+
+Package: [0x57138e18b82cc8ea6e92c3d5737d6078b1304b655f59cf5ae9668cc44aad4ead](https://suiexplorer.com/object/0x57138e18b82cc8ea6e92c3d5737d6078b1304b655f59cf5ae9668cc44aad4ead?network=mainnet)
+
+Registry: [0xd6eb0ca817dfe0763af9303a6bea89b88a524844d78e657dc25ed8ba3877deac](https://suiexplorer.com/object/0xd6eb0ca817dfe0763af9303a6bea89b88a524844d78e657dc25ed8ba3877deac?network=mainnet)
 
 ## Basics
 
