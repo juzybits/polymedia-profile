@@ -1,6 +1,6 @@
 # Polymedia Profile
 
-![Polymedia Profile](./web/src/img/open_graph.webp)
+![Polymedia Profile](./web/src/img/open-graph.webp)
 
 Polymedia Profile is a fully on-chain profile/identity system on the Sui Network.
 
