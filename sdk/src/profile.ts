@@ -55,6 +55,7 @@ type NetworkName = 'localnet' | 'devnet' | 'testnet' | 'mainnet';
 export class ProfileManager {
     private readonly cachedAddresses: Map<string, PolymediaProfile|null> = new Map();
     private readonly cachedObjects: Map<string, PolymediaProfile|null> = new Map();
+    public readonly network: NetworkName;
     public readonly suiClient: SuiClient;
     public readonly packageId: string;
     public readonly registryId: string;
@@ -65,6 +66,7 @@ export class ProfileManager {
         packageId?: string,
         registryId?: string
     }) {
+        this.network = network;
         this.suiClient = suiClient;
         if (network === 'localnet') {
             this.packageId = packageId || POLYMEDIA_PROFILE_PACKAGE_ID_LOCALNET;
@@ -265,6 +267,7 @@ export class ProfileManager {
     }): Promise<OwnedObjectRef>
     {
         return await sui_createRegistry({
+            network: this.network,
             suiClient: this.suiClient,
             signTransactionBlock,
             packageId: this.packageId,
@@ -287,6 +290,7 @@ export class ProfileManager {
     }): Promise<PolymediaProfile>
     {
         return await sui_createProfile({
+            network: this.network,
             suiClient: this.suiClient,
             signTransactionBlock,
             packageId: this.packageId,
@@ -315,6 +319,7 @@ export class ProfileManager {
     }): Promise<SuiTransactionBlockResponse>
     {
         return await sui_editProfile({
+            network: this.network,
             suiClient: this.suiClient,
             signTransactionBlock,
             profileId: profileId,
@@ -446,11 +451,13 @@ async function sui_fetchProfileObjects({ suiClient, lookupObjectIds }: {
 }
 
 async function sui_createRegistry({
+    network,
     suiClient,
     signTransactionBlock,
     packageId,
     registryName,
 } : {
+    network: NetworkName,
     suiClient: SuiClient,
     signTransactionBlock: WalletKitCore['signTransactionBlock'],
     packageId: string,
@@ -468,6 +475,7 @@ async function sui_createRegistry({
 
     const signedTx = await signTransactionBlock({
         transactionBlock: tx,
+        chain: `sui:${network}`,
     });
     return suiClient.executeTransactionBlock({
         transactionBlock: signedTx.transactionBlockBytes,
@@ -491,6 +499,7 @@ async function sui_createRegistry({
 }
 
 async function sui_createProfile({
+    network,
     suiClient,
     signTransactionBlock,
     packageId,
@@ -500,6 +509,7 @@ async function sui_createProfile({
     description = '',
     data = null,
 } : {
+    network: NetworkName,
     suiClient: SuiClient,
     signTransactionBlock: WalletKitCore['signTransactionBlock'],
     packageId: string,
@@ -528,6 +538,7 @@ async function sui_createProfile({
     // Creates 2 objects: the profile (owned by the caller) and a dynamic field (inside the registry's table)
     const signedTx = await signTransactionBlock({
         transactionBlock: tx,
+        chain: `sui:${network}`,
     });
     const resp = await suiClient.executeTransactionBlock({
         transactionBlock: signedTx.transactionBlockBytes,
@@ -563,6 +574,7 @@ async function sui_createProfile({
 }
 
 async function sui_editProfile({
+    network,
     suiClient,
     signTransactionBlock,
     profileId,
@@ -572,6 +584,7 @@ async function sui_editProfile({
     description = '',
     data = null,
 } : {
+    network: NetworkName,
     suiClient: SuiClient,
     signTransactionBlock: WalletKitCore['signTransactionBlock'],
     profileId: string,
@@ -599,6 +612,7 @@ async function sui_editProfile({
 
     const signedTx = await signTransactionBlock({
         transactionBlock: tx,
+        chain: `sui:${network}`,
     });
     const resp = await suiClient.executeTransactionBlock({
         transactionBlock: signedTx.transactionBlockBytes,
