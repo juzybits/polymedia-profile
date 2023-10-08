@@ -7,7 +7,6 @@ import { useWalletKit } from '@mysten/wallet-kit';
 import { NetworkSelector } from '@polymedia/react-components';
 import { NetworkName, isLocalhost } from '@polymedia/webutils';
 import { PolymediaProfile } from '@polymedia/profile-sdk';
-import imgLogo from '../img/logo.png';
 import imgAnon from '../img/anon.webp';
 import '../css/Nav.less';
 
@@ -34,7 +33,7 @@ export const Nav: React.FC<{
 
         <div id='nav-logo' className='nav-section'>
             <Link to='/' id='nav-logo-link' onClick={closeMobileNav}>
-                <img id='nav-logo-img' src={imgLogo} alt='Polymedia Profile' />
+                <img id='nav-logo-img' src='https://assets.polymedia.app/img/all/logo-nomargin-transparent-512x512.webp' alt='Polymedia logo' />
                 <span id='nav-logo-txt'>
                     <span id='nav-title-polymedia'>POLYMEDIA</span>
                     <span id='nav-title-profile'>PROFILE</span>
