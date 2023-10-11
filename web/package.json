@@ -15,7 +15,7 @@
         "clean": "rm -rf .parcel-cache/ dist/",
         "lint": "eslint ./src --ext .ts,.tsx",
         "serve": "pnpm clean && parcel src/index.html",
-        "build": "pnpm clean && parcel build --no-source-maps src/index.html && cp src/static/* dist/ && cp src/img/project_image.png dist/img/",
+        "build": "pnpm clean && parcel build --reporter @parcel/reporter-bundle-analyzer --no-source-maps src/index.html && cp src/static/* dist/ && cp src/img/project_image.png dist/img/",
         "deploy-dev": "pnpm build && wrangler pages publish dist/ --project-name polymedia-profile --branch dev",
         "deploy-prod": "pnpm build && wrangler pages publish dist/ --project-name polymedia-profile --branch main"
     },
@@ -31,6 +31,7 @@
         "react-router-dom": "^6.16.0"
     },
     "devDependencies": {
+        "@parcel/reporter-bundle-analyzer": "^2.9.3",
         "@parcel/transformer-less": "latest",
         "@types/react": "^18.2.25",
         "@types/react-dom": "^18.2.11",

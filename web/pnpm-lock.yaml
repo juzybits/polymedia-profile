@@ -34,6 +34,9 @@ dependencies:
     version: 6.16.0(react-dom@18.2.0)(react@18.2.0)
 
 devDependencies:
+  '@parcel/reporter-bundle-analyzer':
+    specifier: ^2.9.3
+    version: 2.9.3(@parcel/core@2.9.3)
   '@parcel/transformer-less':
     specifier: latest
     version: 2.9.3(@parcel/core@2.9.3)
@@ -1003,6 +1006,17 @@ packages:
       '@parcel/diagnostic': 2.9.3
       '@parcel/events': 2.9.3
       chrome-trace-event: 1.0.3
+    dev: true
+
+  /@parcel/reporter-bundle-analyzer@2.9.3(@parcel/core@2.9.3):
+    resolution: {integrity: sha512-zfz6vVR3/j0lL2T5C2XKQICUBd1OT8TRHgDuGqSQChPLBwJOZeQdtF7o6V40FM43FtVRkl86I17ycyydjyUbcA==}
+    engines: {node: '>= 12.0.0', parcel: ^2.9.3}
+    dependencies:
+      '@parcel/plugin': 2.9.3(@parcel/core@2.9.3)
+      '@parcel/utils': 2.9.3
+      nullthrows: 1.1.1
+    transitivePeerDependencies:
+      - '@parcel/core'
     dev: true
 
   /@parcel/reporter-cli@2.9.3(@parcel/core@2.9.3):
