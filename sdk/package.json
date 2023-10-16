@@ -1,11 +1,11 @@
 {
     "private": false,
-    "name": "@polymedia/profile-sdk",
     "version": "1.7.0",
-    "description": "An SDK to interact with Polymedia Profile objects on the Sui network",
-    "license": "Apache-2.0",
+    "name": "@polymedia/profile-sdk",
     "author": "@juzybits (https://polymedia.app)",
     "homepage": "https://profile.polymedia.app",
+    "description": "An SDK to interact with Polymedia Profile objects on the Sui network",
+    "license": "Apache-2.0",
     "repository": {
         "type": "git",
         "url": "https://github.com/juzybits/polymedia-profile"
