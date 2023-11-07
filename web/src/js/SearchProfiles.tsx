@@ -6,7 +6,7 @@ import { PolymediaProfile } from '@polymedia/profile-sdk';
 import { AppContext } from './App';
 import '../css/SearchProfiles.less';
 
-import { ADDRESS_REGEX, makeCssUrl } from '@polymedia/webutils';
+import { ADDRESS_REGEX, makeCssUrl, shortenAddress } from '@polymedia/webutils';
 const addressRegex = new RegExp(ADDRESS_REGEX, 'g');
 
 export const SearchProfiles: React.FC = () =>
@@ -137,10 +137,6 @@ export const SearchProfiles: React.FC = () =>
 
         {errorMsg && <div className='error-message'>{errorMsg}</div>}
     </div>;
-}
-
-function shortenAddress(address: string): string {
-    return '@' + address.slice(2, 6) + '..' + address.slice(-4);
 }
 
 const logError = (origin: string, error: any): string => // TODO: move to @polymedia/webutils

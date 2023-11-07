@@ -1,11 +1,10 @@
 import { PolymediaProfile } from '@polymedia/profile-sdk';
+import { linkToExplorer, shortenAddress } from '@polymedia/webutils';
+import { useEffect, useState } from 'react';
+import { useOutletContext, useParams } from 'react-router-dom';
 import '../css/ViewProfile.less';
 import { AppContext } from './App';
-import { useParams } from 'react-router-dom';
-import { useOutletContext } from 'react-router-dom';
 import { notifyError } from './components/Notification';
-import { useEffect, useState } from 'react';
-import { linkToExplorer } from '@polymedia/webutils';
 
 export const ViewProfile: React.FC = () =>
 {
@@ -92,7 +91,4 @@ export const ViewProfile: React.FC = () =>
     return <div id='page' className='page-view-profile'>
         {view}
     </div>;
-}
-function shortenAddress(address: string): string {
-    return '@' + address.slice(2, 10) + '...' + address.slice(-8);
 }

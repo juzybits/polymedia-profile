@@ -1,14 +1,13 @@
 /// Navigation bar
 
+import { useWalletKit } from '@mysten/wallet-kit';
+import { PolymediaProfile } from '@polymedia/profile-sdk';
+import { NetworkSelector } from '@polymedia/react-components';
+import { NetworkName, isLocalhost, shortenAddress } from '@polymedia/webutils';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useWalletKit } from '@mysten/wallet-kit';
-
-import { NetworkSelector } from '@polymedia/react-components';
-import { NetworkName, isLocalhost } from '@polymedia/webutils';
-import { PolymediaProfile } from '@polymedia/profile-sdk';
-import imgAnon from '../img/anon.webp';
 import '../css/Nav.less';
+import imgAnon from '../img/anon.webp';
 
 export const Nav: React.FC<{
     network: NetworkName,
@@ -118,7 +117,7 @@ const NavProfile: React.FC<{
         </div>
         <div id='nav-profile-name-wrap'>
             <div id='nav-profile-name'>{ profile ? profile.name : 'Anon' }</div>
-            <div id='nav-profile-address'>{'@' + currentAccount.address.slice(2, 6) + '..' + currentAccount.address.slice(-4)}</div>
+            <div id='nav-profile-address'>{shortenAddress(currentAccount.address)}</div>
         </div>
     </div>;
 }
