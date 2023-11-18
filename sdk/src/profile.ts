@@ -85,15 +85,6 @@ export class ProfileManager {
         }
     }
 
-    /** @deprecated Use `getProfilesByOwner` instead. */
-    public async getProfiles({ lookupAddresses, useCache=true }: {
-        lookupAddresses: Iterable<string>,
-        useCache?: boolean,
-    }): Promise<Map<string, PolymediaProfile|null>>
-    {
-       return this.getProfilesByOwner({lookupAddresses, useCache});
-    }
-
     public async getProfilesByOwner({ lookupAddresses, useCache=true }: {
         lookupAddresses: Iterable<string>,
         useCache?: boolean,
@@ -153,15 +144,6 @@ export class ProfileManager {
         return result;
     }
 
-    /** @deprecated Use `getProfileByOwner` instead. */
-    public async getProfile({ lookupAddress, useCache=true }: {
-        lookupAddress: string,
-        useCache?: boolean,
-    }): Promise<PolymediaProfile|null>
-    {
-        return this.getProfileByOwner({lookupAddress, useCache});
-    }
-
     public async getProfileByOwner({ lookupAddress, useCache=true }: {
         lookupAddress: string,
         useCache?: boolean,
@@ -179,15 +161,6 @@ export class ProfileManager {
     {
         const profile = await this.getProfileByOwner({lookupAddress, useCache});
         return profile !== null;
-    }
-
-    /** @deprecated Use `getProfilesById` instead. */
-    public async fetchProfileObjects({ lookupObjectIds, useCache=true }: {
-        lookupObjectIds: string[],
-        useCache?: boolean,
-    }): Promise<Map<string, PolymediaProfile|null>>
-    {
-        return this.getProfilesById({ lookupObjectIds, useCache });
     }
 
     public async getProfilesById({ lookupObjectIds, useCache=true }: {
@@ -675,7 +648,7 @@ function suiObjectToProfile(resp: SuiObjectResponse): PolymediaProfile|null
         throw new Error('Expected an owned object');
     }
 
-    const fields = content.fields as any;
+    const fields = content.fields as Record<string, any>;
     return {
         id: fields.id.id,
         name: fields.name,
