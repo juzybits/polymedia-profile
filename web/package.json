@@ -20,7 +20,6 @@
         "deploy-prod": "pnpm build && wrangler pages publish dist/ --project-name polymedia-profile --branch main"
     },
     "dependencies": {
-        "@kunalabs-io/sui-snap-wallet": "latest",
         "@mysten/sui.js": "latest",
         "@mysten/wallet-kit": "latest",
         "@polymedia/profile-sdk": "latest",

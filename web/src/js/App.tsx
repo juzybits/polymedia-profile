@@ -9,9 +9,6 @@ import { Nav } from './Nav';
 import { notifyError } from './components/Notification';
 import '../css/App.less';
 
-import { registerSuiSnapWallet } from "@kunalabs-io/sui-snap-wallet";
-registerSuiSnapWallet();
-
 export type AppContext = {
     network: NetworkName;
     profile: PolymediaProfile|null|undefined;
