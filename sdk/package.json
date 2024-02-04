@@ -33,18 +33,25 @@
         "eslint-plugin-deprecation": "^1.5.0",
         "typescript": "^5.3.3"
     },
+    "type": "module",
+    "sideEffects": false,
+    "publishConfig": {
+        "access": "public"
+    },
     "files": [
         "dist/",
         "src/",
         "LICENSE",
         "README.md"
     ],
-    "main": "dist/cjs/index.js",
-    "module": "dist/esm/index.js",
-    "types": "dist/esm/index.d.ts",
+    "types": "./dist/cjs/index.d.ts",
+    "main": "./dist/cjs/index.js",
+    "import": "./dist/esm/index.js",
     "exports": {
-        "source": "./src/index.ts",
-        "import": "./dist/esm/index.js",
-        "require": "./dist/cjs/index.js"
+        ".": {
+            "types": "./dist/cjs/index.d.ts",
+            "main": "./dist/cjs/index.js",
+            "import": "./dist/esm/index.js"
+        }
     }
 }
