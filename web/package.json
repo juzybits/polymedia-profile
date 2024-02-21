@@ -43,5 +43,7 @@
         "parcel": "latest",
         "process": "latest",
         "react-devtools": "latest"
-    }
+    },
+    "type": "module",
+    "sideEffects": false
 }
