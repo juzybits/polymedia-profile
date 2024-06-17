@@ -1,12 +1,5 @@
-import {
-    DevInspectResults,
-    SuiClient,
-    SuiObjectResponse,
-    SuiTransactionBlockResponse,
-    TransactionEffects,
-} from "@mysten/sui/client";
+import { DevInspectResults, SuiClient } from "@mysten/sui/client";
 import { Transaction, TransactionResult } from "@mysten/sui/transactions";
-import { NetworkName, PolymediaProfile } from "./types";
 
 /*
 // Register a custom struct type for Sui 'Binary Canonical (de)Serialization'
@@ -65,40 +58,6 @@ export function sui_fetchProfileObjectIds({
             throw new Error(resp.effects.status.error);
         }
     });
-}
-
-/**
- * Fetch one or more Sui objects and return them as PolymediaProfile instances
- * Object IDs that don't exist or are not a Profile won't be included in the returned array.
- */
-export async function sui_fetchProfileObjects({ suiClient, lookupObjectIds }: {
-    suiClient: SuiClient;
-    lookupObjectIds: string[];
-}): Promise<PolymediaProfile[]>
-{
-    const allProfiles = new Array<PolymediaProfile>();
-    const objectIdBatches = chunkArray(lookupObjectIds, 50);
-    const promises = objectIdBatches.map(async lookupObjectIds =>
-    {
-        const resps: SuiObjectResponse[] = await suiClient.multiGetObjects({
-            ids: lookupObjectIds,
-            options: {
-                showContent: true,
-                showOwner: true,
-            },
-        });
-
-        const profiles: PolymediaProfile[] = [];
-        for (const resp of resps) {
-            const profile = suiObjectToProfile(resp);
-            if (profile) {
-                profiles.push(profile);
-            }
-        }
-        allProfiles.push(...profiles);
-    });
-    await Promise.all(promises);
-    return allProfiles;
 }
 
 export function create_registry(
@@ -164,50 +123,4 @@ export function edit_profile(
         typeArguments: [],
         arguments: moveArgs,
     });
-}
-
-/**
- * Convert a generic `SuiObjectResponse` into a `PolymediaProfile`.
- *
- * Note: when fetching `SuiObjectResponse`, call SuiClient.getObject/multiGetObjects with:
-    options: {
-        showContent: true,
-        showOwner: true,
-    },
-*/
-export function suiObjectToProfile(resp: SuiObjectResponse): PolymediaProfile|null
-{
-    if (resp.error || !resp.data) {
-        return null;
-    }
-
-    const content = resp.data.content;
-    if (!content) {
-        throw new Error("Missing object content. Make sure to fetch the object with `showContent: true`");
-    }
-    if (content.dataType !== "moveObject") {
-        throw new Error(`Wrong object dataType. Expected 'moveObject' but got: '${content.dataType}'`);
-    }
-    if (!content.type.endsWith("::profile::Profile")) {
-        throw new Error("Wrong object type. Expected a Profile but got: " + content.type);
-    }
-
-    const owner = resp.data.owner;
-    if (!owner) {
-        throw new Error("Missing object owner. Make sure to fetch the object with `showOwner: true`");
-    }
-    const isOwnedObject = typeof owner === "object" && (("AddressOwner" in owner) || ("ObjectOwner" in owner));
-    if (!isOwnedObject) {
-        throw new Error("Expected an owned object");
-    }
-
-    const fields = content.fields as Record<string, any>;
-    return {
-        id: fields.id.id,
-        name: fields.name,
-        imageUrl: fields.image_url,
-        description: fields.description,
-        data: fields.data ? JSON.parse(fields.data) : null,
-        owner: ("AddressOwner" in owner) ? owner.AddressOwner : owner.ObjectOwner,
-    };
 }
