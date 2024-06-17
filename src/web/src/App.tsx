@@ -1,13 +1,74 @@
-import { SuiClient } from '@mysten/sui/client';
-import { ConnectModal, WalletKitProvider, useWalletKit } from '@mysten/wallet-kit';
+import {
+    ConnectModal,
+    SuiClientProvider,
+    WalletProvider,
+    createNetworkConfig,
+} from "@mysten/dapp-kit";
+import { SuiClient, getFullnodeUrl } from '@mysten/sui/client';
 import { PolymediaProfile, ProfileManager } from '@polymedia/profile-sdk';
-import { NetworkName } from '@polymedia/suitcase-core';
 import { isLocalhost, loadNetwork } from '@polymedia/suitcase-react';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useEffect, useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom';
+import { Docs } from "./Docs";
+import { Home } from "./Home";
+import { ManageProfile } from "./ManageProfile";
 import { Nav } from './Nav';
+import { NotFound } from "./NotFound";
+import { RegistryNew } from "./RegistryNew";
+import { SearchProfiles } from "./SearchProfiles";
+import { ViewProfile } from "./ViewProfile";
 import { notifyError } from './components/Notification';
 import './styles/App.less';
+
+/* App router */
+
+export const AppRouter: React.FC = () => {
+    return (
+    <BrowserRouter>
+        <Routes>
+            <Route path="/" element={<AppSuiProviders />} >
+                <Route index element={<Home />} />
+                <Route path='manage' element={<ManageProfile />} />
+                <Route path='docs' element={<Docs />} />
+                <Route path='registry/new' element={<RegistryNew />} />
+                <Route path='search' element={<SearchProfiles />} />
+                <Route path='view/:profileId' element={<ViewProfile />} />
+                <Route path='*' element={<NotFound />} />
+            </Route>
+        </Routes>
+    </BrowserRouter>
+    );
+};
+
+/* Sui providers + network config */
+
+const supportedNetworks = ["mainnet", "testnet", "devnet"] as const;
+export type NetworkName = typeof supportedNetworks[number];
+
+const { networkConfig } = createNetworkConfig({
+    mainnet: { url: "https://mainnet.suiet.app" },
+    testnet: { url: getFullnodeUrl("testnet") },
+    devnet: { url: getFullnodeUrl("devnet") },
+});
+
+const queryClient = new QueryClient();
+const AppSuiProviders: React.FC = () => {
+    const [network, setNetwork] = useState(loadNetwork(supportedNetworks, "mainnet"));
+    return (
+    <QueryClientProvider client={queryClient}>
+        <SuiClientProvider networks={networkConfig} network={network}>
+            <WalletProvider autoConnect={true}>
+                <App network={network} setNetwork={setNetwork} />
+            </WalletProvider>
+        </SuiClientProvider>
+    </QueryClientProvider>
+    );
+};
+
+/* App */
+
+export type ReactSetter<T> = React.Dispatch<React.SetStateAction<T>>;
 
 export type AppContext = {
     network: NetworkName;
@@ -17,16 +78,18 @@ export type AppContext = {
     openConnectModal: () => void;
 };
 
-export const AppWrap: React.FC = () =>
-    <WalletKitProvider><App /></WalletKitProvider>;
-
-const App: React.FC = () =>
+const App: React.FC<{
+    network: NetworkName;
+    setNetwork: ReactSetter<NetworkName>;
+}> = ({
+    network,
+    setNetwork,
+}) =>
 {
     const { currentAccount } = useWalletKit();
-    const [profile, setProfile] = useState<PolymediaProfile|null|undefined>(undefined);
-    const [showConnectModal, setShowConnectModal] = useState(false);
-    const [network, setNetwork] = useState<NetworkName|null>(null);
-    const [profileManager, setProfileManager] = useState<ProfileManager|null>(null);
+    const [ profile, setProfile ] = useState<PolymediaProfile|null|undefined>(undefined);
+    const [ showConnectModal, setShowConnectModal ] = useState(false);
+    const [ profileManager, setProfileManager ] = useState<ProfileManager|null>(null);
 
     useEffect(() => {
         async function initialize() {
