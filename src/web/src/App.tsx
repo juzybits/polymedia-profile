@@ -6,9 +6,9 @@ import {
     useCurrentAccount,
     useSuiClient,
 } from "@mysten/dapp-kit";
-import { SuiClient, getFullnodeUrl } from '@mysten/sui/client';
-import { PolymediaProfile, ProfileManager } from '@polymedia/profile-sdk';
-import { isLocalhost, loadNetwork } from '@polymedia/suitcase-react';
+import { getFullnodeUrl } from '@mysten/sui/client';
+import { PolymediaProfile, ProfileClient } from '@polymedia/profile-sdk';
+import { loadNetwork } from '@polymedia/suitcase-react';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useEffect, useState } from 'react';
 import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom';
@@ -75,7 +75,7 @@ export type ReactSetter<T> = React.Dispatch<React.SetStateAction<T>>;
 export type AppContext = {
     network: NetworkName;
     profile: PolymediaProfile|null|undefined;
-    profileManager: ProfileManager;
+    profileClient: ProfileClient;
     reloadProfile: () => Promise<PolymediaProfile|null|undefined>;
     openConnectModal: () => void;
 };
@@ -92,13 +92,13 @@ const App: React.FC<{
 
     const [ profile, setProfile ] = useState<PolymediaProfile|null|undefined>(undefined);
     const [ showConnectModal, setShowConnectModal ] = useState(false);
-    const [ profileManager, setProfileManager ] = useState<ProfileManager>(
-        new ProfileManager({network, suiClient})
+    const [ profileClient, setProfileManager ] = useState<ProfileClient>(
+        new ProfileClient(network, suiClient)
     );
 
     useEffect(() => {
         setProfileManager(
-            new ProfileManager({network, suiClient})
+            new ProfileClient(network, suiClient)
         );
     }, [network, suiClient]);
 
@@ -111,10 +111,7 @@ const App: React.FC<{
             setProfile(undefined);
             return undefined;
         }
-        return await profileManager.getProfileByOwner({
-            lookupAddress: currentAccount.address,
-            useCache: false,
-        })
+        return await profileClient.getProfileByOwner(currentAccount.address, false)
         .then((result: PolymediaProfile|null) => {
             console.debug('[reloadProfile] Setting profile:', result);
             setProfile(result);
@@ -135,15 +132,16 @@ const App: React.FC<{
     const appContext: AppContext = {
         network,
         profile,
-        profileManager,
+        profileClient,
         reloadProfile,
         openConnectModal,
     };
 
     return <>
         <ConnectModal
+            trigger={<></>}
             open={showConnectModal}
-            onClose={() => setShowConnectModal(false)}
+            onOpenChange={isOpen => { setShowConnectModal(isOpen); }}
         />
 
         <div id='layout'>

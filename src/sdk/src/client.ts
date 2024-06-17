@@ -32,14 +32,14 @@ export class ProfileClient
     }
 
     public async createRegistry(
-        signTransactionBlock: WalletKitCore["signTransactionBlock"],
+        signTransaction: any, // TODO
         registryName: string,
     ): Promise<OwnedObjectRef>
     {
         const tx = new Transaction();
         pkg.create_registry(tx, this.packageId, registryName);
 
-        const signedTx = await signTransactionBlock({
+        const signedTx = await signTransaction({
             transactionBlock: tx,
             chain: `sui:${this.network}`,
         });
@@ -66,7 +66,7 @@ export class ProfileClient
     }
 
     public async createProfile(
-        signTransactionBlock: WalletKitCore["signTransactionBlock"],
+        signTransaction: any, // TODO
         name: string,
         imageUrl?: string,
         description?: string,
@@ -85,7 +85,7 @@ export class ProfileClient
         );
 
         // Creates 2 objects: the profile (owned by the caller) and a dynamic field (inside the registry's table)
-        const signedTx = await signTransactionBlock({
+        const signedTx = await signTransaction({
             transactionBlock: tx,
             chain: `sui:${this.network}`,
         });
@@ -123,7 +123,7 @@ export class ProfileClient
     }
 
     public async editProfile(
-        signTransactionBlock: WalletKitCore["signTransactionBlock"],
+        signTransaction: any, // TODO
         profileId: string,
         name: string,
         imageUrl?: string,
@@ -142,7 +142,7 @@ export class ProfileClient
             data,
         );
 
-        const signedTx = await signTransactionBlock({
+        const signedTx = await signTransaction({
             transactionBlock: tx,
             chain: `sui:${this.network}`,
         });
@@ -310,7 +310,7 @@ export class ProfileClient
                 batch,
             );
 
-            const lookupResults = await this.suiClient.devInspectTransactionBlock({
+            const lookupResults: any = await this.suiClient.devInspectTransactionBlock({
                 transactionBlock: tx,
                 sender: "0x7777777777777777777777777777777777777777777777777777777777777777",
             })
@@ -319,10 +319,10 @@ export class ProfileClient
                     // Deserialize the returned value into an array of LookupResult objects
                     // @ts-ignore
                     const returnValue: any[] = resp.results[0].returnValues[0]; // grab the 1st and only tuple
-                    const valueType: string = returnValue[1];
-                    const valueData = Uint8Array.from(returnValue[0]);
-                    const lookupResults: TypeOfLookupResult[] = bcs.de(valueType, valueData, "hex");
-                    return lookupResults;
+                    // const valueType: string = returnValue[1];
+                    // const valueData = Uint8Array.from(returnValue[0]);
+                    // const results: TypeOfLookupResult[] = bcs.de(valueType, valueData, "hex");
+                    return null;
                 } else {
                     throw new Error(resp.effects.status.error);
                 }
