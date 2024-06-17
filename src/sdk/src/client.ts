@@ -1,9 +1,9 @@
-import { OwnedObjectRef, SuiClient, SuiObjectResponse, SuiTransactionBlockResponse } from "@mysten/sui/client";
+import { OwnedObjectRef, SuiClient, SuiExecutionResult, SuiObjectResponse, SuiTransactionBlockResponse } from "@mysten/sui/client";
 import { Transaction } from "@mysten/sui/transactions";
 import { PROFILE_IDS } from "./config.js";
-import { chunkArray } from "./functions.js";
+import { chunkArray, devInspectAndGetResults } from "./functions.js";
 import * as pkg from "./package.js";
-import { PolymediaProfile } from "./types.js";
+import { BcsLookupResults, LookupResults, PolymediaProfile } from "./types.js";
 
 type NetworkName = "localnet" | "devnet" | "testnet" | "mainnet";
 
@@ -299,37 +299,28 @@ export class ProfileClient
         lookupAddresses: string[],
     ): Promise<Map<string, string>>
     {
+        const deserializeResults = (
+            blockResults: SuiExecutionResult[],
+        ): LookupResults =>
+        {
+            const txResults = blockResults[0];
+            const value = txResults.returnValues![0];
+            const valueData = Uint8Array.from(value[0]);
+            const valueDeserialized = BcsLookupResults.parse(valueData);
+            return valueDeserialized;
+        };
+
         const results = new Map<string, string>();
         const addressBatches = chunkArray(lookupAddresses, 30);
-        const promises = addressBatches.map(async (batch) => {
+        const promises = addressBatches.map(async (batch) =>
+        {
             const tx = new Transaction();
-            pkg.get_profiles(
-                tx,
-                this.packageId,
-                this.registryId,
-                batch,
-            );
+            pkg.get_profiles(tx, this.packageId, this.registryId, batch);
+            const blockResults = await devInspectAndGetResults(this.suiClient, tx);
 
-            const lookupResults: any = await this.suiClient.devInspectTransactionBlock({
-                transactionBlock: tx,
-                sender: "0x7777777777777777777777777777777777777777777777777777777777777777",
-            })
-            .then(resp => {
-                if (resp.effects.status.status == "success") {
-                    // Deserialize the returned value into an array of LookupResult objects
-                    // @ts-ignore
-                    const returnValue: any[] = resp.results[0].returnValues[0]; // grab the 1st and only tuple
-                    // const valueType: string = returnValue[1];
-                    // const valueData = Uint8Array.from(returnValue[0]);
-                    // const results: TypeOfLookupResult[] = bcs.de(valueType, valueData, "hex");
-                    return null;
-                } else {
-                    throw new Error(resp.effects.status.error);
-                }
-            });
-
-            for (const result of lookupResults) {
-                results.set("0x"+result.lookupAddr, "0x"+result.profileAddr);
+            const valueDeserialized = deserializeResults(blockResults);
+            for (const result of valueDeserialized) {
+                results.set("0x"+result.lookup_addr, "0x"+result.profile_addr);
             }
         });
         await Promise.all(promises);
