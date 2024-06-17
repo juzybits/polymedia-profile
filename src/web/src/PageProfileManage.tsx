@@ -1,4 +1,6 @@
-import { useCurrentAccount, useSignTransaction } from "@mysten/dapp-kit";
+import { useCurrentAccount, useSignTransaction, useSuiClient } from "@mysten/dapp-kit";
+import { Transaction } from "@mysten/sui/transactions";
+import { create_profile } from "@polymedia/profile-sdk";
 import { LinkToPolymedia } from "@polymedia/suitcase-react";
 import { SyntheticEvent, useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
@@ -10,6 +12,7 @@ export const PageProfileManage: React.FC = () =>
 {
     /* State */
 
+    const suiClient = useSuiClient();
     const currentAccount = useCurrentAccount();
     const { mutateAsync: signTransaction } = useSignTransaction();
 
@@ -73,20 +76,41 @@ export const PageProfileManage: React.FC = () =>
         console.debug(`[onSubmitCreateProfile] Attempting to create profile: ${inputName}`);
         setWaiting(true);
         try {
-            const newProfile = await profileClient.createProfile(
-                signTransaction,
+            const tx = new Transaction();
+            create_profile(
+                tx,
+                profileClient.packageId,
+                profileClient.registryId,
                 inputName,
                 inputImage,
                 inputDescription,
                 null,
             );
-            console.debug("[onSubmitCreateProfile] New profile:", newProfile);
-            notifyOkay("SUCCESS");
-            reloadProfile();
-        } catch(error: any) {
-            showError("onSubmitCreateProfile", error);
+
+            const signedTx = await signTransaction({
+                transaction: tx,
+            });
+
+            const resp = await suiClient.executeTransactionBlock({
+                transactionBlock: signedTx.bytes,
+                signature: signedTx.signature,
+                options: { showEffects: true },
+            });
+            console.debug("resp:", resp);
+
+            if (resp.errors || resp.effects?.status.status !== "success") {
+                notifyError(`Txn digest: ${resp.digest}\n`
+                    + `Txn status: ${resp.effects?.status.status}\n`
+                    + `Txn errors: ${JSON.stringify(resp.errors)}`);
+            } else {
+                notifyOkay("SUCCESS");
+                reloadProfile();
+            }
+        } catch(err) {
+            showError("onSubmitCreateProfile", err);
+        } finally {
+            setWaiting(false);
         }
-        setWaiting(false);
     };
 
     const onSubmitEditProfile = async (e: SyntheticEvent) => {

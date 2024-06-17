@@ -49,10 +49,11 @@ export function PageRegistryNew()
                     + `Txn status: ${resp.effects?.status.status}\n`
                     + `Txn errors: ${JSON.stringify(resp.errors)}`);
             }
-        } catch(error: any) {
-            notifyError(error.message);
+        } catch(err) {
+            notifyError(String(err));
+        } finally {
+            setWaiting(false);
         }
-        setWaiting(false);
     };
 
     return <div id="page" className="page-registry-new">

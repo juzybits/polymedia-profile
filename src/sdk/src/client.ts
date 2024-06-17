@@ -31,63 +31,6 @@ export class ProfileClient
         this.registryId = registryId || PROFILE_IDS[network].registryId;
     }
 
-    public async createProfile(
-        signTransaction: any, // TODO
-        name: string,
-        imageUrl?: string,
-        description?: string,
-        data?: unknown,
-    ): Promise<PolymediaProfile>
-    {
-        const tx = new Transaction();
-        pkg.create_profile(
-            tx,
-            this.packageId,
-            this.registryId,
-            name,
-            imageUrl,
-            description,
-            data,
-        );
-
-        // Creates 2 objects: the profile (owned by the caller) and a dynamic field (inside the registry's table)
-        const signedTx = await signTransaction({
-            transactionBlock: tx,
-            chain: `sui:${this.network}`,
-        });
-        const resp = await this.suiClient.executeTransactionBlock({
-            transactionBlock: signedTx.transactionBlockBytes,
-            signature: signedTx.signature,
-            options: {
-                showEffects: true,
-                showEvents: true,
-            },
-        });
-
-        // Verify the transaction results
-        const effects = resp.effects!;
-        if (effects.status.status !== "success") {
-            throw new Error(effects.status.error);
-        }
-        // Build and return PolymediaProfile object from the 'EventCreateProfile' event
-        if (resp.events)
-            for (const event of resp.events) {
-                if (event.type.endsWith("::profile::EventCreateProfile")) {
-                    const newProfile: PolymediaProfile = {
-                        id: (event.parsedJson as any).profile_id,
-                        name: name,
-                        imageUrl: imageUrl ?? "",
-                        description: description ?? "",
-                        data: data,
-                        owner: event.sender,
-                    };
-                    return newProfile;
-                }
-        }
-        // Should never happen:
-        throw new Error("Transaction was successful, but can't find the new profile object ID in the response: " + JSON.stringify(resp));
-    }
-
     public async editProfile(
         signTransaction: any, // TODO
         profileId: string,
