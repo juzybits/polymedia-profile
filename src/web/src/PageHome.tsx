@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { Link, useOutletContext } from "react-router-dom";
 import { AppContext } from "./App";
 
-export const Home: React.FC = () =>
+export const PageHome: React.FC = () =>
 {
     useEffect(() => {
         document.title = "Polymedia Profile - Home";

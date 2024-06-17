@@ -6,7 +6,7 @@ import { AppContext } from "./App";
 import { notifyError } from "./components/Notification";
 import "./styles/ViewProfile.less";
 
-export const ViewProfile: React.FC = () =>
+export const PageProfileView: React.FC = () =>
 {
     /* State */
 

@@ -6,7 +6,7 @@ import { AppContext } from "./App";
 import { notifyError, notifyOkay } from "./components/Notification";
 import "./styles/ManageProfile.less";
 
-export const ManageProfile: React.FC = () =>
+export const PageProfileManage: React.FC = () =>
 {
     /* State */
 

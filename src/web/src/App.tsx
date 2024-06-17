@@ -13,14 +13,14 @@ import { loadNetwork } from "@polymedia/suitcase-react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
-import { Docs } from "./Docs";
-import { Home } from "./Home";
-import { ManageProfile } from "./ManageProfile";
 import { Nav } from "./Nav";
-import { NotFound } from "./NotFound";
-import { RegistryNew } from "./RegistryNew";
-import { SearchProfiles } from "./SearchProfiles";
-import { ViewProfile } from "./ViewProfile";
+import { PageDocs } from "./PageDocs";
+import { PageHome } from "./PageHome";
+import { PageNotFound } from "./PageNotFound";
+import { PageProfileManage } from "./PageProfileManage";
+import { PageProfileSearch } from "./PageProfileSearch";
+import { PageProfileView } from "./PageProfileView";
+import { PageRegistryNew } from "./PageRegistryNew";
 import { notifyError } from "./components/Notification";
 import "./styles/App.less";
 
@@ -31,13 +31,13 @@ export const AppRouter: React.FC = () => {
     <BrowserRouter>
         <Routes>
             <Route path="/" element={<AppSuiProviders />} >
-                <Route index element={<Home />} />
-                <Route path="manage" element={<ManageProfile />} />
-                <Route path="docs" element={<Docs />} />
-                <Route path="registry/new" element={<RegistryNew />} />
-                <Route path="search" element={<SearchProfiles />} />
-                <Route path="view/:profileId" element={<ViewProfile />} />
-                <Route path="*" element={<NotFound />} />
+                <Route index element={<PageHome />} />
+                <Route path="manage" element={<PageProfileManage />} />
+                <Route path="docs" element={<PageDocs />} />
+                <Route path="registry/new" element={<PageRegistryNew />} />
+                <Route path="search" element={<PageProfileSearch />} />
+                <Route path="view/:profileId" element={<PageProfileView />} />
+                <Route path="*" element={<PageNotFound />} />
             </Route>
         </Routes>
     </BrowserRouter>
@@ -50,7 +50,7 @@ export const supportedNetworks = ["mainnet", "testnet", "devnet"] as const;
 export type NetworkName = typeof supportedNetworks[number];
 
 const { networkConfig } = createNetworkConfig({
-    mainnet: { url: "https://mainnet.suiet.app" },
+    mainnet: { url: getFullnodeUrl("mainnet") },
     testnet: { url: getFullnodeUrl("testnet") },
     devnet: { url: getFullnodeUrl("devnet") },
 });

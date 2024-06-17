@@ -4,7 +4,7 @@ import { useOutletContext } from "react-router-dom";
 import { AppContext } from "./App";
 import { notifyError } from "./components/Notification";
 
-export function RegistryNew()
+export function PageRegistryNew()
 {
     useEffect(() => {
         document.title = "Polymedia Profile - New Registry";

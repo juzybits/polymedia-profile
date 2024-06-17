@@ -8,7 +8,7 @@ import "./styles/SearchProfiles.less";
 
 const addressRegex = new RegExp(ADDRESS_REGEX, "g");
 
-export const SearchProfiles: React.FC = () =>
+export const PageProfileSearch: React.FC = () =>
 {
     /* State */
 

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-export function NotFound()
+export function PageNotFound()
 {
     useEffect(() => {
         document.title = "Polymedia Profile - Not found";
