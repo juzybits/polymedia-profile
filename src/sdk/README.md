@@ -1,5 +1,7 @@
 # Polymedia Profile: TypeScript SDK
 
+TODO: update
+
 A library to interact with the _PolymediaProfile_ package on Sui.
 
 For an overview of Polymedia Profile, see _[../README.md](../README.md)_.

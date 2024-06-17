@@ -8,5 +8,5 @@ It lets users create and manage an on-chain profile associated to their Sui addr
 
 ```
 pnpm install
-pnpm serve
+pnpm dev
 ```
