@@ -1,12 +1,12 @@
-import { PolymediaProfile } from '@polymedia/profile-sdk';
-import { ADDRESS_REGEX } from '@polymedia/suitcase-core';
-import { LinkToPolymedia, makeCssUrl } from '@polymedia/suitcase-react';
-import { useEffect, useState } from 'react';
-import { Link, useOutletContext } from 'react-router-dom';
-import { AppContext } from './App';
-import './styles/SearchProfiles.less';
+import { PolymediaProfile } from "@polymedia/profile-sdk";
+import { ADDRESS_REGEX } from "@polymedia/suitcase-core";
+import { LinkToPolymedia, makeCssUrl } from "@polymedia/suitcase-react";
+import { useEffect, useState } from "react";
+import { Link, useOutletContext } from "react-router-dom";
+import { AppContext } from "./App";
+import "./styles/SearchProfiles.less";
 
-const addressRegex = new RegExp(ADDRESS_REGEX, 'g');
+const addressRegex = new RegExp(ADDRESS_REGEX, "g");
 
 export const SearchProfiles: React.FC = () =>
 {
@@ -17,7 +17,7 @@ export const SearchProfiles: React.FC = () =>
         profileManager,
     } = useOutletContext<AppContext>();
 
-    const [userInput, setUserInput] = useState<string>('');
+    const [userInput, setUserInput] = useState<string>("");
     const [addressCount, setAddressCount] = useState<number>(0);
     const [results, setResults] = useState<Map<string, PolymediaProfile | null>|undefined>(undefined);
     const [errorMsg, setErrorMsg] = useState<string|null>(null);
@@ -26,7 +26,7 @@ export const SearchProfiles: React.FC = () =>
     /* Functions */
 
     useEffect(() => {
-        document.title = 'Polymedia Profile - Search';
+        document.title = "Polymedia Profile - Search";
     }, []);
 
     useEffect(() => {
@@ -43,7 +43,7 @@ export const SearchProfiles: React.FC = () =>
                 const profiles = await profileManager.getProfilesByOwner({lookupAddresses: addresses});
                 setResults(profiles);
             } catch(error) {
-                const errorString = logError('loadProfiles', error);
+                const errorString = logError("loadProfiles", error);
                 setErrorMsg(errorString);
             } finally {
                 setIsLoading(false);
@@ -54,14 +54,14 @@ export const SearchProfiles: React.FC = () =>
 
     const onUserInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         const addressesString = e.target.value;
-        setUserInput(addressesString)
+        setUserInput(addressesString);
     };
 
     /* HTML */
 
     const ProfileLine: React.FC<{
-        address: string,
-        profile: PolymediaProfile | null,
+        address: string;
+        profile: PolymediaProfile | null;
     }> = ({
         address,
         profile,
@@ -71,19 +71,19 @@ export const SearchProfiles: React.FC = () =>
             ? { opacity: 0.7 }
             : { backgroundImage: makeCssUrl(profile.imageUrl) };
         return (
-            <tr className='profile-line'>
-                <td className='td-owner'>
-                    <LinkToPolymedia network={network} kind='address' addr={address} />
+            <tr className="profile-line">
+                <td className="td-owner">
+                    <LinkToPolymedia network={network} kind="address" addr={address} />
                 </td>
-                <td className='td-profile'>
+                <td className="td-profile">
                 {
                     !profile
-                    ? <span className='no-profile'>no profile</span>
-                    : <Link to={'/view/'+profile.id}>
-                        <div className='profile-img-wrap'>
-                            <span className='profile-img' style={pfpStyle} />
+                    ? <span className="no-profile">no profile</span>
+                    : <Link to={"/view/"+profile.id}>
+                        <div className="profile-img-wrap">
+                            <span className="profile-img" style={pfpStyle} />
                         </div>
-                        <span className='profile-name'>
+                        <span className="profile-name">
                             {profile.name}
                         </span>
                     </Link>
@@ -91,31 +91,31 @@ export const SearchProfiles: React.FC = () =>
                 </td>
             </tr>
         );
-    }
+    };
 
-    return <div id='page' className='page-search-profiles'>
+    return <div id="page" className="page-search-profiles">
         <h1>SEARCH PROFILES</h1>
 
         <p>
             Enter one or more Sui addresses to fetch their profiles.
         </p>
 
-        <form className='form'>
-        <div className='form-field'>
+        <form className="form">
+        <div className="form-field">
             <textarea
                 value={userInput}
-                spellCheck='false' autoCorrect='off' autoComplete='off'
+                spellCheck="false" autoCorrect="off" autoComplete="off"
                 onChange={onUserInputChange}
             />
             <div>
-                {addressCount} address{addressCount !== 1 && 'es'}
+                {addressCount} address{addressCount !== 1 && "es"}
             </div>
         </div>
-            {isLoading && <div className='search-loading'>Loading...</div>}
+            {isLoading && <div className="search-loading">Loading...</div>}
         </form>
 
         {results &&
-        <div className='search-results'>
+        <div className="search-results">
             <table>
                 <thead>
                     <tr>
@@ -131,13 +131,13 @@ export const SearchProfiles: React.FC = () =>
             </table>
         </div>}
 
-        {errorMsg && <div className='error-message'>{errorMsg}</div>}
+        {errorMsg && <div className="error-message">{errorMsg}</div>}
     </div>;
-}
+};
 
 const logError = (origin: string, error: any): string => // TODO: move to @polymedia/suitcase-react
 {
-    let errorString = String(error.stack || error.message || error);
+    const errorString = String(error.stack || error.message || error);
     console.warn(`[${origin}] ${errorString}`);
     return errorString;
-}
+};

@@ -1,10 +1,10 @@
 import { useCurrentAccount, useSignTransaction } from "@mysten/dapp-kit";
-import { LinkToPolymedia } from '@polymedia/suitcase-react';
-import { SyntheticEvent, useEffect, useState } from 'react';
-import { useOutletContext } from 'react-router-dom';
-import { AppContext } from './App';
-import { notifyError, notifyOkay } from './components/Notification';
-import './styles/ManageProfile.less';
+import { LinkToPolymedia } from "@polymedia/suitcase-react";
+import { SyntheticEvent, useEffect, useState } from "react";
+import { useOutletContext } from "react-router-dom";
+import { AppContext } from "./App";
+import { notifyError, notifyOkay } from "./components/Notification";
+import "./styles/ManageProfile.less";
 
 export const ManageProfile: React.FC = () =>
 {
@@ -22,9 +22,9 @@ export const ManageProfile: React.FC = () =>
     } = useOutletContext<AppContext>();
 
     // Form inputs
-    const [inputName, setInputName] = useState('');
-    const [inputImage, setInputImage] = useState('');
-    const [inputDescription, setInputDescription] = useState('');
+    const [inputName, setInputName] = useState("");
+    const [inputImage, setInputImage] = useState("");
+    const [inputDescription, setInputDescription] = useState("");
     // Form errors
     const [isErrorImage, setIsErrorImage] = useState(false);
     const [isErrorForm, setIsErrorForm] = useState(false);
@@ -35,13 +35,13 @@ export const ManageProfile: React.FC = () =>
     /* Functions */
 
     useEffect(() => {
-        document.title = 'Polymedia Profile - Manage';
+        document.title = "Polymedia Profile - Manage";
     }, []);
 
     useEffect(() => {
-        setInputName(profile?.name || '');
-        setInputImage(profile?.imageUrl || '');
-        setInputDescription(profile?.description || '');
+        setInputName(profile?.name || "");
+        setInputImage(profile?.imageUrl || "");
+        setInputDescription(profile?.description || "");
     }, [profile]);
 
     const onInputImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -61,7 +61,7 @@ export const ManageProfile: React.FC = () =>
     const onImageError = () => {
         setIsErrorImage(true);
         setIsErrorForm(true);
-        setIsErrorImgur(inputImage.startsWith('https://imgur.com/'));
+        setIsErrorImgur(inputImage.startsWith("https://imgur.com/"));
     };
 
     const onSubmitCreateProfile = async (e: SyntheticEvent) => {
@@ -80,11 +80,11 @@ export const ManageProfile: React.FC = () =>
                 description: inputDescription,
                 data: null,
             });
-            console.debug('[onSubmitCreateProfile] New profile:', newProfile);
-            notifyOkay('SUCCESS');
+            console.debug("[onSubmitCreateProfile] New profile:", newProfile);
+            notifyOkay("SUCCESS");
             reloadProfile();
         } catch(error: any) {
-            showError('onSubmitCreateProfile', error);
+            showError("onSubmitCreateProfile", error);
         }
         setWaiting(false);
     };
@@ -96,7 +96,7 @@ export const ManageProfile: React.FC = () =>
             return;
         }
         if (!profile) {
-            notifyError('[onSubmitEditProfile] Missing profile');
+            notifyError("[onSubmitEditProfile] Missing profile");
             return;
         }
         setWaiting(true);
@@ -109,11 +109,11 @@ export const ManageProfile: React.FC = () =>
                 description: inputDescription,
                 data: null,
             });
-            console.debug('[onSubmitEditProfile] Response:', response);
-            notifyOkay('SUCCESS');
+            console.debug("[onSubmitEditProfile] Response:", response);
+            notifyOkay("SUCCESS");
             reloadProfile();
         } catch(error: any) {
-            showError('onSubmitEditProfile', error);
+            showError("onSubmitEditProfile", error);
         } finally {
             setWaiting(false);
         }
@@ -136,47 +136,47 @@ export const ManageProfile: React.FC = () =>
         </div>;
     }
     else {
-        view = <form className='form' onSubmit={profile===null ? onSubmitCreateProfile : onSubmitEditProfile}>
-            <div className='form-field'>
+        view = <form className="form" onSubmit={profile===null ? onSubmitCreateProfile : onSubmitEditProfile}>
+            <div className="form-field">
                 <label>Name</label>
-                <input value={inputName} type='text' required maxLength={60}
-                    className={waiting ? 'waiting' : ''} disabled={waiting}
-                    spellCheck='false' autoCorrect='off' autoComplete='off'
+                <input value={inputName} type="text" required maxLength={60}
+                    className={waiting ? "waiting" : ""} disabled={waiting}
+                    spellCheck="false" autoCorrect="off" autoComplete="off"
                     onChange={e => setInputName(e.target.value)}
                 />
             </div>
-            <div className='form-field'>
-                <label>Description<span className='field-optional'>[optional]</span></label>
+            <div className="form-field">
+                <label>Description<span className="field-optional">[optional]</span></label>
                 <textarea value={inputDescription} maxLength={10000}
-                    className={waiting ? 'waiting' : ''} disabled={waiting}
-                    spellCheck='true' autoCorrect='off' autoComplete='off'
+                    className={waiting ? "waiting" : ""} disabled={waiting}
+                    spellCheck="true" autoCorrect="off" autoComplete="off"
                     onChange={e => setInputDescription(e.target.value)}
                 />
             </div>
-            <div className='form-field'>
-                <label>Image URL<span className='field-optional'>[optional]</span></label>
-                <input value={inputImage} type='text'
-                    className={waiting ? 'waiting' : ''} disabled={waiting}
-                    spellCheck='false' autoCorrect='off' autoComplete='off'
+            <div className="form-field">
+                <label>Image URL<span className="field-optional">[optional]</span></label>
+                <input value={inputImage} type="text"
+                    className={waiting ? "waiting" : ""} disabled={waiting}
+                    spellCheck="false" autoCorrect="off" autoComplete="off"
                     onChange={onInputImageChange}
                 />
-                {isErrorImage && <div className='field-error'>That doesn't look like a valid image URL</div>}
-                <div className='field-info'>Right click the image, then click 'Copy Image Address'. To use a picture from your device, upload it to a service like <a href='https://imgur.com/upload' target='_blank' rel='noopener nofollow noreferrer'>imgur.com</a>, then copy the image address.</div>
-                {isErrorImgur && <div className='field-error-imgur'><img src="/img/drake.webp" /></div>}
+                {isErrorImage && <div className="field-error">That doesn't look like a valid image URL</div>}
+                <div className="field-info">Right click the image, then click 'Copy Image Address'. To use a picture from your device, upload it to a service like <a href="https://imgur.com/upload" target="_blank" rel="noopener nofollow noreferrer">imgur.com</a>, then copy the image address.</div>
+                {isErrorImgur && <div className="field-error-imgur"><img src="/img/drake.webp" /></div>}
             </div>
             <button
-                type='submit'
+                type="submit"
                 disabled={waiting || isErrorForm}
-                className={isErrorForm ? 'disabled' : (waiting ? 'waiting' : '')}
+                className={isErrorForm ? "disabled" : (waiting ? "waiting" : "")}
             >
-                {profile===null ? 'CREATE PROFILE' : 'EDIT PROFILE'}
+                {profile===null ? "CREATE PROFILE" : "EDIT PROFILE"}
             </button>
-            {isErrorForm && <div className='field-error'>Form has errors</div>}
+            {isErrorForm && <div className="field-error">Form has errors</div>}
         </form>;
     }
 
     const imageSection = !inputImage ? <></> :
-    <div className={'section section-image '+(isErrorImage?'hidden':'')}>
+    <div className={"section section-image "+(isErrorImage?"hidden":"")}>
         <h2>Image preview</h2>
         <img
             src={inputImage}
@@ -186,41 +186,41 @@ export const ManageProfile: React.FC = () =>
     </div>;
 
     const infoSection = !profile ? <></> :
-    <div className='section section-info'>
+    <div className="section section-info">
         <h2>Details</h2>
         <p>
-            Profile: <LinkToPolymedia network={network} kind='object' addr={profile.id} />
+            Profile: <LinkToPolymedia network={network} kind="object" addr={profile.id} />
         </p>
         <p>
-            Registry: <LinkToPolymedia network={network} kind='object' addr={profileManager.registryId} />
+            Registry: <LinkToPolymedia network={network} kind="object" addr={profileManager.registryId} />
         </p>
     </div>;
 
-    return <div id='page' className='page-manage-profile'>
-        <h1>{profile ? 'EDIT' : (profile===null ? 'CREATE' : 'MANAGE')} PROFILE</h1>
+    return <div id="page" className="page-manage-profile">
+        <h1>{profile ? "EDIT" : (profile===null ? "CREATE" : "MANAGE")} PROFILE</h1>
         {view}
         {imageSection}
         {infoSection}
     </div>;
-}
+};
 
 const showError = (origin: string, error: any): void => // TODO: move to @polymedia/suitcase-react
 {
     let errorString = String(error.stack || error.message || error);
-    if (errorString.includes('ejected from user') || // Sui, Ethos
-        errorString.includes('User rejection') || // Suiet
-        errorString.includes('User Rejected the request') // Martian
+    if (errorString.includes("ejected from user") || // Sui, Ethos
+        errorString.includes("User rejection") || // Suiet
+        errorString.includes("User Rejected the request") // Martian
     ) {
         console.debug(`[${origin}] Cancelled by the user`);
         return;
     }
 
-    if (errorString.includes('Cannot find gas coin for signer address') || // Sui
-        errorString.includes('SUI balance is insufficient to pay for') // Suiet
+    if (errorString.includes("Cannot find gas coin for signer address") || // Sui
+        errorString.includes("SUI balance is insufficient to pay for") // Suiet
     ) {
         errorString = "Your wallet doesn't have enough SUI to pay for the transaction";
     }
 
     notifyError(errorString);
     console.warn(`[${origin}] Error: ${errorString}`);
-}
+};
