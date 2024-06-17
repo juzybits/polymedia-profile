@@ -8,7 +8,8 @@ import { BcsLookupResults, LookupResults, PolymediaProfile } from "./types.js";
 type NetworkName = "localnet" | "devnet" | "testnet" | "mainnet";
 
 /**
- * Helps you interact with the `polymedia_profile` Sui package
+ * Helps fetching Polymedia Profile data from the network.
+ * Keeps an internal cache to avoid wasteful RPC requests.
  */
 export class ProfileClient
 {
@@ -31,6 +32,9 @@ export class ProfileClient
         this.registryId = registryId || PROFILE_IDS[network].registryId;
     }
 
+    /**
+     * Find the profile associated to a single address.
+     */
     public async getProfileByOwner(
         lookupAddress: string,
         useCache?: boolean,
@@ -41,6 +45,9 @@ export class ProfileClient
         return profiles.get(lookupAddress) || null;
     }
 
+    /**
+     * Find the profiles associated to multiple addresses.
+     */
     public async getProfilesByOwner(
         lookupAddresses: Iterable<string>,
         useCache?: boolean,
@@ -96,14 +103,21 @@ export class ProfileClient
         return result;
     }
 
+    /**
+     * Get a single profile by its object ID.
+     */
     public async getProfileById(
         objectId: string,
+        useCache?: boolean,
     ): Promise<PolymediaProfile|null>
     {
-        const profiles = await this.getProfilesById([ objectId ]);
+        const profiles = await this.getProfilesById([ objectId ], useCache);
         return profiles.get(objectId) || null;
     }
 
+    /**
+     * Get multiple profiles by their object IDs.
+     */
     public async getProfilesById(
         lookupObjectIds: string[],
         useCache?: boolean,
@@ -151,6 +165,9 @@ export class ProfileClient
         return result;
     }
 
+    /**
+     * Check if an address has a profile associated to it.
+     */
     public async hasProfile(
         lookupAddress: string,
         useCache?: boolean,

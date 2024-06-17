@@ -67,7 +67,7 @@ profileClient.getProfilesByOwner(
 });
 ```
 
-Use `ProfileClient.getProfileById()` to fetch a single profile by its object ID:
+Use `ProfileClient.getProfileById()` to get a single profile by its object ID:
 ```ts
 profileClient.getProfileById(
     '0x_PROFILE_ID',
@@ -80,7 +80,7 @@ profileClient.getProfileById(
 });
 ```
 
-use `ProfileClient.getProfilesById()` to fetch multiple profiles by their object IDs:
+use `ProfileClient.getProfilesById()` to get multiple profiles by their object IDs:
 ```ts
 profileClient.getProfilesById(
     ['0x_PROFILE_ID_1', '0x_PROFILE_ID_2'],

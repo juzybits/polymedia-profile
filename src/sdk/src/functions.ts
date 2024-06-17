@@ -1,4 +1,4 @@
-/* Convenience functions, copied from @polymedia/suitcase-core */
+/// Convenience functions, copied from @polymedia/suitcase-core
 
 import { SuiClient, SuiExecutionResult } from "@mysten/sui/client";
 import { Transaction } from "@mysten/sui/transactions";

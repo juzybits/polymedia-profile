@@ -1,3 +1,6 @@
+/// Functions that map 1:1 to the Sui package.
+/// Can be used to build transactions.
+
 import { bcs } from "@mysten/sui/bcs";
 import { Transaction, TransactionResult } from "@mysten/sui/transactions";
 
