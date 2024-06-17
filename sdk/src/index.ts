@@ -1,4 +1,4 @@
+export * from "./client";
 export * from "./config";
-export * from "./profileClient";
-export * from "./profilePackage";
+export * from "./package";
 export * from "./types";

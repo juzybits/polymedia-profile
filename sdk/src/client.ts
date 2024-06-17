@@ -1,8 +1,8 @@
 import { OwnedObjectRef, SuiClient, SuiObjectResponse, SuiTransactionBlockResponse } from "@mysten/sui/client";
 import { Transaction } from "@mysten/sui/transactions";
-import { PROFILE_IDS } from "./config";
+import { PROFILE_IDS } from "./config.js";
 import { chunkArray } from "./functions.js";
-import * as pkg from "./profilePackage.js";
+import * as pkg from "./package.js";
 import { PolymediaProfile } from "./types.js";
 
 type NetworkName = "localnet" | "devnet" | "testnet" | "mainnet";
