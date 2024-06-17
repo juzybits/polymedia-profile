@@ -292,17 +292,35 @@ export class ProfileClient {
         data?: any;
     }): Promise<SuiTransactionBlockResponse>
     {
-        return await pkg.sui_editProfile({
-            network: this.network,
-            suiClient: this.suiClient,
-            signTransactionBlock,
-            profileId: profileId,
-            packageId: this.packageId,
+        const tx = new Transaction();
+        pkg.edit_profile(
+            tx,
+            profileId,
+            this.packageId,
             name,
             imageUrl,
             description,
             data,
+        );
+
+        const signedTx = await signTransactionBlock({
+            transactionBlock: tx,
+            chain: `sui:${this.network}`,
         });
+        const resp = await this.suiClient.executeTransactionBlock({
+            transactionBlock: signedTx.transactionBlockBytes,
+            signature: signedTx.signature,
+            options: {
+                showEffects: true,
+            },
+        });
+
+        // Verify the transaction results
+        const effects = resp.effects!;
+        if (effects.status.status !== "success") {
+            throw new Error(effects.status.error);
+        }
+        return resp;
     }
 
     /**

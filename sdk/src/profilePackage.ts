@@ -141,61 +141,29 @@ export function create_profile(
     });
 }
 
-export async function sui_editProfile({
-    network,
-    suiClient,
-    signTransactionBlock,
-    profileId,
-    packageId,
-    name,
-    imageUrl = "",
-    description = "",
-    data = null,
-} : {
-    network: NetworkName;
-    suiClient: SuiClient;
-    signTransactionBlock: WalletKitCore["signTransactionBlock"];
-    profileId: string;
-    packageId: string;
-    name: string;
-    imageUrl?: string;
-    description?: string;
-    data?: any;
-}): Promise<SuiTransactionBlockResponse>
+export function edit_profile(
+    tx: Transaction,
+    profileId: string,
+    packageId: string,
+    name: string,
+    imageUrl?: string,
+    description?: string,
+    data?: unknown,
+): TransactionResult
 {
     const dataJson = data ? JSON.stringify(data) : "";
-    const tx = new Transaction();
     const moveArgs = [
         tx.object(profileId),
-        tx.pure(Array.from( (new TextEncoder()).encode(name) )),
-        tx.pure(Array.from( (new TextEncoder()).encode(imageUrl) )),
-        tx.pure(Array.from( (new TextEncoder()).encode(description) )),
-        tx.pure(Array.from( (new TextEncoder()).encode(dataJson) )),
+        tx.pure.string(name),
+        tx.pure.string(imageUrl ?? ""),
+        tx.pure.string(description ?? ""),
+        tx.pure.string(dataJson),
     ];
-    tx.moveCall({
+    return tx.moveCall({
         target: `${packageId}::profile::edit_profile`,
         typeArguments: [],
         arguments: moveArgs,
     });
-
-    const signedTx = await signTransactionBlock({
-        transactionBlock: tx,
-        chain: `sui:${network}`,
-    });
-    const resp = await suiClient.executeTransactionBlock({
-        transactionBlock: signedTx.transactionBlockBytes,
-        signature: signedTx.signature,
-        options: {
-            showEffects: true,
-        },
-    });
-
-    // Verify the transaction results
-    const effects = resp.effects as TransactionEffects;
-    if (effects.status.status !== "success") {
-        throw new Error(effects.status.error);
-    }
-    return resp;
 }
 
 /**
