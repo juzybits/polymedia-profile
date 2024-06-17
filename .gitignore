@@ -1,2 +1,13 @@
 .DS_Store
-sui.log.*
+
+# JavaScript
+.auth.ts
+.turbo
+.wrangler
+dist
+node_modules
+
+# Sui
+.coverage_map.mvcov
+.trace
+build
