@@ -27,13 +27,6 @@
         "@mysten/bcs": "^1.0.2",
         "@mysten/sui": "^1.1.2"
     },
-    "devDependencies": {
-        "@eslint/js": "^9.5.0",
-        "@stylistic/eslint-plugin": "^2.2.0",
-        "eslint": "^9.5.0",
-        "typescript": "^5.4.5",
-        "typescript-eslint": "^7.13.0"
-    },
     "type": "module",
     "sideEffects": false,
     "publishConfig": {

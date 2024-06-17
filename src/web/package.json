@@ -1,0 +1,46 @@
+{
+    "private": true,
+    "version": "0.0.0",
+    "name": "@polymedia/profile-web",
+    "author": "@juzybits (https://polymedia.app)",
+    "homepage": "https://profile.polymedia.app",
+    "description": "Polymedia Profile web app to create and manage on-chain Sui profiles.",
+    "license": "Apache-2.0",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/juzybits/polymedia-profile"
+    },
+    "keywords": [],
+    "scripts": {
+        "build": "vite build",
+        "clean": "rm -rf dist/ node_modules/ .turbo/ .wrangler/",
+        "deploy-dev": "pnpm build && wrangler pages deploy dist/ --project-name polymedia-profile --branch dev",
+        "deploy-prod": "pnpm build && wrangler pages deploy dist/ --project-name polymedia-profile --branch main",
+        "dev": "vite",
+        "lint": "eslint src/ --report-unused-disable-directives --max-warnings 0",
+        "preview": "pnpm build && vite preview",
+        "tunnel": "lt --port 1234"
+    },
+    "dependencies": {
+        "@mysten/dapp-kit": "^0.14.9",
+        "@mysten/sui": "^1.1.2",
+        "@polymedia/profile-sdk": "workspace:*",
+        "@polymedia/suitcase-react": "^0.0.6",
+        "@tanstack/react-query": "^5.45.1",
+        "normalize.css": "^8.0.1",
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1",
+        "react-router-dom": "^6.23.1"
+    },
+    "devDependencies": {
+        "@types/react": "^18.3.3",
+        "@types/react-dom": "^18.3.0",
+        "@vitejs/plugin-react-swc": "^3.7.0",
+        "less": "^4.2.0",
+        "localtunnel": "^2.0.2",
+        "vite": "^5.3.1",
+        "wrangler": "^3.60.3"
+    },
+    "type": "module",
+    "sideEffects": false
+}
