@@ -1,15 +1,17 @@
-import { useWalletKit } from '@mysten/wallet-kit';
+import { useCurrentAccount, useSignTransaction } from "@mysten/dapp-kit";
 import { SyntheticEvent, useEffect, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { AppContext } from './App';
 import { notifyError } from './components/Notification';
 
-export function RegistryNew() {
+export function RegistryNew()
+{
     useEffect(() => {
         document.title = 'Polymedia Profile - New Registry';
     }, []);
 
-    const { currentAccount, signTransactionBlock } = useWalletKit();
+    const currentAccount = useCurrentAccount();
+    const { mutateAsync: signTransaction } = useSignTransaction();
 
     const { profileManager, openConnectModal } = useOutletContext<AppContext>();
 
@@ -26,7 +28,7 @@ export function RegistryNew() {
         setWaiting(true);
         try {
             const registryObject = await profileManager.createRegistry({
-                signTransactionBlock,
+                signTransaction,
                 registryName: inputName
             });
             console.debug('[onSubmitCreateRegistry] New registry:', registryObject);

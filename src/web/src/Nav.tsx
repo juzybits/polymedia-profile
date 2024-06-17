@@ -1,9 +1,7 @@
-/// Navigation bar
-
-import { useWalletKit } from '@mysten/wallet-kit';
+import { useCurrentAccount } from "@mysten/dapp-kit";
 import { PolymediaProfile } from '@polymedia/profile-sdk';
 import { NetworkName, shortenSuiAddress } from '@polymedia/suitcase-core';
-import { isLocalhost, NetworkSelector } from '@polymedia/suitcase-react';
+import { NetworkSelector, isLocalhost } from '@polymedia/suitcase-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './styles/Nav.less';
@@ -16,8 +14,9 @@ export const Nav: React.FC<{
     network,
     openConnectModal,
     profile,
-}) => {
-    const { currentAccount } = useWalletKit();
+}) =>
+{
+    const currentAccount = useCurrentAccount();
 
     const [showMobileNav, setShowMobileNav] = useState(false);
     const toggleMobileNav = () => { setShowMobileNav(!showMobileNav) };

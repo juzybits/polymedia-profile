@@ -1,4 +1,4 @@
-import { useWalletKit } from '@mysten/wallet-kit';
+import { useCurrentAccount, useSignTransaction } from "@mysten/dapp-kit";
 import { LinkToPolymedia } from '@polymedia/suitcase-react';
 import { SyntheticEvent, useEffect, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
@@ -10,7 +10,8 @@ export const ManageProfile: React.FC = () =>
 {
     /* State */
 
-    const { currentAccount, signTransactionBlock } = useWalletKit();
+    const currentAccount = useCurrentAccount();
+    const { mutateAsync: signTransaction } = useSignTransaction();
 
     const {
         network,
@@ -73,7 +74,7 @@ export const ManageProfile: React.FC = () =>
         setWaiting(true);
         try {
             const newProfile = await profileManager.createProfile({
-                signTransactionBlock,
+                signTransaction,
                 name: inputName,
                 imageUrl: inputImage,
                 description: inputDescription,
@@ -101,7 +102,7 @@ export const ManageProfile: React.FC = () =>
         setWaiting(true);
         try {
             const response = await profileManager.editProfile({
-                signTransactionBlock,
+                signTransaction,
                 profileId: profile.id,
                 name: inputName,
                 imageUrl: inputImage,

@@ -3,6 +3,7 @@ import {
     SuiClientProvider,
     WalletProvider,
     createNetworkConfig,
+    useCurrentAccount,
 } from "@mysten/dapp-kit";
 import { SuiClient, getFullnodeUrl } from '@mysten/sui/client';
 import { PolymediaProfile, ProfileManager } from '@polymedia/profile-sdk';
@@ -86,7 +87,7 @@ const App: React.FC<{
     setNetwork,
 }) =>
 {
-    const { currentAccount } = useWalletKit();
+    const currentAccount = useCurrentAccount();
     const [ profile, setProfile ] = useState<PolymediaProfile|null|undefined>(undefined);
     const [ showConnectModal, setShowConnectModal ] = useState(false);
     const [ profileManager, setProfileManager ] = useState<ProfileManager|null>(null);
