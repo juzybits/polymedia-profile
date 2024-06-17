@@ -10,7 +10,8 @@ type NetworkName = "localnet" | "devnet" | "testnet" | "mainnet";
 /**
  * Helps you interact with the `polymedia_profile` Sui package
  */
-export class ProfileClient {
+export class ProfileClient
+{
     protected readonly cachedAddresses = new Map<string, PolymediaProfile|null>();
     protected readonly cachedObjects = new Map<string, PolymediaProfile|null>();
     public readonly network: NetworkName;
@@ -18,25 +19,22 @@ export class ProfileClient {
     public readonly packageId: string;
     public readonly registryId: string;
 
-    constructor({ network, suiClient, packageId, registryId }: {
-        network: NetworkName;
-        suiClient: SuiClient;
-        packageId?: string;
-        registryId?: string;
-    }) {
+    constructor(
+        network: NetworkName,
+        suiClient: SuiClient,
+        packageId?: string,
+        registryId?: string,
+    ) {
         this.network = network;
         this.suiClient = suiClient;
         this.packageId = packageId || PROFILE_IDS[network].packageId;
         this.registryId = registryId || PROFILE_IDS[network].registryId;
     }
 
-    public async createRegistry({
-        signTransactionBlock,
-        registryName
-    }: {
-        signTransactionBlock: WalletKitCore["signTransactionBlock"];
-        registryName: string;
-    }): Promise<OwnedObjectRef>
+    public async createRegistry(
+        signTransactionBlock: WalletKitCore["signTransactionBlock"],
+        registryName: string,
+    ): Promise<OwnedObjectRef>
     {
         const tx = new Transaction();
         pkg.create_registry(tx, this.packageId, registryName);
@@ -67,19 +65,13 @@ export class ProfileClient {
         });
     }
 
-    public async createProfile({
-        signTransactionBlock,
-        name,
-        imageUrl="",
-        description="",
-        data=null,
-    }: {
-        signTransactionBlock: WalletKitCore["signTransactionBlock"];
-        name: string;
-        imageUrl?: string;
-        description?: string;
-        data?: any;
-    }): Promise<PolymediaProfile>
+    public async createProfile(
+        signTransactionBlock: WalletKitCore["signTransactionBlock"],
+        name: string,
+        imageUrl?: string,
+        description?: string,
+        data?: unknown,
+    ): Promise<PolymediaProfile>
     {
         const tx = new Transaction();
         pkg.create_profile(
@@ -118,8 +110,8 @@ export class ProfileClient {
                     const newProfile: PolymediaProfile = {
                         id: (event.parsedJson as any).profile_id,
                         name: name,
-                        imageUrl: imageUrl,
-                        description: description,
+                        imageUrl: imageUrl ?? "",
+                        description: description ?? "",
                         data: data,
                         owner: event.sender,
                     };
@@ -130,21 +122,14 @@ export class ProfileClient {
         throw new Error("Transaction was successful, but can't find the new profile object ID in the response: " + JSON.stringify(resp));
     }
 
-    public async editProfile({
-        signTransactionBlock,
-        profileId,
-        name,
-        imageUrl="",
-        description="",
-        data=null,
-    }: {
-        signTransactionBlock: WalletKitCore["signTransactionBlock"];
-        profileId: string;
-        name: string;
-        imageUrl?: string;
-        description?: string;
-        data?: any;
-    }): Promise<SuiTransactionBlockResponse>
+    public async editProfile(
+        signTransactionBlock: WalletKitCore["signTransactionBlock"],
+        profileId: string,
+        name: string,
+        imageUrl?: string,
+        description?: string,
+        data?: unknown,
+    ): Promise<SuiTransactionBlockResponse>
     {
         const tx = new Transaction();
         pkg.edit_profile(
@@ -177,20 +162,20 @@ export class ProfileClient {
         return resp;
     }
 
-    public async getProfileByOwner({ lookupAddress, useCache=true }: {
-        lookupAddress: string;
-        useCache?: boolean;
-    }): Promise<PolymediaProfile|null>
+    public async getProfileByOwner(
+        lookupAddress: string,
+        useCache?: boolean,
+    ): Promise<PolymediaProfile|null>
     {
         const lookupAddresses = [lookupAddress];
-        const profiles = await this.getProfilesByOwner({lookupAddresses, useCache});
+        const profiles = await this.getProfilesByOwner(lookupAddresses, useCache);
         return profiles.get(lookupAddress) || null;
     }
 
-    public async getProfilesByOwner({ lookupAddresses, useCache=true }: {
-        lookupAddresses: Iterable<string>;
-        useCache?: boolean;
-    }): Promise<Map<string, PolymediaProfile|null>>
+    public async getProfilesByOwner(
+        lookupAddresses: Iterable<string>,
+        useCache?: boolean,
+    ): Promise<Map<string, PolymediaProfile|null>>
     {
         let result = new Map<string, PolymediaProfile|null>();
         const newLookupAddresses = new Set<string>(); // unseen addresses (i.e. not cached)
@@ -208,9 +193,7 @@ export class ProfileClient {
         if (newLookupAddresses.size > 0) {
             // Find the profile object IDs associated to `newLookupAddresses`.
             // Addresses that don't have a profile are not included in the returned array.
-            const newObjectIds = await this.fetchProfileObjectIds({
-                lookupAddresses: [...newLookupAddresses]
-            });
+            const newObjectIds = await this.fetchProfileObjectIds([...newLookupAddresses]);
 
             // Add addresses without a profile to the cache with a `null` value
             for (const addr of newLookupAddresses) {
@@ -222,9 +205,7 @@ export class ProfileClient {
 
             if (newObjectIds.size > 0) {
                 // Retrieve the remaining profile objects
-                const profileObjects = await this.getProfilesById({
-                    lookupObjectIds: [...newObjectIds.values()]
-                });
+                const profileObjects = await this.getProfilesById([...newObjectIds.values()]);
 
                 // Add the remaining profile objects to the returned map and cache
                 for (const profile of profileObjects.values()) {
@@ -246,20 +227,18 @@ export class ProfileClient {
         return result;
     }
 
-    public async getProfileById({ objectId }: {
-        objectId: string;
-    }): Promise<PolymediaProfile|null>
+    public async getProfileById(
+        objectId: string,
+    ): Promise<PolymediaProfile|null>
     {
-        const profiles = await this.getProfilesById({
-            lookupObjectIds: [ objectId ],
-        });
+        const profiles = await this.getProfilesById([ objectId ]);
         return profiles.get(objectId) || null;
     }
 
-    public async getProfilesById({ lookupObjectIds, useCache=true }: {
-        lookupObjectIds: string[];
-        useCache?: boolean;
-    }): Promise<Map<string, PolymediaProfile|null>>
+    public async getProfilesById(
+        lookupObjectIds: string[],
+        useCache?: boolean,
+    ): Promise<Map<string, PolymediaProfile|null>>
     {
         let result = new Map<string, PolymediaProfile|null>();
         const newLookupObjectIds = new Set<string>(); // unseen objects (i.e. not cached)
@@ -277,10 +256,7 @@ export class ProfileClient {
         if (newLookupObjectIds.size > 0) {
             // Add to the results the profile objects associated to `newLookupObjectIds`.
             // Profile objects that don't exist are not included in the returned array.
-            const newProfiles = await this.fetchProfileObjects({
-                suiClient: this.suiClient,
-                lookupObjectIds,
-            });
+            const newProfiles = await this.fetchProfileObjects( this.suiClient, lookupObjectIds );
             for (const profile of newProfiles) {
                 result.set(profile.id, profile);
             }
@@ -306,12 +282,12 @@ export class ProfileClient {
         return result;
     }
 
-    public async hasProfile({ lookupAddress, useCache=true }: {
-        lookupAddress: string;
-        useCache?: boolean;
-    }): Promise<boolean>
+    public async hasProfile(
+        lookupAddress: string,
+        useCache?: boolean,
+    ): Promise<boolean>
     {
-        const profile = await this.getProfileByOwner({lookupAddress, useCache});
+        const profile = await this.getProfileByOwner(lookupAddress, useCache);
         return profile !== null;
     }
 
@@ -319,9 +295,9 @@ export class ProfileClient {
      * Given one or more Sui addresses, find their associated profile object IDs.
      * Addresses that don't have a profile won't be included in the returned array.
      */
-    protected async fetchProfileObjectIds({ lookupAddresses }: {
-        lookupAddresses: string[];
-    }): Promise<Map<string, string>>
+    protected async fetchProfileObjectIds(
+        lookupAddresses: string[],
+    ): Promise<Map<string, string>>
     {
         const results = new Map<string, string>();
         const addressBatches = chunkArray(lookupAddresses, 30);
@@ -363,10 +339,10 @@ export class ProfileClient {
      * Fetch one or more Sui objects and return them as PolymediaProfile instances
      * Object IDs that don't exist or are not a Profile won't be included in the returned array.
      */
-    protected async fetchProfileObjects({ suiClient, lookupObjectIds }: {
-        suiClient: SuiClient;
-        lookupObjectIds: string[];
-    }): Promise<PolymediaProfile[]>
+    protected async fetchProfileObjects(
+        suiClient: SuiClient,
+        lookupObjectIds: string[],
+    ): Promise<PolymediaProfile[]>
     {
         const allProfiles = new Array<PolymediaProfile>();
         const objectIdBatches = chunkArray(lookupObjectIds, 50);
@@ -403,7 +379,9 @@ export class ProfileClient {
         showOwner: true,
     },
 */
-function suiObjectToProfile(resp: SuiObjectResponse): PolymediaProfile|null
+function suiObjectToProfile(
+    resp: SuiObjectResponse,
+): PolymediaProfile|null
 {
     if (resp.error || !resp.data) {
         return null;
