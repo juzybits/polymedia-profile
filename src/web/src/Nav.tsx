@@ -1,9 +1,10 @@
-import { useCurrentAccount } from "@mysten/dapp-kit";
+import { useCurrentAccount, useDisconnectWallet } from "@mysten/dapp-kit";
 import { PolymediaProfile } from "@polymedia/profile-sdk";
 import { NetworkName, shortenSuiAddress } from "@polymedia/suitcase-core";
 import { NetworkSelector, isLocalhost } from "@polymedia/suitcase-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { supportedNetworks } from "./App";
 import "./styles/Nav.less";
 
 export const Nav: React.FC<{
@@ -49,7 +50,7 @@ export const Nav: React.FC<{
                 :
                 <NavProfile profile={profile} />
             }
-            {showNetworkSelector && <NetworkSelector currentNetwork={network} />}
+            {showNetworkSelector && <NetworkSelector currentNetwork={network} supportedNetworks={supportedNetworks} />}
             </div>
 
             <div id="nav-pages" className="nav-section">
@@ -99,7 +100,8 @@ const NavProfile: React.FC<{
     profile: PolymediaProfile|null|undefined;
 }> = ({profile}) =>
 {
-    const { currentAccount, disconnect } = useWalletKit();
+    const currentAccount = useCurrentAccount();
+    const { mutate: disconnect } = useDisconnectWallet();
 
     if (!currentAccount) {
         return <></>;
@@ -109,7 +111,7 @@ const NavProfile: React.FC<{
         return <>Loading...</>;
     }
 
-    return <div id="nav-profile" onClick={disconnect}>
+    return <div id="nav-profile" onClick={() => { disconnect(); }}>
         <div id="nav-profile-image-wrap">
             <img src={(profile?.imageUrl) || "/img/anon.webp"} />
         </div>

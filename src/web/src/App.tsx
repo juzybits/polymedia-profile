@@ -6,6 +6,7 @@ import {
     useCurrentAccount,
     useSuiClient,
 } from "@mysten/dapp-kit";
+import "@mysten/dapp-kit/dist/index.css";
 import { getFullnodeUrl } from "@mysten/sui/client";
 import { PolymediaProfile, ProfileClient } from "@polymedia/profile-sdk";
 import { loadNetwork } from "@polymedia/suitcase-react";
@@ -45,7 +46,7 @@ export const AppRouter: React.FC = () => {
 
 /* Sui providers + network config */
 
-const supportedNetworks = ["mainnet", "testnet", "devnet"] as const;
+export const supportedNetworks = ["mainnet", "testnet", "devnet"] as const;
 export type NetworkName = typeof supportedNetworks[number];
 
 const { networkConfig } = createNetworkConfig({

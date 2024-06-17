@@ -19,7 +19,8 @@
         "dev": "vite",
         "lint": "eslint src/ --report-unused-disable-directives --max-warnings 0",
         "preview": "pnpm build && vite preview",
-        "tunnel": "lt --port 1234"
+        "tunnel": "lt --port 1234",
+        "typecheck": "tsc"
     },
     "dependencies": {
         "@mysten/dapp-kit": "^0.14.9",
