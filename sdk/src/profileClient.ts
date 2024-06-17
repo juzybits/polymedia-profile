@@ -1,15 +1,3 @@
-/*
-  ___  ___  _ __   ____  __ ___ ___ ___   _
- | _ \/ _ \| |\ \ / /  \/  | __|   \_ _| /_\
- |  _/ (_) | |_\ V /| |\/| | _|| |) | | / _ \
- |_|_ \___/|____|_| |_| _|_|___|___/___/_/ \_\
- | _ \ _ \/ _ \| __|_ _| |  | __|
- |  _/   / (_) | _| | || |__| _|
- |_| |_|_\\___/|_| |___|____|___| by @juzybits
-
-*/
-
-import { BCS, getSuiMoveConfig } from "@mysten/bcs";
 import {
     DevInspectResults,
     OwnedObjectRef,
@@ -17,42 +5,17 @@ import {
     SuiObjectResponse,
     SuiTransactionBlockResponse,
     TransactionEffects,
-} from "@mysten/sui.js/client";
-import {
-    TransactionBlock,
-} from "@mysten/sui.js/transactions";
-import { WalletKitCore } from "@mysten/wallet-kit-core";
+} from "@mysten/sui/client";
+import { Transaction } from "@mysten/sui/transactions";
+import { PolymediaProfile } from "./types";
 
-export const POLYMEDIA_PROFILE_PACKAGE_ID_LOCALNET = "0x6ced420f60b41fa73ccedde9057ac7d382506e007f9ddb59fcce9b314f35d696";
-export const POLYMEDIA_PROFILE_REGISTRY_ID_LOCALNET = "0xe082e8fbcc466d25561f045c343f2eae0634ccca6bd9db8cd26e4dd84e4eaaad";
-
-export const POLYMEDIA_PROFILE_PACKAGE_ID_DEVNET = "0x1eb08098bfcfe2e659525d8036833143246f779c55c6b38eec80b0edcb1a3388";
-export const POLYMEDIA_PROFILE_REGISTRY_ID_DEVNET = "0x61bacafd53850607f09f4b4a040d8c16e83a45ed246aa96a2c977a1c6e15baa0";
-
-export const POLYMEDIA_PROFILE_PACKAGE_ID_TESTNET = "0xe6b9d38ab44c0055b6fda90183b73b7557900e3d7e2215130d152e7b5f5b6f65";
-export const POLYMEDIA_PROFILE_REGISTRY_ID_TESTNET = "0xe1db46532bcc8ad2314c672aa890d91075565b592be3e7b315f883ae3e827f9c";
-
-export const POLYMEDIA_PROFILE_PACKAGE_ID_MAINNET = "0x57138e18b82cc8ea6e92c3d5737d6078b1304b655f59cf5ae9668cc44aad4ead";
-export const POLYMEDIA_PROFILE_REGISTRY_ID_MAINNET = "0xd6eb0ca817dfe0763af9303a6bea89b88a524844d78e657dc25ed8ba3877deac";
-
-/**
- * Represents a `polymedia_profile::profile::Profile` Sui object
- */
-export type PolymediaProfile = {
-    id: string;
-    name: string;
-    imageUrl: string;
-    description: string;
-    data: any;
-    owner: string;
-};
 
 type NetworkName = "localnet" | "devnet" | "testnet" | "mainnet";
 
 /**
  * Helps you interact with the `polymedia_profile` Sui package
  */
-export class ProfileManager {
+export class ProfileClient {
     private readonly cachedAddresses = new Map<string, PolymediaProfile|null>();
     private readonly cachedObjects = new Map<string, PolymediaProfile|null>();
     public readonly network: NetworkName;
@@ -360,7 +323,7 @@ function sui_fetchProfileObjectIds({
     lookupAddresses: string[];
 }): Promise<TypeOfLookupResult[]>
 {
-    const tx = new TransactionBlock();
+    const tx = new Transaction();
     tx.moveCall({
         target: `${packageId}::profile::get_profiles`,
         typeArguments: [],
@@ -371,7 +334,7 @@ function sui_fetchProfileObjectIds({
     });
 
     return suiClient.devInspectTransactionBlock({
-        transactionBlock: tx,
+        Transaction: tx,
         sender: "0x7777777777777777777777777777777777777777777777777777777777777777",
     })
     .then((resp: DevInspectResults) => {
@@ -437,7 +400,7 @@ async function sui_createRegistry({
     registryName: string;
 }): Promise<OwnedObjectRef>
 {
-    const tx = new TransactionBlock();
+    const tx = new Transaction();
     tx.moveCall({
         target: `${packageId}::profile::create_registry`,
         typeArguments: [],
@@ -447,11 +410,11 @@ async function sui_createRegistry({
     });
 
     const signedTx = await signTransactionBlock({
-        transactionBlock: tx,
+        Transaction: tx,
         chain: `sui:${network}`,
     });
     return suiClient.executeTransactionBlock({
-        transactionBlock: signedTx.transactionBlockBytes,
+        Transaction: signedTx.transactionBlockBytes,
         signature: signedTx.signature,
         options: {
             showEffects: true,
@@ -494,7 +457,7 @@ async function sui_createProfile({
 }): Promise<PolymediaProfile>
 {
     const dataJson = data ? JSON.stringify(data) : "";
-    const tx = new TransactionBlock();
+    const tx = new Transaction();
     const moveArgs = [
         tx.object(registryId),
         tx.pure(Array.from( (new TextEncoder()).encode(name) )),
@@ -510,11 +473,11 @@ async function sui_createProfile({
 
     // Creates 2 objects: the profile (owned by the caller) and a dynamic field (inside the registry's table)
     const signedTx = await signTransactionBlock({
-        transactionBlock: tx,
+        Transaction: tx,
         chain: `sui:${network}`,
     });
     const resp = await suiClient.executeTransactionBlock({
-        transactionBlock: signedTx.transactionBlockBytes,
+        Transaction: signedTx.transactionBlockBytes,
         signature: signedTx.signature,
         options: {
             showEffects: true,
@@ -569,7 +532,7 @@ async function sui_editProfile({
 }): Promise<SuiTransactionBlockResponse>
 {
     const dataJson = data ? JSON.stringify(data) : "";
-    const tx = new TransactionBlock();
+    const tx = new Transaction();
     const moveArgs = [
         tx.object(profileId),
         tx.pure(Array.from( (new TextEncoder()).encode(name) )),
@@ -584,11 +547,11 @@ async function sui_editProfile({
     });
 
     const signedTx = await signTransactionBlock({
-        transactionBlock: tx,
+        Transaction: tx,
         chain: `sui:${network}`,
     });
     const resp = await suiClient.executeTransactionBlock({
-        transactionBlock: signedTx.transactionBlockBytes,
+        Transaction: signedTx.transactionBlockBytes,
         signature: signedTx.signature,
         options: {
             showEffects: true,
