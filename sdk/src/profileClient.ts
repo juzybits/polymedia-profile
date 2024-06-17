@@ -326,12 +326,32 @@ export class ProfileClient {
         const results = new Map<string, string>();
         const addressBatches = chunkArray(lookupAddresses, 30);
         const promises = addressBatches.map(async (batch) => {
-            const lookupResults = await pkg.sui_fetchProfileObjectIds({
-                suiClient: this.suiClient,
-                packageId: this.packageId,
-                registryId: this.registryId,
-                lookupAddresses: batch,
+            const tx = new Transaction();
+            pkg.get_profiles(
+                tx,
+                this.packageId,
+                this.registryId,
+                batch,
+            );
+
+            const lookupResults = await this.suiClient.devInspectTransactionBlock({
+                transactionBlock: tx,
+                sender: "0x7777777777777777777777777777777777777777777777777777777777777777",
+            })
+            .then(resp => {
+                if (resp.effects.status.status == "success") {
+                    // Deserialize the returned value into an array of LookupResult objects
+                    // @ts-ignore
+                    const returnValue: any[] = resp.results[0].returnValues[0]; // grab the 1st and only tuple
+                    const valueType: string = returnValue[1];
+                    const valueData = Uint8Array.from(returnValue[0]);
+                    const lookupResults: TypeOfLookupResult[] = bcs.de(valueType, valueData, "hex");
+                    return lookupResults;
+                } else {
+                    throw new Error(resp.effects.status.error);
+                }
             });
+
             for (const result of lookupResults) {
                 results.set("0x"+result.lookupAddr, "0x"+result.profileAddr);
             }

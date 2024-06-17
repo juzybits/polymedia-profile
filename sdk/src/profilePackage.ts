@@ -1,62 +1,20 @@
-import { DevInspectResults, SuiClient } from "@mysten/sui/client";
+import { bcs } from "@mysten/sui/bcs";
 import { Transaction, TransactionResult } from "@mysten/sui/transactions";
 
-/*
-// Register a custom struct type for Sui 'Binary Canonical (de)Serialization'
-const bcs = new BCS( getSuiMoveConfig() );
-const LookupResult = {
-    lookupAddr: BCS.ADDRESS,
-    profileAddr: BCS.ADDRESS,
-};
-bcs.registerStructType(POLYMEDIA_PROFILE_PACKAGE_ID_LOCALNET + "::profile::LookupResult", LookupResult);
-bcs.registerStructType(POLYMEDIA_PROFILE_PACKAGE_ID_DEVNET + "::profile::LookupResult", LookupResult);
-bcs.registerStructType(POLYMEDIA_PROFILE_PACKAGE_ID_TESTNET + "::profile::LookupResult", LookupResult);
-bcs.registerStructType(POLYMEDIA_PROFILE_PACKAGE_ID_MAINNET + "::profile::LookupResult", LookupResult);
-type TypeOfLookupResult = typeof LookupResult;
-*/
-
-/**
- * Given one or more Sui addresses, find their associated profile object IDs.
- * Addresses that don't have a profile won't be included in the returned array.
- */
-export function sui_fetchProfileObjectIds({
-    suiClient,
-    packageId,
-    registryId,
-    lookupAddresses,
-}: {
-    suiClient: SuiClient;
-    packageId: string;
-    registryId: string;
-    lookupAddresses: string[];
-}): Promise<TypeOfLookupResult[]>
+export function get_profiles(
+    tx: Transaction,
+    packageId: string,
+    registryId: string,
+    lookupAddresses: string[],
+): TransactionResult
 {
-    const tx = new Transaction();
-    tx.moveCall({
+    return tx.moveCall({
         target: `${packageId}::profile::get_profiles`,
         typeArguments: [],
         arguments: [
             tx.object(registryId),
-            tx.pure(lookupAddresses),
+            tx.pure(bcs.vector(bcs.Address).serialize(lookupAddresses)),
         ],
-    });
-
-    return suiClient.devInspectTransactionBlock({
-        transactionBlock: tx,
-        sender: "0x7777777777777777777777777777777777777777777777777777777777777777",
-    })
-    .then((resp: DevInspectResults) => {
-        if (resp.effects.status.status == "success") {
-            // Deserialize the returned value into an array of LookupResult objects
-            // @ts-ignore
-            const returnValue: any[] = resp.results[0].returnValues[0]; // grab the 1st and only tuple
-            const valueType: string = returnValue[1];
-            const valueData = Uint8Array.from(returnValue[0]);
-            const lookupResults: TypeOfLookupResult[] = bcs.de(valueType, valueData, "hex");
-            return lookupResults;
-        } else {
-            throw new Error(resp.effects.status.error);
-        }
     });
 }
 
