@@ -250,23 +250,8 @@ export const PageProfileManage: React.FC = () =>
     </div>;
 };
 
-const showError = (origin: string, error: any): void => // TODO: move to @polymedia/suitcase-react
+function showError(origin: string, err: unknown): void
 {
-    let errorString = String(error.stack || error.message || error);
-    if (errorString.includes("ejected from user") || // Sui, Ethos
-        errorString.includes("User rejection") || // Suiet
-        errorString.includes("User Rejected the request") // Martian
-    ) {
-        console.debug(`[${origin}] Cancelled by the user`);
-        return;
-    }
-
-    if (errorString.includes("Cannot find gas coin for signer address") || // Sui
-        errorString.includes("SUI balance is insufficient to pay for") // Suiet
-    ) {
-        errorString = "Your wallet doesn't have enough SUI to pay for the transaction";
-    }
-
-    notifyError(errorString);
-    console.warn(`[${origin}] Error: ${errorString}`);
+    notifyError(String(err));
+    console.warn(`[${origin}]`, err);
 };

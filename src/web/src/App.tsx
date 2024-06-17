@@ -118,8 +118,8 @@ const App: React.FC<{
             setProfile(result);
             return result;
         })
-        .catch((error: any) => {
-            const errorString = String(error.stack || error.message || error);
+        .catch(error => {
+            const errorString = String(error);
             console.warn("[reloadProfile] Error:", errorString);
             notifyError(errorString);
             return undefined;

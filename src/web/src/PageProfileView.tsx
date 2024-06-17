@@ -38,11 +38,10 @@ export const PageProfileView: React.FC = () =>
                 console.debug("[loadProfile] Viewing profile:", profile);
             }
         })
-        .catch((error: any) => {
+        .catch(err => {
             setProfile(null);
-            const errorString = String(error.stack || error.message || error);
-            console.warn("[loadProfile]", errorString);
-            notifyError(errorString);
+            console.warn("[loadProfile]", err);
+            notifyError(String(err));
         });
     };
 

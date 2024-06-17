@@ -42,9 +42,9 @@ export const PageProfileSearch: React.FC = () =>
             try {
                 const profiles = await profileClient.getProfilesByOwner(addresses);
                 setResults(profiles);
-            } catch(error) {
-                const errorString = logError("loadProfiles", error);
-                setErrorMsg(errorString);
+            } catch (err) {
+                console.warn("[loadProfiles]", err);
+                setErrorMsg(String(err));
             } finally {
                 setIsLoading(false);
             }
@@ -133,11 +133,4 @@ export const PageProfileSearch: React.FC = () =>
 
         {errorMsg && <div className="error-message">{errorMsg}</div>}
     </div>;
-};
-
-const logError = (origin: string, error: any): string => // TODO: move to @polymedia/suitcase-react
-{
-    const errorString = String(error.stack || error.message || error);
-    console.warn(`[${origin}] ${errorString}`);
-    return errorString;
 };
