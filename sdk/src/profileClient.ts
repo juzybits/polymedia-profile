@@ -1,11 +1,9 @@
-import {
-    OwnedObjectRef,
-    SuiClient, SuiTransactionBlockResponse
-} from "@mysten/sui/client";
+import { OwnedObjectRef, SuiClient, SuiTransactionBlockResponse } from "@mysten/sui/client";
+import { Transaction } from "@mysten/sui/transactions";
 import { PROFILE_IDS } from "./config";
-import { PolymediaProfile } from "./types";
-import { sui_createRegistry, sui_editProfile, sui_fetchProfileObjectIds, sui_fetchProfileObjects } from "./profilePackage";
-import { chunkArray } from "./functions";
+import { chunkArray } from "./functions.js";
+import * as pkg from "./profilePackage.js";
+import { PolymediaProfile } from "./types.js";
 
 type NetworkName = "localnet" | "devnet" | "testnet" | "mainnet";
 
@@ -131,7 +129,7 @@ export class ProfileClient {
         if (newLookupObjectIds.size > 0) {
             // Add to the results the profile objects associated to `newLookupObjectIds`.
             // Profile objects that don't exist are not included in the returned array.
-            const newProfiles = await sui_fetchProfileObjects({
+            const newProfiles = await pkg.sui_fetchProfileObjects({
                 suiClient: this.suiClient,
                 lookupObjectIds,
             });
@@ -186,12 +184,32 @@ export class ProfileClient {
         registryName: string;
     }): Promise<OwnedObjectRef>
     {
-        return await sui_createRegistry({
-            network: this.network,
-            suiClient: this.suiClient,
-            signTransactionBlock,
-            packageId: this.packageId,
-            registryName,
+        const tx = new Transaction();
+        pkg.create_registry(tx, this.packageId, registryName);
+
+        const signedTx = await signTransactionBlock({
+            transactionBlock: tx,
+            chain: `sui:${this.network}`,
+        });
+
+        return this.suiClient.executeTransactionBlock({
+            transactionBlock: signedTx.transactionBlockBytes,
+            signature: signedTx.signature,
+            options: {
+                showEffects: true,
+            },
+        })
+        .then(resp => {
+            const effects = resp.effects!;
+            if (effects.status.status === "success") {
+                if (effects.created?.length === 1) {
+                    return effects.created[0] as OwnedObjectRef;
+                } else { // Should never happen
+                    throw new Error("New registry object missing from response: " + JSON.stringify(resp));
+                }
+            } else {
+                throw new Error(effects.status.error);
+            }
         });
     }
 
@@ -209,7 +227,7 @@ export class ProfileClient {
         data?: any;
     }): Promise<PolymediaProfile>
     {
-        return await sui_createProfile({
+        return await pkg.sui_createProfile({
             network: this.network,
             suiClient: this.suiClient,
             signTransactionBlock,
@@ -238,7 +256,7 @@ export class ProfileClient {
         data?: any;
     }): Promise<SuiTransactionBlockResponse>
     {
-        return await sui_editProfile({
+        return await pkg.sui_editProfile({
             network: this.network,
             suiClient: this.suiClient,
             signTransactionBlock,
@@ -262,7 +280,7 @@ export class ProfileClient {
         const results = new Map<string, string>();
         const addressBatches = chunkArray(lookupAddresses, 30);
         const promises = addressBatches.map(async (batch) => {
-            const lookupResults = await sui_fetchProfileObjectIds({
+            const lookupResults = await pkg.sui_fetchProfileObjectIds({
                 suiClient: this.suiClient,
                 packageId: this.packageId,
                 registryId: this.registryId,

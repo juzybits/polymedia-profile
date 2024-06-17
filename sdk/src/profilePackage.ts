@@ -6,7 +6,7 @@ import {
     SuiTransactionBlockResponse,
     TransactionEffects,
 } from "@mysten/sui/client";
-import { Transaction } from "@mysten/sui/transactions";
+import { Transaction, TransactionResult } from "@mysten/sui/transactions";
 import { NetworkName, PolymediaProfile } from "./types";
 
 /*
@@ -50,7 +50,7 @@ export function sui_fetchProfileObjectIds({
     });
 
     return suiClient.devInspectTransactionBlock({
-        Transaction: tx,
+        transactionBlock: tx,
         sender: "0x7777777777777777777777777777777777777777777777777777777777777777",
     })
     .then((resp: DevInspectResults) => {
@@ -102,51 +102,18 @@ export async function sui_fetchProfileObjects({ suiClient, lookupObjectIds }: {
     return allProfiles;
 }
 
-export async function sui_createRegistry({
-    network,
-    suiClient,
-    signTransactionBlock,
-    packageId,
-    registryName,
-} : {
-    network: NetworkName;
-    suiClient: SuiClient;
-    signTransactionBlock: WalletKitCore["signTransactionBlock"];
-    packageId: string;
-    registryName: string;
-}): Promise<OwnedObjectRef>
+export function create_registry(
+    tx: Transaction,
+    packageId: string,
+    registryName: string,
+): TransactionResult
 {
-    const tx = new Transaction();
-    tx.moveCall({
+    return tx.moveCall({
         target: `${packageId}::profile::create_registry`,
         typeArguments: [],
         arguments: [
-            tx.pure(Array.from( (new TextEncoder()).encode(registryName) )),
+            tx.pure.string(registryName),
         ],
-    });
-
-    const signedTx = await signTransactionBlock({
-        Transaction: tx,
-        chain: `sui:${network}`,
-    });
-    return suiClient.executeTransactionBlock({
-        transactionBlock: signedTx.transactionBlockBytes,
-        signature: signedTx.signature,
-        options: {
-            showEffects: true,
-        },
-    })
-    .then(resp => {
-        const effects = resp.effects as TransactionEffects;
-        if (effects.status.status === "success") {
-            if (effects.created?.length === 1) {
-                return effects.created[0] as OwnedObjectRef;
-            } else { // Should never happen
-                throw new Error("New registry object missing from response: " + JSON.stringify(resp));
-            }
-        } else {
-            throw new Error(effects.status.error);
-        }
     });
 }
 
@@ -189,7 +156,7 @@ export async function sui_createProfile({
 
     // Creates 2 objects: the profile (owned by the caller) and a dynamic field (inside the registry's table)
     const signedTx = await signTransactionBlock({
-        Transaction: tx,
+        transactionBlock: tx,
         chain: `sui:${network}`,
     });
     const resp = await suiClient.executeTransactionBlock({
@@ -263,7 +230,7 @@ export async function sui_editProfile({
     });
 
     const signedTx = await signTransactionBlock({
-        Transaction: tx,
+        transactionBlock: tx,
         chain: `sui:${network}`,
     });
     const resp = await suiClient.executeTransactionBlock({
