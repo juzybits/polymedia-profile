@@ -4,6 +4,7 @@ import {
     WalletProvider,
     createNetworkConfig,
     useCurrentAccount,
+    useSuiClient,
 } from "@mysten/dapp-kit";
 import { SuiClient, getFullnodeUrl } from '@mysten/sui/client';
 import { PolymediaProfile, ProfileManager } from '@polymedia/profile-sdk';
@@ -60,7 +61,7 @@ const AppSuiProviders: React.FC = () => {
     <QueryClientProvider client={queryClient}>
         <SuiClientProvider networks={networkConfig} network={network}>
             <WalletProvider autoConnect={true}>
-                <App network={network} setNetwork={setNetwork} />
+                <App network={network} _setNetwork={setNetwork} />
             </WalletProvider>
         </SuiClientProvider>
     </QueryClientProvider>
@@ -81,34 +82,32 @@ export type AppContext = {
 
 const App: React.FC<{
     network: NetworkName;
-    setNetwork: ReactSetter<NetworkName>;
+    _setNetwork: ReactSetter<NetworkName>;
 }> = ({
     network,
-    setNetwork,
 }) =>
 {
+    const suiClient = useSuiClient();
     const currentAccount = useCurrentAccount();
+
     const [ profile, setProfile ] = useState<PolymediaProfile|null|undefined>(undefined);
     const [ showConnectModal, setShowConnectModal ] = useState(false);
-    const [ profileManager, setProfileManager ] = useState<ProfileManager|null>(null);
+    const [ profileManager, setProfileManager ] = useState<ProfileManager>(
+        new ProfileManager({network, suiClient})
+    );
 
     useEffect(() => {
-        async function initialize() {
-            const network = isLocalhost() ? loadNetwork() : 'mainnet';
-            const rpcConfig = await getRpcConfig({network, fetch: false});
-            const suiClient = new SuiClient({url: rpcConfig.fullnode});
-            setNetwork(network);
-            setProfileManager( new ProfileManager({network, suiClient}) );
-        };
-        initialize();
-    }, []);
+        setProfileManager(
+            new ProfileManager({network, suiClient})
+        );
+    }, [network, suiClient]);
 
     useEffect(() => {
-        profileManager && reloadProfile();
-    }, [currentAccount, profileManager]);
+        reloadProfile();
+    }, [currentAccount]);
 
     const reloadProfile = async (): Promise<PolymediaProfile|null|undefined> => {
-        if (!currentAccount || !profileManager) {
+        if (!currentAccount) {
             setProfile(undefined);
             return undefined;
         }
@@ -132,10 +131,6 @@ const App: React.FC<{
     const openConnectModal = (): void => {
         setShowConnectModal(true);
     };
-
-    if (!network || !profileManager) {
-        return <></>;
-    }
 
     const appContext: AppContext = {
         network,
