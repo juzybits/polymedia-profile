@@ -15,11 +15,11 @@ export const PROFILE_IDS: Record<NetworkName, NetworkConfig> = {
         registryId: "0xe1db46532bcc8ad2314c672aa890d91075565b592be3e7b315f883ae3e827f9c",
     },
     devnet: {
-        packageId: "0x1eb08098bfcfe2e659525d8036833143246f779c55c6b38eec80b0edcb1a3388",
-        registryId: "0x61bacafd53850607f09f4b4a040d8c16e83a45ed246aa96a2c977a1c6e15baa0",
+        packageId: "0x4dd1b38df8d928ffe981e071688297d9501c182e5ac5195042d2547eaa09a0dd",
+        registryId: "0xb0220f5db4d58f0b66546fc6c3a9c2e8b832f7b28b3fe1513f287f8979833a6a",
     },
     localnet: {
-        packageId: "0x6ced420f60b41fa73ccedde9057ac7d382506e007f9ddb59fcce9b314f35d696",
-        registryId: "0xe082e8fbcc466d25561f045c343f2eae0634ccca6bd9db8cd26e4dd84e4eaaad",
+        packageId: "",
+        registryId: "",
     },
 };

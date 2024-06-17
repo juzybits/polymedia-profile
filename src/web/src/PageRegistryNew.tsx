@@ -1,4 +1,6 @@
-import { useCurrentAccount, useSignTransaction } from "@mysten/dapp-kit";
+import { useCurrentAccount, useSignTransaction, useSuiClient } from "@mysten/dapp-kit";
+import { Transaction } from "@mysten/sui/transactions";
+import { create_registry } from "@polymedia/profile-sdk";
 import { SyntheticEvent, useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import { AppContext } from "./App";
@@ -10,6 +12,7 @@ export function PageRegistryNew()
         document.title = "Polymedia Profile - New Registry";
     }, []);
 
+    const suiClient = useSuiClient();
     const currentAccount = useCurrentAccount();
     const { mutateAsync: signTransaction } = useSignTransaction();
 
@@ -27,11 +30,25 @@ export function PageRegistryNew()
         console.debug(`[onSubmitCreateRegistry] Attempting to create registry with name: ${inputName}`);
         setWaiting(true);
         try {
-            const registryObject = await profileClient.createRegistry(
-                signTransaction,
-                inputName
-            );
-            console.debug("[onSubmitCreateRegistry] New registry:", registryObject);
+            const tx = new Transaction();
+            create_registry(tx, profileClient.packageId, inputName);
+
+            const signedTx = await signTransaction({
+                transaction: tx,
+            });
+
+            const resp = await suiClient.executeTransactionBlock({
+                transactionBlock: signedTx.bytes,
+                signature: signedTx.signature,
+                options: { showEffects: true },
+            });
+            console.debug("resp:", resp);
+
+            if (resp.errors || resp.effects?.status.status !== "success") {
+                notifyError(`Txn digest: ${resp.digest}\n`
+                    + `Txn status: ${resp.effects?.status.status}\n`
+                    + `Txn errors: ${JSON.stringify(resp.errors)}`);
+            }
         } catch(error: any) {
             notifyError(error.message);
         }

@@ -1,4 +1,4 @@
-import { OwnedObjectRef, SuiClient, SuiExecutionResult, SuiObjectResponse, SuiTransactionBlockResponse } from "@mysten/sui/client";
+import { SuiClient, SuiExecutionResult, SuiObjectResponse, SuiTransactionBlockResponse } from "@mysten/sui/client";
 import { Transaction } from "@mysten/sui/transactions";
 import { PROFILE_IDS } from "./config.js";
 import { chunkArray, devInspectAndGetResults } from "./functions.js";
@@ -29,40 +29,6 @@ export class ProfileClient
         this.suiClient = suiClient;
         this.packageId = packageId || PROFILE_IDS[network].packageId;
         this.registryId = registryId || PROFILE_IDS[network].registryId;
-    }
-
-    public async createRegistry(
-        signTransaction: any, // TODO
-        registryName: string,
-    ): Promise<OwnedObjectRef>
-    {
-        const tx = new Transaction();
-        pkg.create_registry(tx, this.packageId, registryName);
-
-        const signedTx = await signTransaction({
-            transactionBlock: tx,
-            chain: `sui:${this.network}`,
-        });
-
-        return this.suiClient.executeTransactionBlock({
-            transactionBlock: signedTx.transactionBlockBytes,
-            signature: signedTx.signature,
-            options: {
-                showEffects: true,
-            },
-        })
-        .then(resp => {
-            const effects = resp.effects!;
-            if (effects.status.status === "success") {
-                if (effects.created?.length === 1) {
-                    return effects.created[0] as OwnedObjectRef;
-                } else { // Should never happen
-                    throw new Error("New registry object missing from response: " + JSON.stringify(resp));
-                }
-            } else {
-                throw new Error(effects.status.error);
-            }
-        });
     }
 
     public async createProfile(
