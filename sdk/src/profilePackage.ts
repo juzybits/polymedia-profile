@@ -7,13 +7,9 @@ import {
     TransactionEffects,
 } from "@mysten/sui/client";
 import { Transaction } from "@mysten/sui/transactions";
-import {
-    POLYMEDIA_PROFILE_PACKAGE_ID_DEVNET,
-    POLYMEDIA_PROFILE_PACKAGE_ID_LOCALNET,
-    POLYMEDIA_PROFILE_PACKAGE_ID_MAINNET,
-    POLYMEDIA_PROFILE_PACKAGE_ID_TESTNET
-} from "./config";
+import { NetworkName, PolymediaProfile } from "./types";
 
+/*
 // Register a custom struct type for Sui 'Binary Canonical (de)Serialization'
 const bcs = new BCS( getSuiMoveConfig() );
 const LookupResult = {
@@ -25,12 +21,13 @@ bcs.registerStructType(POLYMEDIA_PROFILE_PACKAGE_ID_DEVNET + "::profile::LookupR
 bcs.registerStructType(POLYMEDIA_PROFILE_PACKAGE_ID_TESTNET + "::profile::LookupResult", LookupResult);
 bcs.registerStructType(POLYMEDIA_PROFILE_PACKAGE_ID_MAINNET + "::profile::LookupResult", LookupResult);
 type TypeOfLookupResult = typeof LookupResult;
+*/
 
 /**
  * Given one or more Sui addresses, find their associated profile object IDs.
  * Addresses that don't have a profile won't be included in the returned array.
  */
-function sui_fetchProfileObjectIds({
+export function sui_fetchProfileObjectIds({
     suiClient,
     packageId,
     registryId,
@@ -75,7 +72,7 @@ function sui_fetchProfileObjectIds({
  * Fetch one or more Sui objects and return them as PolymediaProfile instances
  * Object IDs that don't exist or are not a Profile won't be included in the returned array.
  */
-async function sui_fetchProfileObjects({ suiClient, lookupObjectIds }: {
+export async function sui_fetchProfileObjects({ suiClient, lookupObjectIds }: {
     suiClient: SuiClient;
     lookupObjectIds: string[];
 }): Promise<PolymediaProfile[]>
@@ -105,7 +102,7 @@ async function sui_fetchProfileObjects({ suiClient, lookupObjectIds }: {
     return allProfiles;
 }
 
-async function sui_createRegistry({
+export async function sui_createRegistry({
     network,
     suiClient,
     signTransactionBlock,
@@ -133,7 +130,7 @@ async function sui_createRegistry({
         chain: `sui:${network}`,
     });
     return suiClient.executeTransactionBlock({
-        Transaction: signedTx.transactionBlockBytes,
+        transactionBlock: signedTx.transactionBlockBytes,
         signature: signedTx.signature,
         options: {
             showEffects: true,
@@ -153,7 +150,7 @@ async function sui_createRegistry({
     });
 }
 
-async function sui_createProfile({
+export async function sui_createProfile({
     network,
     suiClient,
     signTransactionBlock,
@@ -196,7 +193,7 @@ async function sui_createProfile({
         chain: `sui:${network}`,
     });
     const resp = await suiClient.executeTransactionBlock({
-        Transaction: signedTx.transactionBlockBytes,
+        transactionBlock: signedTx.transactionBlockBytes,
         signature: signedTx.signature,
         options: {
             showEffects: true,
@@ -228,7 +225,7 @@ async function sui_createProfile({
     throw new Error("Transaction was successful, but can't find the new profile object ID in the response: " + JSON.stringify(resp));
 }
 
-async function sui_editProfile({
+export async function sui_editProfile({
     network,
     suiClient,
     signTransactionBlock,
@@ -270,7 +267,7 @@ async function sui_editProfile({
         chain: `sui:${network}`,
     });
     const resp = await suiClient.executeTransactionBlock({
-        Transaction: signedTx.transactionBlockBytes,
+        transactionBlock: signedTx.transactionBlockBytes,
         signature: signedTx.signature,
         options: {
             showEffects: true,
@@ -285,16 +282,6 @@ async function sui_editProfile({
     return resp;
 }
 
-/* Convenience functions */
-
-function chunkArray<T>(elements: T[], chunkSize: number): T[][] {
-    const result = [];
-    for (let i = 0; i < elements.length; i += chunkSize) {
-        result.push(elements.slice(i, i + chunkSize));
-    }
-    return result;
-}
-
 /**
  * Convert a generic `SuiObjectResponse` into a `PolymediaProfile`.
  *
@@ -304,7 +291,7 @@ function chunkArray<T>(elements: T[], chunkSize: number): T[][] {
         showOwner: true,
     },
 */
-function suiObjectToProfile(resp: SuiObjectResponse): PolymediaProfile|null
+export function suiObjectToProfile(resp: SuiObjectResponse): PolymediaProfile|null
 {
     if (resp.error || !resp.data) {
         return null;

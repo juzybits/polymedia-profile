@@ -9,3 +9,5 @@ export type PolymediaProfile = {
     data: any;
     owner: string;
 };
+
+export type NetworkName =  "mainnet" | "testnet" | "devnet" | "localnet";
