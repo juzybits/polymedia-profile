@@ -9,7 +9,7 @@
 
 */
 
-import { BCS, getSuiMoveConfig } from '@mysten/bcs';
+import { BCS, getSuiMoveConfig } from "@mysten/bcs";
 import {
     DevInspectResults,
     OwnedObjectRef,
@@ -17,23 +17,23 @@ import {
     SuiObjectResponse,
     SuiTransactionBlockResponse,
     TransactionEffects,
-} from '@mysten/sui.js/client';
+} from "@mysten/sui.js/client";
 import {
     TransactionBlock,
-} from '@mysten/sui.js/transactions';
-import { WalletKitCore } from '@mysten/wallet-kit-core';
+} from "@mysten/sui.js/transactions";
+import { WalletKitCore } from "@mysten/wallet-kit-core";
 
-export const POLYMEDIA_PROFILE_PACKAGE_ID_LOCALNET = '0x6ced420f60b41fa73ccedde9057ac7d382506e007f9ddb59fcce9b314f35d696';
-export const POLYMEDIA_PROFILE_REGISTRY_ID_LOCALNET = '0xe082e8fbcc466d25561f045c343f2eae0634ccca6bd9db8cd26e4dd84e4eaaad';
+export const POLYMEDIA_PROFILE_PACKAGE_ID_LOCALNET = "0x6ced420f60b41fa73ccedde9057ac7d382506e007f9ddb59fcce9b314f35d696";
+export const POLYMEDIA_PROFILE_REGISTRY_ID_LOCALNET = "0xe082e8fbcc466d25561f045c343f2eae0634ccca6bd9db8cd26e4dd84e4eaaad";
 
-export const POLYMEDIA_PROFILE_PACKAGE_ID_DEVNET = '0x1eb08098bfcfe2e659525d8036833143246f779c55c6b38eec80b0edcb1a3388';
-export const POLYMEDIA_PROFILE_REGISTRY_ID_DEVNET = '0x61bacafd53850607f09f4b4a040d8c16e83a45ed246aa96a2c977a1c6e15baa0';
+export const POLYMEDIA_PROFILE_PACKAGE_ID_DEVNET = "0x1eb08098bfcfe2e659525d8036833143246f779c55c6b38eec80b0edcb1a3388";
+export const POLYMEDIA_PROFILE_REGISTRY_ID_DEVNET = "0x61bacafd53850607f09f4b4a040d8c16e83a45ed246aa96a2c977a1c6e15baa0";
 
-export const POLYMEDIA_PROFILE_PACKAGE_ID_TESTNET = '0xe6b9d38ab44c0055b6fda90183b73b7557900e3d7e2215130d152e7b5f5b6f65';
-export const POLYMEDIA_PROFILE_REGISTRY_ID_TESTNET = '0xe1db46532bcc8ad2314c672aa890d91075565b592be3e7b315f883ae3e827f9c';
+export const POLYMEDIA_PROFILE_PACKAGE_ID_TESTNET = "0xe6b9d38ab44c0055b6fda90183b73b7557900e3d7e2215130d152e7b5f5b6f65";
+export const POLYMEDIA_PROFILE_REGISTRY_ID_TESTNET = "0xe1db46532bcc8ad2314c672aa890d91075565b592be3e7b315f883ae3e827f9c";
 
-export const POLYMEDIA_PROFILE_PACKAGE_ID_MAINNET = '0x57138e18b82cc8ea6e92c3d5737d6078b1304b655f59cf5ae9668cc44aad4ead';
-export const POLYMEDIA_PROFILE_REGISTRY_ID_MAINNET = '0xd6eb0ca817dfe0763af9303a6bea89b88a524844d78e657dc25ed8ba3877deac';
+export const POLYMEDIA_PROFILE_PACKAGE_ID_MAINNET = "0x57138e18b82cc8ea6e92c3d5737d6078b1304b655f59cf5ae9668cc44aad4ead";
+export const POLYMEDIA_PROFILE_REGISTRY_ID_MAINNET = "0xd6eb0ca817dfe0763af9303a6bea89b88a524844d78e657dc25ed8ba3877deac";
 
 /**
  * Represents a `polymedia_profile::profile::Profile` Sui object
@@ -45,49 +45,49 @@ export type PolymediaProfile = {
     description: string;
     data: any;
     owner: string;
-}
+};
 
-type NetworkName = 'localnet' | 'devnet' | 'testnet' | 'mainnet';
+type NetworkName = "localnet" | "devnet" | "testnet" | "mainnet";
 
 /**
  * Helps you interact with the `polymedia_profile` Sui package
  */
 export class ProfileManager {
-    private readonly cachedAddresses: Map<string, PolymediaProfile|null> = new Map();
-    private readonly cachedObjects: Map<string, PolymediaProfile|null> = new Map();
+    private readonly cachedAddresses = new Map<string, PolymediaProfile|null>();
+    private readonly cachedObjects = new Map<string, PolymediaProfile|null>();
     public readonly network: NetworkName;
     public readonly suiClient: SuiClient;
     public readonly packageId: string;
     public readonly registryId: string;
 
     constructor({ network, suiClient, packageId, registryId }: {
-        network: NetworkName,
-        suiClient: SuiClient,
-        packageId?: string,
-        registryId?: string
+        network: NetworkName;
+        suiClient: SuiClient;
+        packageId?: string;
+        registryId?: string;
     }) {
         this.network = network;
         this.suiClient = suiClient;
-        if (network === 'localnet') {
+        if (network === "localnet") {
             this.packageId = packageId || POLYMEDIA_PROFILE_PACKAGE_ID_LOCALNET;
             this.registryId = registryId || POLYMEDIA_PROFILE_REGISTRY_ID_LOCALNET;
-        } else if (network === 'devnet') {
+        } else if (network === "devnet") {
             this.packageId = packageId || POLYMEDIA_PROFILE_PACKAGE_ID_DEVNET;
             this.registryId = registryId || POLYMEDIA_PROFILE_REGISTRY_ID_DEVNET;
-        } else if (network === 'testnet') {
+        } else if (network === "testnet") {
             this.packageId = packageId || POLYMEDIA_PROFILE_PACKAGE_ID_TESTNET;
             this.registryId = registryId || POLYMEDIA_PROFILE_REGISTRY_ID_TESTNET;
-        } else if (network === 'mainnet') {
+        } else if (network === "mainnet") {
             this.packageId = packageId || POLYMEDIA_PROFILE_PACKAGE_ID_MAINNET;
             this.registryId = registryId || POLYMEDIA_PROFILE_REGISTRY_ID_MAINNET;
         } else {
-            throw new Error('Network not recognized: ' + network);
+            throw new Error("Network not recognized: " + network);
         }
     }
 
     public async getProfilesByOwner({ lookupAddresses, useCache=true }: {
-        lookupAddresses: Iterable<string>,
-        useCache?: boolean,
+        lookupAddresses: Iterable<string>;
+        useCache?: boolean;
     }): Promise<Map<string, PolymediaProfile|null>>
     {
         let result = new Map<string, PolymediaProfile|null>();
@@ -145,8 +145,8 @@ export class ProfileManager {
     }
 
     public async getProfileByOwner({ lookupAddress, useCache=true }: {
-        lookupAddress: string,
-        useCache?: boolean,
+        lookupAddress: string;
+        useCache?: boolean;
     }): Promise<PolymediaProfile|null>
     {
         const lookupAddresses = [lookupAddress];
@@ -155,8 +155,8 @@ export class ProfileManager {
     }
 
     public async hasProfile({ lookupAddress, useCache=true }: {
-        lookupAddress: string,
-        useCache?: boolean,
+        lookupAddress: string;
+        useCache?: boolean;
     }): Promise<boolean>
     {
         const profile = await this.getProfileByOwner({lookupAddress, useCache});
@@ -164,8 +164,8 @@ export class ProfileManager {
     }
 
     public async getProfilesById({ lookupObjectIds, useCache=true }: {
-        lookupObjectIds: string[],
-        useCache?: boolean,
+        lookupObjectIds: string[];
+        useCache?: boolean;
     }): Promise<Map<string, PolymediaProfile|null>>
     {
         let result = new Map<string, PolymediaProfile|null>();
@@ -215,14 +215,14 @@ export class ProfileManager {
 
     /** @deprecated Use `getProfileObjectById` instead. */
     public async fetchProfileObject({ objectId }: {
-        objectId: string
+        objectId: string;
     }): Promise<PolymediaProfile|null>
     {
         return this.getProfileObjectById({ objectId });
     }
 
     public async getProfileObjectById({ objectId }: {
-        objectId: string
+        objectId: string;
     }): Promise<PolymediaProfile|null>
     {
         const profiles = await this.getProfilesById({
@@ -235,8 +235,8 @@ export class ProfileManager {
         signTransactionBlock,
         registryName
     }: {
-        signTransactionBlock: WalletKitCore['signTransactionBlock'],
-        registryName: string,
+        signTransactionBlock: WalletKitCore["signTransactionBlock"];
+        registryName: string;
     }): Promise<OwnedObjectRef>
     {
         return await sui_createRegistry({
@@ -251,15 +251,15 @@ export class ProfileManager {
     public async createProfile({
         signTransactionBlock,
         name,
-        imageUrl='',
-        description='',
+        imageUrl="",
+        description="",
         data=null,
     }: {
-        signTransactionBlock: WalletKitCore['signTransactionBlock'],
-        name: string,
-        imageUrl?: string,
-        description?: string,
-        data?: any,
+        signTransactionBlock: WalletKitCore["signTransactionBlock"];
+        name: string;
+        imageUrl?: string;
+        description?: string;
+        data?: any;
     }): Promise<PolymediaProfile>
     {
         return await sui_createProfile({
@@ -279,16 +279,16 @@ export class ProfileManager {
         signTransactionBlock,
         profileId,
         name,
-        imageUrl='',
-        description='',
+        imageUrl="",
+        description="",
         data=null,
     }: {
-        signTransactionBlock: WalletKitCore['signTransactionBlock'],
-        profileId: string,
-        name: string,
-        imageUrl?: string,
-        description?: string,
-        data?: any,
+        signTransactionBlock: WalletKitCore["signTransactionBlock"];
+        profileId: string;
+        name: string;
+        imageUrl?: string;
+        description?: string;
+        data?: any;
     }): Promise<SuiTransactionBlockResponse>
     {
         return await sui_editProfile({
@@ -309,7 +309,7 @@ export class ProfileManager {
      * Addresses that don't have a profile won't be included in the returned array.
      */
     private async fetchProfileObjectIds({ lookupAddresses }: {
-        lookupAddresses: string[]
+        lookupAddresses: string[];
     }): Promise<Map<string, string>>
     {
         const results = new Map<string, string>();
@@ -322,7 +322,7 @@ export class ProfileManager {
                 lookupAddresses: batch,
             });
             for (const result of lookupResults) {
-                results.set('0x'+result.lookupAddr, '0x'+result.profileAddr);
+                results.set("0x"+result.lookupAddr, "0x"+result.profileAddr);
             }
         });
         await Promise.all(promises);
@@ -338,10 +338,10 @@ const LookupResult = {
     lookupAddr: BCS.ADDRESS,
     profileAddr: BCS.ADDRESS,
 };
-bcs.registerStructType(POLYMEDIA_PROFILE_PACKAGE_ID_LOCALNET + '::profile::LookupResult', LookupResult);
-bcs.registerStructType(POLYMEDIA_PROFILE_PACKAGE_ID_DEVNET + '::profile::LookupResult', LookupResult);
-bcs.registerStructType(POLYMEDIA_PROFILE_PACKAGE_ID_TESTNET + '::profile::LookupResult', LookupResult);
-bcs.registerStructType(POLYMEDIA_PROFILE_PACKAGE_ID_MAINNET + '::profile::LookupResult', LookupResult);
+bcs.registerStructType(POLYMEDIA_PROFILE_PACKAGE_ID_LOCALNET + "::profile::LookupResult", LookupResult);
+bcs.registerStructType(POLYMEDIA_PROFILE_PACKAGE_ID_DEVNET + "::profile::LookupResult", LookupResult);
+bcs.registerStructType(POLYMEDIA_PROFILE_PACKAGE_ID_TESTNET + "::profile::LookupResult", LookupResult);
+bcs.registerStructType(POLYMEDIA_PROFILE_PACKAGE_ID_MAINNET + "::profile::LookupResult", LookupResult);
 type TypeOfLookupResult = typeof LookupResult;
 
 /**
@@ -354,11 +354,11 @@ function sui_fetchProfileObjectIds({
     registryId,
     lookupAddresses,
 }: {
-    suiClient: SuiClient,
-    packageId: string,
-    registryId: string,
-    lookupAddresses: string[],
-}): Promise<Array<TypeOfLookupResult>>
+    suiClient: SuiClient;
+    packageId: string;
+    registryId: string;
+    lookupAddresses: string[];
+}): Promise<TypeOfLookupResult[]>
 {
     const tx = new TransactionBlock();
     tx.moveCall({
@@ -372,16 +372,16 @@ function sui_fetchProfileObjectIds({
 
     return suiClient.devInspectTransactionBlock({
         transactionBlock: tx,
-        sender: '0x7777777777777777777777777777777777777777777777777777777777777777',
+        sender: "0x7777777777777777777777777777777777777777777777777777777777777777",
     })
     .then((resp: DevInspectResults) => {
-        if (resp.effects.status.status == 'success') {
+        if (resp.effects.status.status == "success") {
             // Deserialize the returned value into an array of LookupResult objects
             // @ts-ignore
             const returnValue: any[] = resp.results[0].returnValues[0]; // grab the 1st and only tuple
             const valueType: string = returnValue[1];
             const valueData = Uint8Array.from(returnValue[0]);
-            const lookupResults: Array<TypeOfLookupResult> = bcs.de(valueType, valueData, 'hex');
+            const lookupResults: TypeOfLookupResult[] = bcs.de(valueType, valueData, "hex");
             return lookupResults;
         } else {
             throw new Error(resp.effects.status.error);
@@ -394,8 +394,8 @@ function sui_fetchProfileObjectIds({
  * Object IDs that don't exist or are not a Profile won't be included in the returned array.
  */
 async function sui_fetchProfileObjects({ suiClient, lookupObjectIds }: {
-    suiClient: SuiClient,
-    lookupObjectIds: string[],
+    suiClient: SuiClient;
+    lookupObjectIds: string[];
 }): Promise<PolymediaProfile[]>
 {
     const allProfiles = new Array<PolymediaProfile>();
@@ -430,11 +430,11 @@ async function sui_createRegistry({
     packageId,
     registryName,
 } : {
-    network: NetworkName,
-    suiClient: SuiClient,
-    signTransactionBlock: WalletKitCore['signTransactionBlock'],
-    packageId: string,
-    registryName: string,
+    network: NetworkName;
+    suiClient: SuiClient;
+    signTransactionBlock: WalletKitCore["signTransactionBlock"];
+    packageId: string;
+    registryName: string;
 }): Promise<OwnedObjectRef>
 {
     const tx = new TransactionBlock();
@@ -459,11 +459,11 @@ async function sui_createRegistry({
     })
     .then(resp => {
         const effects = resp.effects as TransactionEffects;
-        if (effects.status.status === 'success') {
+        if (effects.status.status === "success") {
             if (effects.created?.length === 1) {
                 return effects.created[0] as OwnedObjectRef;
             } else { // Should never happen
-                throw new Error('New registry object missing from response: ' + JSON.stringify(resp));
+                throw new Error("New registry object missing from response: " + JSON.stringify(resp));
             }
         } else {
             throw new Error(effects.status.error);
@@ -478,22 +478,22 @@ async function sui_createProfile({
     packageId,
     registryId,
     name,
-    imageUrl = '',
-    description = '',
+    imageUrl = "",
+    description = "",
     data = null,
 } : {
-    network: NetworkName,
-    suiClient: SuiClient,
-    signTransactionBlock: WalletKitCore['signTransactionBlock'],
-    packageId: string,
-    registryId: string,
-    name: string,
-    imageUrl?: string,
-    description?: string,
-    data?: any,
+    network: NetworkName;
+    suiClient: SuiClient;
+    signTransactionBlock: WalletKitCore["signTransactionBlock"];
+    packageId: string;
+    registryId: string;
+    name: string;
+    imageUrl?: string;
+    description?: string;
+    data?: any;
 }): Promise<PolymediaProfile>
 {
-    const dataJson = data ? JSON.stringify(data) : '';
+    const dataJson = data ? JSON.stringify(data) : "";
     const tx = new TransactionBlock();
     const moveArgs = [
         tx.object(registryId),
@@ -524,13 +524,13 @@ async function sui_createProfile({
 
     // Verify the transaction results
     const effects = resp.effects as TransactionEffects;
-    if (effects.status.status !== 'success') {
+    if (effects.status.status !== "success") {
         throw new Error(effects.status.error);
     }
     // Build and return PolymediaProfile object from the 'EventCreateProfile' event
     if (resp.events)
         for (const event of resp.events) {
-            if (event.type.endsWith('::profile::EventCreateProfile')) {
+            if (event.type.endsWith("::profile::EventCreateProfile")) {
                 const newProfile: PolymediaProfile = {
                     id: (event.parsedJson as any).profile_id,
                     name: name,
@@ -553,22 +553,22 @@ async function sui_editProfile({
     profileId,
     packageId,
     name,
-    imageUrl = '',
-    description = '',
+    imageUrl = "",
+    description = "",
     data = null,
 } : {
-    network: NetworkName,
-    suiClient: SuiClient,
-    signTransactionBlock: WalletKitCore['signTransactionBlock'],
-    profileId: string,
-    packageId: string,
-    name: string,
-    imageUrl?: string,
-    description?: string,
-    data?: any,
+    network: NetworkName;
+    suiClient: SuiClient;
+    signTransactionBlock: WalletKitCore["signTransactionBlock"];
+    profileId: string;
+    packageId: string;
+    name: string;
+    imageUrl?: string;
+    description?: string;
+    data?: any;
 }): Promise<SuiTransactionBlockResponse>
 {
-    const dataJson = data ? JSON.stringify(data) : '';
+    const dataJson = data ? JSON.stringify(data) : "";
     const tx = new TransactionBlock();
     const moveArgs = [
         tx.object(profileId),
@@ -597,7 +597,7 @@ async function sui_editProfile({
 
     // Verify the transaction results
     const effects = resp.effects as TransactionEffects;
-    if (effects.status.status !== 'success') {
+    if (effects.status.status !== "success") {
         throw new Error(effects.status.error);
     }
     return resp;
@@ -630,22 +630,22 @@ function suiObjectToProfile(resp: SuiObjectResponse): PolymediaProfile|null
 
     const content = resp.data.content;
     if (!content) {
-        throw new Error('Missing object content. Make sure to fetch the object with `showContent: true`');
+        throw new Error("Missing object content. Make sure to fetch the object with `showContent: true`");
     }
-    if (content.dataType !== 'moveObject') {
+    if (content.dataType !== "moveObject") {
         throw new Error(`Wrong object dataType. Expected 'moveObject' but got: '${content.dataType}'`);
     }
-    if (!content.type.endsWith('::profile::Profile')) {
-        throw new Error('Wrong object type. Expected a Profile but got: ' + content.type);
+    if (!content.type.endsWith("::profile::Profile")) {
+        throw new Error("Wrong object type. Expected a Profile but got: " + content.type);
     }
 
     const owner = resp.data.owner;
     if (!owner) {
-        throw new Error('Missing object owner. Make sure to fetch the object with `showOwner: true`');
+        throw new Error("Missing object owner. Make sure to fetch the object with `showOwner: true`");
     }
-    const isOwnedObject = typeof owner === 'object' && (('AddressOwner' in owner) || ('ObjectOwner' in owner));
+    const isOwnedObject = typeof owner === "object" && (("AddressOwner" in owner) || ("ObjectOwner" in owner));
     if (!isOwnedObject) {
-        throw new Error('Expected an owned object');
+        throw new Error("Expected an owned object");
     }
 
     const fields = content.fields as Record<string, any>;
@@ -655,6 +655,6 @@ function suiObjectToProfile(resp: SuiObjectResponse): PolymediaProfile|null
         imageUrl: fields.image_url,
         description: fields.description,
         data: fields.data ? JSON.parse(fields.data) : null,
-        owner: ('AddressOwner' in owner) ? owner.AddressOwner : owner.ObjectOwner,
+        owner: ("AddressOwner" in owner) ? owner.AddressOwner : owner.ObjectOwner,
     };
 }
