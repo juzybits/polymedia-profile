@@ -101,7 +101,7 @@ export class ProfileClient
     ): Promise<PolymediaProfile|null>
     {
         const profiles = await this.getProfilesById([ objectId ]);
-        return profiles.get(objectId) || null;
+        return profiles.get(objectId) || null;
     }
 
     public async getProfilesById(
@@ -267,7 +267,8 @@ function suiObjectToProfile(
         throw new Error("Expected an owned object");
     }
 
-    const fields = content.fields as Record<string, any>;
+    /* eslint-disable */
+    const fields: Record<string, any> = content.fields;
     return {
         id: fields.id.id,
         name: fields.name,
@@ -276,4 +277,5 @@ function suiObjectToProfile(
         data: fields.data ? JSON.parse(fields.data) : null,
         owner: ("AddressOwner" in owner) ? owner.AddressOwner : owner.ObjectOwner,
     };
+    /* eslint-enable */
 }

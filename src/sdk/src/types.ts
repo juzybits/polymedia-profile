@@ -10,13 +10,13 @@ export type PolymediaProfile = {
     name: string;
     imageUrl: string;
     description: string;
-    data: any;
+    data: unknown;
     owner: string;
 };
 
 const BcsAddressType = bcs.bytes(32).transform({
-	input: (val: string) => fromHEX(val),
-	output: (val) => toHEX(val),
+    input: (val: string) => fromHEX(val),
+    output: (val) => toHEX(val),
 });
 
 export type LookupResults = typeof BcsLookupResults.$inferType;
