@@ -1,5 +1,5 @@
 import { PolymediaProfile } from '@polymedia/profile-sdk';
-import { linkToExplorer, shortenAddress } from '@polymedia/webutils';
+import { linkToExplorer, shortenAddress } from '@polymedia/suitcase-react';
 import { useEffect, useState } from 'react';
 import { useOutletContext, useParams } from 'react-router-dom';
 import '../css/ViewProfile.less';

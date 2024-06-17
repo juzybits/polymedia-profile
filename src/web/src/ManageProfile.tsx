@@ -1,7 +1,7 @@
 import { useEffect, useState, SyntheticEvent } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { useWalletKit } from '@mysten/wallet-kit';
-import { linkToExplorer } from '@polymedia/webutils';
+import { linkToExplorer } from '@polymedia/suitcase-react';
 
 import { AppContext } from './App';
 import { notifyError, notifyOkay } from './components/Notification';
@@ -205,7 +205,7 @@ export const ManageProfile: React.FC = () =>
     </div>;
 }
 
-const showError = (origin: string, error: any): void => // TODO: move to @polymedia/webutils
+const showError = (origin: string, error: any): void => // TODO: move to @polymedia/suitcase-react
 {
     let errorString = String(error.stack || error.message || error);
     if (errorString.includes('ejected from user') || // Sui, Ethos

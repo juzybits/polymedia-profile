@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Link, useOutletContext } from 'react-router-dom';
-import { linkToExplorer } from '@polymedia/webutils';
+import { linkToExplorer } from '@polymedia/suitcase-react';
 import { PolymediaProfile } from '@polymedia/profile-sdk';
 
 import { AppContext } from './App';
 import '../css/SearchProfiles.less';
 
-import { ADDRESS_REGEX, makeCssUrl, shortenAddress } from '@polymedia/webutils';
+import { ADDRESS_REGEX, makeCssUrl, shortenAddress } from '@polymedia/suitcase-react';
 const addressRegex = new RegExp(ADDRESS_REGEX, 'g');
 
 export const SearchProfiles: React.FC = () =>
@@ -139,7 +139,7 @@ export const SearchProfiles: React.FC = () =>
     </div>;
 }
 
-const logError = (origin: string, error: any): string => // TODO: move to @polymedia/webutils
+const logError = (origin: string, error: any): string => // TODO: move to @polymedia/suitcase-react
 {
     let errorString = String(error.stack || error.message || error);
     console.warn(`[${origin}] ${errorString}`);

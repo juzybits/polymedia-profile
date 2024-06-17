@@ -3,7 +3,7 @@
 import { useWalletKit } from '@mysten/wallet-kit';
 import { PolymediaProfile } from '@polymedia/profile-sdk';
 import { NetworkSelector } from '@polymedia/react-components';
-import { NetworkName, isLocalhost, shortenAddress } from '@polymedia/webutils';
+import { NetworkName, isLocalhost, shortenAddress } from '@polymedia/suitcase-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../css/Nav.less';

@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
-import { linkToExplorer } from '@polymedia/webutils';
+import { linkToExplorer } from '@polymedia/suitcase-react';
 
 import { AppContext } from './App';
 

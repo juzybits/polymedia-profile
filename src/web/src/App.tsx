@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import { SuiClient } from '@mysten/sui.js/client';
+import { SuiClient } from '@mysten/sui/client';
 import { ConnectModal, WalletKitProvider, useWalletKit } from '@mysten/wallet-kit';
-import { NetworkName, isLocalhost, loadNetwork, getRpcConfig } from '@polymedia/webutils';
+import { NetworkName, isLocalhost, loadNetwork, getRpcConfig } from '@polymedia/suitcase-react';
 import { PolymediaProfile, ProfileManager } from '@polymedia/profile-sdk';
 
 import { Nav } from './Nav';
