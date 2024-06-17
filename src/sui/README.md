@@ -2,7 +2,7 @@
 
 A simple and flexible profile system on Sui.
 
-For an overview of Polymedia Profile, see _[../README.md](../README.md)_.
+For an overview of Polymedia Profile, see _[../../README.md](../../README.md)_.
 
 For details about the TypeScript SDK, see _[../sdk/README.md](../sdk/README.md)_.
 

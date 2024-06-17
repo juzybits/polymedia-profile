@@ -1,12 +1,12 @@
 # Polymedia Profile
 
-![Polymedia Profile](./web/src/img/open-graph.webp)
+![Polymedia Profile](./src/web/public/img/open-graph.webp)
 
 Polymedia Profile is a fully on-chain profile system on Sui. It lets users attach a profile (name, picture, etc) to their Sui address. Over 137,000 profiles have been created to date.
 
-- Sui Move package: [./sui/](https://github.com/juzybits/polymedia-profile/tree/main/sui)
-- TypeScript SDK: [./sdk/](https://github.com/juzybits/polymedia-profile/tree/main/sdk)
-- Web interface: [./web/](https://github.com/juzybits/polymedia-profile/tree/main/web)
+- Sui Move package: [./src/sui/](./src/sui/)
+- TypeScript SDK: [./src/sdk/](./src/sdk/)
+- Web interface: [./src/web/](./src/web/)
 
 Key facts about Polymedia Profile:
 1. Profile properties are not unique. Want to use "Alice" as your user name? No problem!
