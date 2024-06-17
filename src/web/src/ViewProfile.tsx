@@ -1,10 +1,10 @@
 import { PolymediaProfile } from '@polymedia/profile-sdk';
-import { linkToExplorer, shortenAddress } from '@polymedia/suitcase-react';
+import { LinkToPolymedia } from '@polymedia/suitcase-react';
 import { useEffect, useState } from 'react';
 import { useOutletContext, useParams } from 'react-router-dom';
-import '../css/ViewProfile.less';
 import { AppContext } from './App';
 import { notifyError } from './components/Notification';
+import './styles/ViewProfile.less';
 
 export const ViewProfile: React.FC = () =>
 {
@@ -69,16 +69,13 @@ export const ViewProfile: React.FC = () =>
                         <i>{profile.description ? profile.description : '(no description)'}</i>
                     </div>
                     <div className='section'>
-                        Profile: <a href={linkToExplorer(network, 'object', profile.id)}
-                            target='_blank' rel='noopener'> {shortenAddress(profile.id)}</a>
+                        Profile: <LinkToPolymedia network={network} kind='object' addr={profile.id} />
                     </div>
                     <div className='section'>
-                        Owner: <a href={linkToExplorer(network, 'address', profile.owner)}
-                            target='_blank' rel='noopener'> {shortenAddress(profile.owner)}</a>
+                        Owner: <LinkToPolymedia network={network} kind='address' addr={profile.owner} />
                     </div>
                     <div className='section'>
-                        Registry: <a href={linkToExplorer(network, 'object', profileManager.registryId)}
-                            target='_blank' rel='noopener'>{shortenAddress(profileManager.registryId)}</a>
+                        Registry: <LinkToPolymedia network={network} kind='object' addr={profileManager.registryId} />
                     </div>
                     <div className='section profile-image'>
                         {profile.imageUrl ? <img src={profile.imageUrl} /> : <i>(no image)</i>}

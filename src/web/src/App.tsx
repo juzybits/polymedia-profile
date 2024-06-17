@@ -1,13 +1,13 @@
-import { useEffect, useState } from 'react';
-import { Outlet } from 'react-router-dom';
 import { SuiClient } from '@mysten/sui/client';
 import { ConnectModal, WalletKitProvider, useWalletKit } from '@mysten/wallet-kit';
-import { NetworkName, isLocalhost, loadNetwork, getRpcConfig } from '@polymedia/suitcase-react';
 import { PolymediaProfile, ProfileManager } from '@polymedia/profile-sdk';
-
+import { NetworkName } from '@polymedia/suitcase-core';
+import { isLocalhost, loadNetwork } from '@polymedia/suitcase-react';
+import { useEffect, useState } from 'react';
+import { Outlet } from 'react-router-dom';
 import { Nav } from './Nav';
 import { notifyError } from './components/Notification';
-import '../css/App.less';
+import './styles/App.less';
 
 export type AppContext = {
     network: NetworkName;

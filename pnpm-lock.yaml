@@ -53,6 +53,9 @@ importers:
       '@polymedia/profile-sdk':
         specifier: workspace:*
         version: link:../sdk
+      '@polymedia/suitcase-core':
+        specifier: ^0.0.6
+        version: 0.0.6(@mysten/sui@1.1.2(svelte@4.2.18)(typescript@5.4.5))
       '@polymedia/suitcase-react':
         specifier: ^0.0.6
         version: 0.0.6(@mysten/sui@1.1.2(svelte@4.2.18)(typescript@5.4.5))(react@18.3.1)

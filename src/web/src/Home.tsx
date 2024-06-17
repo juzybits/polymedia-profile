@@ -1,8 +1,6 @@
+import { makePolymediaUrl } from '@polymedia/suitcase-core';
 import { useEffect } from 'react';
-import { useOutletContext } from 'react-router-dom';
-import { Link } from 'react-router-dom';
-import { linkToExplorer } from '@polymedia/suitcase-react';
-
+import { Link, useOutletContext } from 'react-router-dom';
 import { AppContext } from './App';
 
 export const Home: React.FC = () =>
@@ -23,7 +21,7 @@ export const Home: React.FC = () =>
             <br/>
             <br/>
 
-            This web app lets users manage their profiles on the default registry, called <i><a href={linkToExplorer(network, 'object', profileManager.registryId)} target='_blank' rel='noopener'>polymedia-main</a></i>.
+            This web app lets users manage their profiles on the default registry, called <i><a href={makePolymediaUrl(network, 'object', profileManager.registryId)} target='_blank' rel='noopener'>polymedia-main</a></i>.
             <br/>
             <br/>
             The code is fully <a href='https://github.com/juzybits/polymedia-profile' target='_blank' rel='noopener'>open-source</a>, and there is a <a href='https://www.npmjs.com/package/@polymedia/profile-sdk' target='_blank' rel='noopener'>TypeScript SDK</a> to facilitate 3rd party integrations.

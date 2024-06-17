@@ -1,7 +1,6 @@
+import { makePolymediaUrl } from '@polymedia/suitcase-core';
 import { useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
-import { linkToExplorer } from '@polymedia/suitcase-react';
-
 import { AppContext } from './App';
 
 export const Docs: React.FC = () =>
@@ -38,7 +37,7 @@ export const Docs: React.FC = () =>
 
             <li>Profiles are always included in at least one <i>Registry</i> object. A Sui address may own multiple profiles, but can only add one <i>Profile</i> to each <i>Registry</i>.</li>
 
-            <li>The default registry is called <i><a href={linkToExplorer(network, 'object', profileManager.registryId)} target='_blank' rel='noopener'>polymedia-main</a></i>, and is used by all Polymedia apps. <b>Anyone</b> can create a new registry.</li>
+            <li>The default registry is called <i><a href={makePolymediaUrl(network, 'object', profileManager.registryId)} target='_blank' rel='noopener'>polymedia-main</a></i>, and is used by all Polymedia apps. <b>Anyone</b> can create a new registry.</li>
 
             <li>Profiles can be used <b>anywhere</b> on Sui. There is a <a href='https://www.npmjs.com/package/@polymedia/profile-sdk' target='_blank' rel='noopener'>TypeScript SDK</a> to facilitate 3rd party integrations.</li>
 

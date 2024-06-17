@@ -1,12 +1,11 @@
+import { PolymediaProfile } from '@polymedia/profile-sdk';
+import { ADDRESS_REGEX } from '@polymedia/suitcase-core';
+import { LinkToPolymedia, makeCssUrl } from '@polymedia/suitcase-react';
 import { useEffect, useState } from 'react';
 import { Link, useOutletContext } from 'react-router-dom';
-import { linkToExplorer } from '@polymedia/suitcase-react';
-import { PolymediaProfile } from '@polymedia/profile-sdk';
-
 import { AppContext } from './App';
-import '../css/SearchProfiles.less';
+import './styles/SearchProfiles.less';
 
-import { ADDRESS_REGEX, makeCssUrl, shortenAddress } from '@polymedia/suitcase-react';
 const addressRegex = new RegExp(ADDRESS_REGEX, 'g');
 
 export const SearchProfiles: React.FC = () =>
@@ -74,10 +73,7 @@ export const SearchProfiles: React.FC = () =>
         return (
             <tr className='profile-line'>
                 <td className='td-owner'>
-                    <a
-                        href={linkToExplorer(network, 'address', address)}
-                        target='_blank' rel='noopener'>{shortenAddress(address)}
-                    </a>
+                    <LinkToPolymedia network={network} kind='address' addr={address} />
                 </td>
                 <td className='td-profile'>
                 {

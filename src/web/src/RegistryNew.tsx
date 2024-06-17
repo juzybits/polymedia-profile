@@ -1,7 +1,6 @@
-import { useEffect, useState, SyntheticEvent } from 'react';
-import { useOutletContext } from 'react-router-dom';
 import { useWalletKit } from '@mysten/wallet-kit';
-
+import { SyntheticEvent, useEffect, useState } from 'react';
+import { useOutletContext } from 'react-router-dom';
 import { AppContext } from './App';
 import { notifyError } from './components/Notification';
 
@@ -51,5 +50,5 @@ export function RegistryNew() {
             <button type='submit' className={waiting ? 'primary waiting' : 'primary'} disabled={waiting}
                 >CREATE</button>
         </form>
-    </div>; // end of #page
+    </div>;
 }

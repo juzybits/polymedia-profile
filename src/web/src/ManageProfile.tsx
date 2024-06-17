@@ -1,12 +1,10 @@
-import { useEffect, useState, SyntheticEvent } from 'react';
-import { useOutletContext } from 'react-router-dom';
 import { useWalletKit } from '@mysten/wallet-kit';
-import { linkToExplorer } from '@polymedia/suitcase-react';
-
+import { LinkToPolymedia } from '@polymedia/suitcase-react';
+import { SyntheticEvent, useEffect, useState } from 'react';
+import { useOutletContext } from 'react-router-dom';
 import { AppContext } from './App';
 import { notifyError, notifyOkay } from './components/Notification';
-import '../css/ManageProfile.less';
-import imgDrake from '../img/drake.webp';
+import './styles/ManageProfile.less';
 
 export const ManageProfile: React.FC = () =>
 {
@@ -163,7 +161,7 @@ export const ManageProfile: React.FC = () =>
                 />
                 {isErrorImage && <div className='field-error'>That doesn't look like a valid image URL</div>}
                 <div className='field-info'>Right click the image, then click 'Copy Image Address'. To use a picture from your device, upload it to a service like <a href='https://imgur.com/upload' target='_blank' rel='noopener nofollow noreferrer'>imgur.com</a>, then copy the image address.</div>
-                {isErrorImgur && <div className='field-error-imgur'><img src={imgDrake} /></div>}
+                {isErrorImgur && <div className='field-error-imgur'><img src="/img/drake.webp" /></div>}
             </div>
             <button
                 type='submit'
@@ -190,10 +188,10 @@ export const ManageProfile: React.FC = () =>
     <div className='section section-info'>
         <h2>Details</h2>
         <p>
-            Profile: <a href={linkToExplorer(network, 'object', profile.id)} target='_blank' rel='noopener'>{profile.id}</a>
+            Profile: <LinkToPolymedia network={network} kind='object' addr={profile.id} />
         </p>
         <p>
-            Registry: <a href={linkToExplorer(network, 'object', profileManager.registryId)} target='_blank' rel='noopener'>{profileManager.registryId}</a>
+            Registry: <LinkToPolymedia network={network} kind='object' addr={profileManager.registryId} />
         </p>
     </div>;
 

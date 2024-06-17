@@ -2,12 +2,11 @@
 
 import { useWalletKit } from '@mysten/wallet-kit';
 import { PolymediaProfile } from '@polymedia/profile-sdk';
-import { NetworkSelector } from '@polymedia/react-components';
-import { NetworkName, isLocalhost, shortenAddress } from '@polymedia/suitcase-react';
+import { NetworkName, shortenSuiAddress } from '@polymedia/suitcase-core';
+import { isLocalhost, NetworkSelector } from '@polymedia/suitcase-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import '../css/Nav.less';
-import imgAnon from '../img/anon.webp';
+import './styles/Nav.less';
 
 export const Nav: React.FC<{
     network: NetworkName,
@@ -113,11 +112,11 @@ const NavProfile: React.FC<{
 
     return <div id='nav-profile' onClick={disconnect}>
         <div id='nav-profile-image-wrap'>
-            <img src={(profile?.imageUrl) || imgAnon} />
+            <img src={(profile?.imageUrl) || "/img/anon.webp"} />
         </div>
         <div id='nav-profile-name-wrap'>
             <div id='nav-profile-name'>{ profile ? profile.name : 'Anon' }</div>
-            <div id='nav-profile-address'>{shortenAddress(currentAccount.address)}</div>
+            <div id='nav-profile-address'>{shortenSuiAddress(currentAccount.address)}</div>
         </div>
     </div>;
 }
