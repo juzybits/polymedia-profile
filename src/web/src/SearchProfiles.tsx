@@ -14,7 +14,7 @@ export const SearchProfiles: React.FC = () =>
 
     const {
         network,
-        profileManager,
+        profileClient,
     } = useOutletContext<AppContext>();
 
     const [userInput, setUserInput] = useState<string>("");
@@ -40,7 +40,7 @@ export const SearchProfiles: React.FC = () =>
             }
             setIsLoading(true);
             try {
-                const profiles = await profileManager.getProfilesByOwner({lookupAddresses: addresses});
+                const profiles = await profileClient.getProfilesByOwner(addresses);
                 setResults(profiles);
             } catch(error) {
                 const errorString = logError("loadProfiles", error);

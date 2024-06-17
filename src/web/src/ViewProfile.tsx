@@ -14,7 +14,7 @@ export const ViewProfile: React.FC = () =>
 
     const {
         network,
-        profileManager,
+        profileClient,
     } = useOutletContext<AppContext>();
 
     const [profile, setProfile] = useState<PolymediaProfile|null|undefined>(undefined);
@@ -27,9 +27,7 @@ export const ViewProfile: React.FC = () =>
     }, []);
 
     const loadProfile = async (): Promise<void> => {
-        return await profileManager.getProfileObjectById({
-            objectId: profileId,
-        })
+        return await profileClient.getProfileById(profileId)
         .then((profile: PolymediaProfile|null) => {
             setProfile(profile);
             if (!profile) {
@@ -75,7 +73,7 @@ export const ViewProfile: React.FC = () =>
                         Owner: <LinkToPolymedia network={network} kind="address" addr={profile.owner} />
                     </div>
                     <div className="section">
-                        Registry: <LinkToPolymedia network={network} kind="object" addr={profileManager.registryId} />
+                        Registry: <LinkToPolymedia network={network} kind="object" addr={profileClient.registryId} />
                     </div>
                     <div className="section profile-image">
                         {profile.imageUrl ? <img src={profile.imageUrl} /> : <i>(no image)</i>}

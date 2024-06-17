@@ -16,7 +16,7 @@ export const ManageProfile: React.FC = () =>
     const {
         network,
         profile,
-        profileManager,
+        profileClient,
         reloadProfile,
         openConnectModal,
     } = useOutletContext<AppContext>();
@@ -73,13 +73,13 @@ export const ManageProfile: React.FC = () =>
         console.debug(`[onSubmitCreateProfile] Attempting to create profile: ${inputName}`);
         setWaiting(true);
         try {
-            const newProfile = await profileManager.createProfile({
+            const newProfile = await profileClient.createProfile(
                 signTransaction,
-                name: inputName,
-                imageUrl: inputImage,
-                description: inputDescription,
-                data: null,
-            });
+                inputName,
+                inputImage,
+                inputDescription,
+                null,
+            );
             console.debug("[onSubmitCreateProfile] New profile:", newProfile);
             notifyOkay("SUCCESS");
             reloadProfile();
@@ -101,14 +101,14 @@ export const ManageProfile: React.FC = () =>
         }
         setWaiting(true);
         try {
-            const response = await profileManager.editProfile({
+            const response = await profileClient.editProfile(
                 signTransaction,
-                profileId: profile.id,
-                name: inputName,
-                imageUrl: inputImage,
-                description: inputDescription,
-                data: null,
-            });
+                profile.id,
+                inputName,
+                inputImage,
+                inputDescription,
+                null,
+            );
             console.debug("[onSubmitEditProfile] Response:", response);
             notifyOkay("SUCCESS");
             reloadProfile();
@@ -192,7 +192,7 @@ export const ManageProfile: React.FC = () =>
             Profile: <LinkToPolymedia network={network} kind="object" addr={profile.id} />
         </p>
         <p>
-            Registry: <LinkToPolymedia network={network} kind="object" addr={profileManager.registryId} />
+            Registry: <LinkToPolymedia network={network} kind="object" addr={profileClient.registryId} />
         </p>
     </div>;
 

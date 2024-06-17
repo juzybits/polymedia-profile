@@ -13,7 +13,7 @@ export function RegistryNew()
     const currentAccount = useCurrentAccount();
     const { mutateAsync: signTransaction } = useSignTransaction();
 
-    const { profileManager, openConnectModal } = useOutletContext<AppContext>();
+    const { profileClient, openConnectModal } = useOutletContext<AppContext>();
 
     const [inputName, setInputName] = useState("");
     const [waiting, setWaiting] = useState(false);
@@ -27,10 +27,10 @@ export function RegistryNew()
         console.debug(`[onSubmitCreateRegistry] Attempting to create registry with name: ${inputName}`);
         setWaiting(true);
         try {
-            const registryObject = await profileManager.createRegistry({
+            const registryObject = await profileClient.createRegistry(
                 signTransaction,
-                registryName: inputName
-            });
+                inputName
+            );
             console.debug("[onSubmitCreateRegistry] New registry:", registryObject);
         } catch(error: any) {
             notifyError(error.message);
