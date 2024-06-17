@@ -21,7 +21,8 @@ export function PageRegistryNew()
     const [inputName, setInputName] = useState("");
     const [waiting, setWaiting] = useState(false);
 
-    const onSubmitCreateRegistry = async (e: SyntheticEvent) => {
+    const onSubmitCreateRegistry = async (e: SyntheticEvent) =>
+    {
         e.preventDefault();
         if (!currentAccount) {
             openConnectModal();

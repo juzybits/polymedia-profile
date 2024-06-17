@@ -1,8 +1,8 @@
-import { SuiClient, SuiExecutionResult, SuiObjectResponse, SuiTransactionBlockResponse } from "@mysten/sui/client";
+import { SuiClient, SuiExecutionResult, SuiObjectResponse } from "@mysten/sui/client";
 import { Transaction } from "@mysten/sui/transactions";
 import { PROFILE_IDS } from "./config.js";
 import { chunkArray, devInspectAndGetResults } from "./functions.js";
-import * as pkg from "./package.js";
+import { get_profiles } from "./package.js";
 import { BcsLookupResults, LookupResults, PolymediaProfile } from "./types.js";
 
 type NetworkName = "localnet" | "devnet" | "testnet" | "mainnet";
@@ -29,46 +29,6 @@ export class ProfileClient
         this.suiClient = suiClient;
         this.packageId = packageId || PROFILE_IDS[network].packageId;
         this.registryId = registryId || PROFILE_IDS[network].registryId;
-    }
-
-    public async editProfile(
-        signTransaction: any, // TODO
-        profileId: string,
-        name: string,
-        imageUrl?: string,
-        description?: string,
-        data?: unknown,
-    ): Promise<SuiTransactionBlockResponse>
-    {
-        const tx = new Transaction();
-        pkg.edit_profile(
-            tx,
-            profileId,
-            this.packageId,
-            name,
-            imageUrl,
-            description,
-            data,
-        );
-
-        const signedTx = await signTransaction({
-            transactionBlock: tx,
-            chain: `sui:${this.network}`,
-        });
-        const resp = await this.suiClient.executeTransactionBlock({
-            transactionBlock: signedTx.transactionBlockBytes,
-            signature: signedTx.signature,
-            options: {
-                showEffects: true,
-            },
-        });
-
-        // Verify the transaction results
-        const effects = resp.effects!;
-        if (effects.status.status !== "success") {
-            throw new Error(effects.status.error);
-        }
-        return resp;
     }
 
     public async getProfileByOwner(
@@ -224,7 +184,7 @@ export class ProfileClient
         const promises = addressBatches.map(async (batch) =>
         {
             const tx = new Transaction();
-            pkg.get_profiles(tx, this.packageId, this.registryId, batch);
+            get_profiles(tx, this.packageId, this.registryId, batch);
             const blockResults = await devInspectAndGetResults(this.suiClient, tx);
 
             const valueDeserialized = deserializeResults(blockResults);

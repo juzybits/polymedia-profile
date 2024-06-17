@@ -1,4 +1,4 @@
-import { NetworkName } from "./types";
+import { NetworkName } from "./types.js";
 
 export type NetworkConfig = {
     packageId: string;
