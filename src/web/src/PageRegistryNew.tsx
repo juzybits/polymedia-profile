@@ -50,7 +50,8 @@ export function PageRegistryNew()
                     + `Txn status: ${resp.effects?.status.status}\n`
                     + `Txn errors: ${JSON.stringify(resp.errors)}`);
             }
-        } catch(err) {
+        } catch (err) {
+            console.warn("[onSubmitCreateRegistry]", err);
             notifyError(String(err));
         } finally {
             setWaiting(false);

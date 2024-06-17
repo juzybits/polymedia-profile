@@ -118,10 +118,9 @@ const App: React.FC<{
             setProfile(result);
             return result;
         })
-        .catch(error => {
-            const errorString = String(error);
-            console.warn("[reloadProfile] Error:", errorString);
-            notifyError(errorString);
+        .catch(err => {
+            console.warn("[reloadProfile]", err);
+            notifyError(String(err));
             return undefined;
         });
     };

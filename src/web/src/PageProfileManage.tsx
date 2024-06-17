@@ -107,8 +107,9 @@ export const PageProfileManage: React.FC = () =>
                 notifyOkay("SUCCESS");
                 reloadProfile();
             }
-        } catch(err) {
-            showError("onSubmitCreateProfile", err);
+        } catch (err) {
+            console.warn(`[onSubmitCreateProfile]`, err);
+            notifyError(String(err));
         } finally {
             setWaiting(false);
         }
@@ -158,8 +159,9 @@ export const PageProfileManage: React.FC = () =>
                 notifyOkay("SUCCESS");
                 reloadProfile();
             }
-        } catch(error) {
-            showError("onSubmitEditProfile", error);
+        } catch (err) {
+            console.warn(`[onSubmitEditProfile]`, err);
+            notifyError(String(err));
         } finally {
             setWaiting(false);
         }
@@ -248,10 +250,4 @@ export const PageProfileManage: React.FC = () =>
         {imageSection}
         {infoSection}
     </div>;
-};
-
-function showError(origin: string, err: unknown): void
-{
-    notifyError(String(err));
-    console.warn(`[${origin}]`, err);
 };
