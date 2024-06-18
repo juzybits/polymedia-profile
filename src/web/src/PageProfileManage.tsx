@@ -108,7 +108,7 @@ export const PageProfileManage: React.FC = () =>
                 reloadProfile();
             }
         } catch (err) {
-            console.warn(`[onSubmitCreateProfile]`, err);
+            console.warn("[onSubmitCreateProfile]", err);
             notifyError(String(err));
         } finally {
             setWaiting(false);
@@ -160,7 +160,7 @@ export const PageProfileManage: React.FC = () =>
                 reloadProfile();
             }
         } catch (err) {
-            console.warn(`[onSubmitEditProfile]`, err);
+            console.warn("[onSubmitEditProfile]", err);
             notifyError(String(err));
         } finally {
             setWaiting(false);
