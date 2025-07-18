@@ -51,8 +51,8 @@ export const AppRouter: React.FC = () => {
 
 /* Sui providers + network config */
 
-export const supportedNetworks = ["mainnet", "testnet", "devnet", "localnet"] as const;
-export type NetworkName = (typeof supportedNetworks)[number];
+export const supportedNetworks = ["localnet", "devnet", "testnet", "mainnet"] as const;
+export type SupportedNetwork = (typeof supportedNetworks)[number];
 
 const { networkConfig } = createNetworkConfig({
 	mainnet: { url: getFullnodeUrl("mainnet") },
@@ -78,7 +78,7 @@ const AppSuiProviders: React.FC = () => {
 /* App */
 
 export type AppContext = {
-	network: NetworkName;
+	network: SupportedNetwork;
 	profile: PolymediaProfile | null | undefined;
 	profileClient: ProfileClient;
 	reloadProfile: () => Promise<PolymediaProfile | null | undefined>;
@@ -86,8 +86,8 @@ export type AppContext = {
 };
 
 const App: React.FC<{
-	network: NetworkName;
-	setNetwork: Setter<NetworkName>;
+	network: SupportedNetwork;
+	setNetwork: Setter<SupportedNetwork>;
 }> = ({ network, setNetwork }) => {
 	const [profile, setProfile] = useState<PolymediaProfile | null | undefined>(undefined);
 	const [showConnectModal, setShowConnectModal] = useState(false);
@@ -126,7 +126,7 @@ const App: React.FC<{
 
 	useEffect(() => {
 		reloadProfile();
-	}, [reloadProfile]);
+	}, [currAcct, profileClient]);
 
 	const openConnectModal = (): void => {
 		setShowConnectModal(true);
