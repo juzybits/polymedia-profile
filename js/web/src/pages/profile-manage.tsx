@@ -239,18 +239,14 @@ export const PageProfileManage: React.FC = () => {
 		);
 	}
 
-	const imageSection = !inputImage ? (
-		<></>
-	) : (
+	const imageSection = inputImage && (
 		<div className={`section section-image ${isErrorImage ? "hidden" : ""}`}>
 			<h2>Image preview</h2>
 			<img src={inputImage} onLoad={onImageLoad} onError={onImageError} />
 		</div>
 	);
 
-	const infoSection = !profile ? (
-		<></>
-	) : (
+	const infoSection = profile && (
 		<div className="section section-info">
 			<h2>Details</h2>
 			<p>

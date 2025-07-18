@@ -287,6 +287,7 @@ function suiObjectToProfile(resp: SuiObjectResponse): PolymediaProfile | null {
 		throw new Error("Expected an owned object");
 	}
 
+	// biome-ignore lint/suspicious/noExplicitAny: cause i say so
 	const fields: Record<string, any> = content.fields;
 	return {
 		id: fields.id.id,

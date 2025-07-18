@@ -137,7 +137,7 @@ const NavProfile: React.FC<{
 	const { mutate: disconnect } = useDisconnectWallet();
 
 	if (!currAcct) {
-		return <></>;
+		return null;
 	}
 
 	if (profile === undefined) {
