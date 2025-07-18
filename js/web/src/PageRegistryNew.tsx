@@ -31,7 +31,7 @@ export function PageRegistryNew() {
 		setWaiting(true);
 		try {
 			const tx = new Transaction();
-			create_registry(tx, profileClient.packageId, inputName);
+			create_registry(tx, profileClient.profilePkgId, inputName);
 
 			const signedTx = await signTransaction({
 				transaction: tx,

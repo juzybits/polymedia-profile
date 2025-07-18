@@ -2,10 +2,15 @@ import type {
 	SuiClient,
 	SuiExecutionResult,
 	SuiObjectResponse,
+	SuiTransactionBlockResponseOptions,
 } from "@mysten/sui/client";
 import { Transaction } from "@mysten/sui/transactions";
-import type { NetworkName } from "@polymedia/suitcase-core";
-import { PROFILE_IDS } from "./config.js";
+import {
+	type SignTx,
+	SuiClientBase,
+	type WaitForTxOptions,
+} from "@polymedia/suitcase-core";
+import { NETWORK_IDS } from "./config.js";
 import { chunkArray, devInspectAndGetResults } from "./functions.js";
 import { get_profiles } from "./package.js";
 import { BcsLookupResults, type LookupResults, type PolymediaProfile } from "./types.js";
@@ -14,24 +19,28 @@ import { BcsLookupResults, type LookupResults, type PolymediaProfile } from "./t
  * Helps fetching Polymedia Profile data from the network.
  * Keeps an internal cache to avoid wasteful RPC requests.
  */
-export class ProfileClient {
+export class ProfileClient extends SuiClientBase {
+	public readonly profilePkgId: string;
+	public readonly registryId: string;
 	protected readonly cachedAddresses = new Map<string, PolymediaProfile | null>();
 	protected readonly cachedObjects = new Map<string, PolymediaProfile | null>();
-	public readonly network: NetworkName;
-	public readonly suiClient: SuiClient;
-	public readonly packageId: string;
-	public readonly registryId: string;
 
-	constructor(
-		network: NetworkName,
-		suiClient: SuiClient,
-		packageId?: string,
-		registryId?: string,
-	) {
-		this.network = network;
-		this.suiClient = suiClient;
-		this.packageId = packageId || PROFILE_IDS[network].packageId;
-		this.registryId = registryId || PROFILE_IDS[network].registryId;
+	constructor(args: {
+		profilePkgId: string;
+		registryId: string;
+		suiClient: SuiClient;
+		signTx: SignTx;
+		waitForTxOptions?: WaitForTxOptions;
+		txRespOptions?: SuiTransactionBlockResponseOptions;
+	}) {
+		super({
+			suiClient: args.suiClient,
+			signTx: args.signTx,
+			waitForTxOptions: args.waitForTxOptions,
+			txRespOptions: args.txRespOptions,
+		});
+		this.profilePkgId = args.profilePkgId;
+		this.registryId = args.registryId;
 	}
 
 	/**
@@ -193,7 +202,7 @@ export class ProfileClient {
 		const addressBatches = chunkArray(lookupAddresses, 30);
 		const promises = addressBatches.map(async (batch) => {
 			const tx = new Transaction();
-			get_profiles(tx, this.packageId, this.registryId, batch);
+			get_profiles(tx, this.profilePkgId, this.registryId, batch);
 			const blockResults = await devInspectAndGetResults(this.suiClient, tx);
 
 			const valueDeserialized = deserializeResults(blockResults);

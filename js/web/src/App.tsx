@@ -3,15 +3,20 @@ import {
 	createNetworkConfig,
 	SuiClientProvider,
 	useCurrentAccount,
+	useSignTransaction,
 	useSuiClient,
 	WalletProvider,
 } from "@mysten/dapp-kit";
 import "@mysten/dapp-kit/dist/index.css";
 import { getFullnodeUrl } from "@mysten/sui/client";
-import { type PolymediaProfile, ProfileClient } from "@polymedia/profile-sdk";
+import {
+	NETWORK_IDS,
+	type PolymediaProfile,
+	ProfileClient,
+} from "@polymedia/profile-sdk";
 import { loadNetwork, type Setter } from "@polymedia/suitcase-react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
 import { notifyError } from "./components/Notification";
 import { Nav } from "./Nav";
@@ -84,18 +89,21 @@ const App: React.FC<{
 	network: NetworkName;
 	setNetwork: Setter<NetworkName>;
 }> = ({ network, setNetwork }) => {
-	const suiClient = useSuiClient();
-	const currentAccount = useCurrentAccount();
-
 	const [profile, setProfile] = useState<PolymediaProfile | null | undefined>(undefined);
 	const [showConnectModal, setShowConnectModal] = useState(false);
-	const [profileClient, setProfileManager] = useState<ProfileClient>(
-		new ProfileClient(network, suiClient),
-	);
 
-	useEffect(() => {
-		setProfileManager(new ProfileClient(network, suiClient));
-	}, [network, suiClient]);
+	const suiClient = useSuiClient();
+	const currentAccount = useCurrentAccount();
+	const { mutateAsync: walletSignTx } = useSignTransaction();
+
+	const profileClient = useMemo(() => {
+		return new ProfileClient({
+			profilePkgId: NETWORK_IDS[network].packageId,
+			registryId: NETWORK_IDS[network].registryId,
+			suiClient,
+			signTx: (tx) => walletSignTx({ transaction: tx }),
+		});
+	}, [suiClient, walletSignTx]);
 
 	const reloadProfile = async (): Promise<PolymediaProfile | null | undefined> => {
 		if (!currentAccount) {

@@ -72,7 +72,7 @@ export const PageProfileManage: React.FC = () => {
 			const tx = new Transaction();
 			create_profile(
 				tx,
-				profileClient.packageId,
+				profileClient.profilePkgId,
 				profileClient.registryId,
 				inputName,
 				inputImage,
@@ -126,7 +126,7 @@ export const PageProfileManage: React.FC = () => {
 			edit_profile(
 				tx,
 				profile.id,
-				profileClient.packageId,
+				profileClient.profilePkgId,
 				inputName,
 				inputImage,
 				inputDescription,
