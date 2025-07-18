@@ -6,11 +6,12 @@ import type {
 } from "@mysten/sui/client";
 import { Transaction } from "@mysten/sui/transactions";
 import {
+	chunkArray,
+	devInspectAndGetExecutionResults,
 	type SignTx,
 	SuiClientBase,
 	type WaitForTxOptions,
 } from "@polymedia/suitcase-core";
-import { chunkArray, devInspectAndGetResults } from "./functions.js";
 import { get_profiles } from "./package.js";
 import { BcsLookupResults, type LookupResults, type PolymediaProfile } from "./types.js";
 
@@ -202,7 +203,7 @@ export class ProfileClient extends SuiClientBase {
 		const promises = addressBatches.map(async (batch) => {
 			const tx = new Transaction();
 			get_profiles(tx, this.profilePkgId, this.registryId, batch);
-			const blockResults = await devInspectAndGetResults(this.suiClient, tx);
+			const blockResults = await devInspectAndGetExecutionResults(this.suiClient, tx);
 
 			const valueDeserialized = deserializeResults(blockResults);
 			for (const result of valueDeserialized) {
