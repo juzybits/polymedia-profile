@@ -38,6 +38,9 @@ importers:
       '@mysten/sui':
         specifier: ^1.36.0
         version: 1.36.0(typescript@5.8.3)
+      '@mysten/walrus':
+        specifier: ^0.3.0
+        version: 0.3.0(typescript@5.8.3)
       '@polymedia/profile-sdk':
         specifier: workspace:*
         version: link:../sdk
@@ -694,6 +697,12 @@ packages:
   '@mysten/wallet-standard@0.16.5':
     resolution: {integrity: sha512-dd6/P9J7LD+ibT6DFHhsdvZTu7dtZ/DYL4t6OAdKwwFBKPFOKI2W+hWQ+MqGZaYoBmY3IL3O48SLjiAc4dW3pg==}
 
+  '@mysten/walrus-wasm@0.1.0':
+    resolution: {integrity: sha512-sCTFzzbMImfd9nKZM/wgRBa8P6miLk6BbEdqKft+UIgmJyvd60DV4+hXvIoVIYTSdgP7FUIgu+9If1hVfvv5BA==}
+
+  '@mysten/walrus@0.3.0':
+    resolution: {integrity: sha512-ry/x/KwZTxyv7nFQrb/y/g/AiEqNp+duM3P+wAIYgPw8LThAaewyVdodHJywUrU8yNUBvRJnDRnTOZHjwJ++Kw==}
+
   '@mysten/window-wallet-core@0.0.6':
     resolution: {integrity: sha512-uYjdUVok0pAaMGMxAdZfmW+2SCXgdQok9YtKmno5Tj8zlRQGv9Qet7EuCnDcBKquSbtqid3yhug7fcD+t8/KmA==}
 
@@ -1323,6 +1332,9 @@ packages:
 
   csstype@3.1.3:
     resolution: {integrity: sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw==}
+
+  dataloader@2.2.3:
+    resolution: {integrity: sha512-y2krtASINtPFS1rSDjacrFgn1dcUuoREVabwlOGOe4SdxenREqwjwjElAdwvbGM7kgZz9a3KVicWR7vcz8rnzA==}
 
   dedent@1.6.0:
     resolution: {integrity: sha512-F1Z+5UCFpmQUzJa11agbyPVMbpgT/qA3/SKyJ1jyBgm7dUcUEa8v9JwDkerSQXfakBwFljIxhOJqGkjUwZ9FSA==}
@@ -2235,6 +2247,20 @@ snapshots:
       - '@gql.tada/vue-support'
       - typescript
 
+  '@mysten/walrus-wasm@0.1.0': {}
+
+  '@mysten/walrus@0.3.0(typescript@5.8.3)':
+    dependencies:
+      '@mysten/bcs': 1.6.4
+      '@mysten/sui': 1.36.0(typescript@5.8.3)
+      '@mysten/utils': 0.1.1
+      '@mysten/walrus-wasm': 0.1.0
+      dataloader: 2.2.3
+    transitivePeerDependencies:
+      - '@gql.tada/svelte-support'
+      - '@gql.tada/vue-support'
+      - typescript
+
   '@mysten/window-wallet-core@0.0.6':
     dependencies:
       '@mysten/utils': 0.1.1
@@ -2787,6 +2813,8 @@ snapshots:
   cssesc@3.0.0: {}
 
   csstype@3.1.3: {}
+
+  dataloader@2.2.3: {}
 
   dedent@1.6.0: {}
 

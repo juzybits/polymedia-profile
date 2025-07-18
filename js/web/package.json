@@ -16,6 +16,7 @@
 	"dependencies": {
 		"@mysten/dapp-kit": "^0.16.15",
 		"@mysten/sui": "^1.36.0",
+		"@mysten/walrus": "^0.3.0",
 		"@polymedia/profile-sdk": "workspace:*",
 		"@polymedia/suitcase-core": "^0.0.60",
 		"@polymedia/suitcase-react": "^0.0.60",
