@@ -11,7 +11,7 @@ export function PageRegistryNew() {
 		document.title = "Polymedia Profile - New Registry";
 	}, []);
 
-	const currentAccount = useCurrentAccount();
+	const currAcct = useCurrentAccount();
 
 	const { profileClient, openConnectModal } = useOutletContext<AppContext>();
 
@@ -20,7 +20,7 @@ export function PageRegistryNew() {
 
 	const onSubmitCreateRegistry = async (e: SyntheticEvent) => {
 		e.preventDefault();
-		if (!currentAccount) {
+		if (!currAcct) {
 			openConnectModal();
 			return;
 		}

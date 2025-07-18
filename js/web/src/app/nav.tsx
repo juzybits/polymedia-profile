@@ -9,7 +9,7 @@ import {
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { supportedNetworks } from "./app";
-import "./styles/nav.less";
+import "../styles/nav.less";
 
 export const Nav: React.FC<{
 	network: NetworkName;
@@ -17,7 +17,7 @@ export const Nav: React.FC<{
 	openConnectModal: () => void;
 	profile: PolymediaProfile | null | undefined;
 }> = ({ network, setNetwork, openConnectModal, profile }) => {
-	const currentAccount = useCurrentAccount();
+	const currAcct = useCurrentAccount();
 
 	const [showMobileNav, setShowMobileNav] = useState(false);
 	const toggleMobileNav = () => {
@@ -50,7 +50,7 @@ export const Nav: React.FC<{
 
 			<div id="nav-sections-wrap" className={showMobileNav ? "open" : ""}>
 				<div id="nav-user" className="nav-section">
-					{!currentAccount ? (
+					{!currAcct ? (
 						<span id="nav-btn-connect" onClick={openConnectModal}>
 							LOG IN
 						</span>
@@ -140,10 +140,10 @@ export const Nav: React.FC<{
 const NavProfile: React.FC<{
 	profile: PolymediaProfile | null | undefined;
 }> = ({ profile }) => {
-	const currentAccount = useCurrentAccount();
+	const currAcct = useCurrentAccount();
 	const { mutate: disconnect } = useDisconnectWallet();
 
-	if (!currentAccount) {
+	if (!currAcct) {
 		return <></>;
 	}
 
@@ -163,7 +163,7 @@ const NavProfile: React.FC<{
 			</div>
 			<div id="nav-profile-name-wrap">
 				<div id="nav-profile-name">{profile ? profile.name : "Anon"}</div>
-				<div id="nav-profile-address">{shortenAddress(currentAccount.address)}</div>
+				<div id="nav-profile-address">{shortenAddress(currAcct.address)}</div>
 			</div>
 		</div>
 	);

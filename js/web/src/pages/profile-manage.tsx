@@ -11,7 +11,7 @@ import "../styles/manage-profile.less";
 export const PageProfileManage: React.FC = () => {
 	/* State */
 
-	const currentAccount = useCurrentAccount();
+	const currAcct = useCurrentAccount();
 
 	const { network, profile, profileClient, reloadProfile, openConnectModal } =
 		useOutletContext<AppContext>();
@@ -61,7 +61,7 @@ export const PageProfileManage: React.FC = () => {
 
 	const onSubmitCreateProfile = async (e: SyntheticEvent) => {
 		e.preventDefault();
-		if (!currentAccount) {
+		if (!currAcct) {
 			openConnectModal();
 			return;
 		}
@@ -102,7 +102,7 @@ export const PageProfileManage: React.FC = () => {
 
 	const onSubmitEditProfile = async (e: SyntheticEvent) => {
 		e.preventDefault();
-		if (!currentAccount) {
+		if (!currAcct) {
 			openConnectModal();
 			return;
 		}
@@ -148,7 +148,7 @@ export const PageProfileManage: React.FC = () => {
 	/* HTML */
 
 	let view: React.ReactNode;
-	if (!currentAccount) {
+	if (!currAcct) {
 		view = (
 			<div>
 				<p>

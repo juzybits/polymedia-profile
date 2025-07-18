@@ -93,7 +93,7 @@ const App: React.FC<{
 	const [showConnectModal, setShowConnectModal] = useState(false);
 
 	const suiClient = useSuiClient();
-	const currentAccount = useCurrentAccount();
+	const currAcct = useCurrentAccount();
 	const { mutateAsync: walletSignTx } = useSignTransaction();
 
 	const profileClient = useMemo(() => {
@@ -106,12 +106,12 @@ const App: React.FC<{
 	}, [suiClient, walletSignTx, network]);
 
 	const reloadProfile = async (): Promise<PolymediaProfile | null | undefined> => {
-		if (!currentAccount) {
+		if (!currAcct) {
 			setProfile(undefined);
 			return undefined;
 		}
 		return await profileClient
-			.getProfileByOwner(currentAccount.address, false)
+			.getProfileByOwner(currAcct.address, false)
 			.then((result: PolymediaProfile | null) => {
 				console.debug("[reloadProfile] Setting profile:", result);
 				setProfile(result);
