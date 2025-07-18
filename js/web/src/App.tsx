@@ -103,7 +103,7 @@ const App: React.FC<{
 			suiClient,
 			signTx: (tx) => walletSignTx({ transaction: tx }),
 		});
-	}, [suiClient, walletSignTx]);
+	}, [suiClient, walletSignTx, network]);
 
 	const reloadProfile = async (): Promise<PolymediaProfile | null | undefined> => {
 		if (!currentAccount) {
@@ -143,7 +143,7 @@ const App: React.FC<{
 	return (
 		<>
 			<ConnectModal
-				trigger={<></>}
+				trigger={<button style={{ display: "none" }} />}
 				open={showConnectModal}
 				onOpenChange={(isOpen) => {
 					setShowConnectModal(isOpen);

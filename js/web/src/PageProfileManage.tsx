@@ -1,4 +1,4 @@
-import { useCurrentAccount, useSignTransaction } from "@mysten/dapp-kit";
+import { useCurrentAccount } from "@mysten/dapp-kit";
 import { Transaction } from "@mysten/sui/transactions";
 import { create_profile, edit_profile } from "@polymedia/profile-sdk";
 import { LinkToPolymedia } from "@polymedia/suitcase-react";
@@ -12,7 +12,6 @@ export const PageProfileManage: React.FC = () => {
 	/* State */
 
 	const currentAccount = useCurrentAccount();
-	const { mutateAsync: signTransaction } = useSignTransaction();
 
 	const { network, profile, profileClient, reloadProfile, openConnectModal } =
 		useOutletContext<AppContext>();
@@ -80,15 +79,7 @@ export const PageProfileManage: React.FC = () => {
 				null,
 			);
 
-			const signedTx = await signTransaction({
-				transaction: tx,
-			});
-
-			const resp = await profileClient.suiClient.executeTransactionBlock({
-				transactionBlock: signedTx.bytes,
-				signature: signedTx.signature,
-				options: { showEffects: true },
-			});
+			const resp = await profileClient.signAndExecuteTx({ tx });
 			console.debug("resp:", resp);
 
 			if (resp.errors || resp.effects?.status.status !== "success") {
@@ -133,15 +124,7 @@ export const PageProfileManage: React.FC = () => {
 				null,
 			);
 
-			const signedTx = await signTransaction({
-				transaction: tx,
-			});
-
-			const resp = await profileClient.suiClient.executeTransactionBlock({
-				transactionBlock: signedTx.bytes,
-				signature: signedTx.signature,
-				options: { showEffects: true },
-			});
+			const resp = await profileClient.signAndExecuteTx({ tx });
 			console.debug("resp:", resp);
 
 			if (resp.errors || resp.effects?.status.status !== "success") {

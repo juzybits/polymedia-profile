@@ -1,4 +1,4 @@
-import { useCurrentAccount, useSignTransaction } from "@mysten/dapp-kit";
+import { useCurrentAccount } from "@mysten/dapp-kit";
 import { Transaction } from "@mysten/sui/transactions";
 import { create_registry } from "@polymedia/profile-sdk";
 import { type SyntheticEvent, useEffect, useState } from "react";
@@ -12,7 +12,6 @@ export function PageRegistryNew() {
 	}, []);
 
 	const currentAccount = useCurrentAccount();
-	const { mutateAsync: signTransaction } = useSignTransaction();
 
 	const { profileClient, openConnectModal } = useOutletContext<AppContext>();
 
@@ -33,15 +32,7 @@ export function PageRegistryNew() {
 			const tx = new Transaction();
 			create_registry(tx, profileClient.profilePkgId, inputName);
 
-			const signedTx = await signTransaction({
-				transaction: tx,
-			});
-
-			const resp = await profileClient.suiClient.executeTransactionBlock({
-				transactionBlock: signedTx.bytes,
-				signature: signedTx.signature,
-				options: { showEffects: true },
-			});
+			const resp = await profileClient.signAndExecuteTx({ tx });
 			console.debug("resp:", resp);
 
 			if (resp.errors || resp.effects?.status.status !== "success") {

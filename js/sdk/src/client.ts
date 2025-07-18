@@ -10,7 +10,6 @@ import {
 	SuiClientBase,
 	type WaitForTxOptions,
 } from "@polymedia/suitcase-core";
-import { NETWORK_IDS } from "./config.js";
 import { chunkArray, devInspectAndGetResults } from "./functions.js";
 import { get_profiles } from "./package.js";
 import { BcsLookupResults, type LookupResults, type PolymediaProfile } from "./types.js";
