@@ -17,11 +17,6 @@ export const PageProfileView: React.FC = () => {
 
 	/* Functions */
 
-	useEffect(() => {
-		document.title = "Polymedia Profile - View";
-		loadProfile();
-	}, [loadProfile]);
-
 	const loadProfile = async (): Promise<void> => {
 		return await profileClient
 			.getProfileById(profileId)
@@ -41,6 +36,11 @@ export const PageProfileView: React.FC = () => {
 				notifyError(String(err));
 			});
 	};
+
+	useEffect(() => {
+		document.title = "Polymedia Profile - View";
+		loadProfile();
+	}, [loadProfile]);
 
 	let view: React.ReactNode;
 

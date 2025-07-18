@@ -9,7 +9,7 @@ import {
 import "@mysten/dapp-kit/dist/index.css";
 import { getFullnodeUrl } from "@mysten/sui/client";
 import { type PolymediaProfile, ProfileClient } from "@polymedia/profile-sdk";
-import { loadNetwork } from "@polymedia/suitcase-react";
+import { loadNetwork, type Setter } from "@polymedia/suitcase-react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
@@ -46,13 +46,14 @@ export const AppRouter: React.FC = () => {
 
 /* Sui providers + network config */
 
-export const supportedNetworks = ["mainnet", "testnet", "devnet"] as const;
+export const supportedNetworks = ["mainnet", "testnet", "devnet", "localnet"] as const;
 export type NetworkName = (typeof supportedNetworks)[number];
 
 const { networkConfig } = createNetworkConfig({
 	mainnet: { url: getFullnodeUrl("mainnet") },
 	testnet: { url: getFullnodeUrl("testnet") },
 	devnet: { url: getFullnodeUrl("devnet") },
+	localnet: { url: getFullnodeUrl("localnet") },
 });
 
 const queryClient = new QueryClient();
@@ -62,7 +63,7 @@ const AppSuiProviders: React.FC = () => {
 		<QueryClientProvider client={queryClient}>
 			<SuiClientProvider networks={networkConfig} network={network}>
 				<WalletProvider autoConnect={true}>
-					<App network={network} _setNetwork={setNetwork} />
+					<App network={network} setNetwork={setNetwork} />
 				</WalletProvider>
 			</SuiClientProvider>
 		</QueryClientProvider>
@@ -70,8 +71,6 @@ const AppSuiProviders: React.FC = () => {
 };
 
 /* App */
-
-export type ReactSetter<T> = React.Dispatch<React.SetStateAction<T>>;
 
 export type AppContext = {
 	network: NetworkName;
@@ -83,8 +82,8 @@ export type AppContext = {
 
 const App: React.FC<{
 	network: NetworkName;
-	_setNetwork: ReactSetter<NetworkName>;
-}> = ({ network }) => {
+	setNetwork: Setter<NetworkName>;
+}> = ({ network, setNetwork }) => {
 	const suiClient = useSuiClient();
 	const currentAccount = useCurrentAccount();
 
@@ -97,10 +96,6 @@ const App: React.FC<{
 	useEffect(() => {
 		setProfileManager(new ProfileClient(network, suiClient));
 	}, [network, suiClient]);
-
-	useEffect(() => {
-		reloadProfile();
-	}, [reloadProfile]);
 
 	const reloadProfile = async (): Promise<PolymediaProfile | null | undefined> => {
 		if (!currentAccount) {
@@ -120,6 +115,10 @@ const App: React.FC<{
 				return undefined;
 			});
 	};
+
+	useEffect(() => {
+		reloadProfile();
+	}, [reloadProfile]);
 
 	const openConnectModal = (): void => {
 		setShowConnectModal(true);
@@ -145,7 +144,12 @@ const App: React.FC<{
 
 			<div id="layout">
 				{/* #nav */}
-				<Nav network={network} openConnectModal={openConnectModal} profile={profile} />
+				<Nav
+					network={network}
+					setNetwork={setNetwork}
+					openConnectModal={openConnectModal}
+					profile={profile}
+				/>
 				{/* #page */}
 				<Outlet context={appContext} />
 				<div id="filler-section"></div>

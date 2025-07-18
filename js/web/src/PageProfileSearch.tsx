@@ -1,12 +1,12 @@
 import type { PolymediaProfile } from "@polymedia/profile-sdk";
-import { ADDRESS_REGEX } from "@polymedia/suitcase-core";
+import { REGEX_ADDRESS } from "@polymedia/suitcase-core";
 import { LinkToPolymedia, makeCssUrl } from "@polymedia/suitcase-react";
 import { useEffect, useState } from "react";
 import { Link, useOutletContext } from "react-router-dom";
 import type { AppContext } from "./App";
 import "./styles/SearchProfiles.less";
 
-const addressRegex = new RegExp(ADDRESS_REGEX, "g");
+const addressRegex = new RegExp(REGEX_ADDRESS, "g");
 
 export const PageProfileSearch: React.FC = () => {
 	/* State */

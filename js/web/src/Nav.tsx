@@ -1,7 +1,11 @@
 import { useCurrentAccount, useDisconnectWallet } from "@mysten/dapp-kit";
 import type { PolymediaProfile } from "@polymedia/profile-sdk";
-import { type NetworkName, shortenSuiAddress } from "@polymedia/suitcase-core";
-import { isLocalhost, NetworkSelector } from "@polymedia/suitcase-react";
+import { type NetworkName, shortenAddress } from "@polymedia/suitcase-core";
+import {
+	isLocalhost,
+	NetworkRadioSelector,
+	type Setter,
+} from "@polymedia/suitcase-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { supportedNetworks } from "./App";
@@ -9,9 +13,10 @@ import "./styles/Nav.less";
 
 export const Nav: React.FC<{
 	network: NetworkName;
+	setNetwork: Setter<NetworkName>;
 	openConnectModal: () => void;
 	profile: PolymediaProfile | null | undefined;
-}> = ({ network, openConnectModal, profile }) => {
+}> = ({ network, setNetwork, openConnectModal, profile }) => {
 	const currentAccount = useCurrentAccount();
 
 	const [showMobileNav, setShowMobileNav] = useState(false);
@@ -53,9 +58,10 @@ export const Nav: React.FC<{
 						<NavProfile profile={profile} />
 					)}
 					{showNetworkSelector && (
-						<NetworkSelector
-							currentNetwork={network}
+						<NetworkRadioSelector
+							selectedNetwork={network}
 							supportedNetworks={supportedNetworks}
+							onSwitch={setNetwork}
 						/>
 					)}
 				</div>
@@ -157,7 +163,7 @@ const NavProfile: React.FC<{
 			</div>
 			<div id="nav-profile-name-wrap">
 				<div id="nav-profile-name">{profile ? profile.name : "Anon"}</div>
-				<div id="nav-profile-address">{shortenSuiAddress(currentAccount.address)}</div>
+				<div id="nav-profile-address">{shortenAddress(currentAccount.address)}</div>
 			</div>
 		</div>
 	);
