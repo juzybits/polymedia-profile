@@ -4,12 +4,11 @@ import type {
 	SuiObjectResponse,
 } from "@mysten/sui/client";
 import { Transaction } from "@mysten/sui/transactions";
+import type { NetworkName } from "@polymedia/suitcase-core";
 import { PROFILE_IDS } from "./config.js";
 import { chunkArray, devInspectAndGetResults } from "./functions.js";
 import { get_profiles } from "./package.js";
 import { BcsLookupResults, type LookupResults, type PolymediaProfile } from "./types.js";
-
-type NetworkName = "localnet" | "devnet" | "testnet" | "mainnet";
 
 /**
  * Helps fetching Polymedia Profile data from the network.

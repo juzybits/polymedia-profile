@@ -1,6 +1,4 @@
-import { bcs, fromHEX, toHEX } from "@mysten/bcs";
-
-export type NetworkName = "mainnet" | "testnet" | "devnet" | "localnet";
+import { bcs, fromHex, toHex } from "@mysten/bcs";
 
 /**
  * Represents a `polymedia_profile::profile::Profile` Sui object
@@ -15,8 +13,8 @@ export type PolymediaProfile = {
 };
 
 const BcsAddressType = bcs.bytes(32).transform({
-	input: (val: string) => fromHEX(val),
-	output: (val) => toHEX(val),
+	input: (val: string) => fromHex(val),
+	output: (val) => toHex(val),
 });
 
 export type LookupResults = typeof BcsLookupResults.$inferType;

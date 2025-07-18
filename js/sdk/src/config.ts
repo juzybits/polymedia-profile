@@ -1,4 +1,4 @@
-import type { NetworkName } from "./types.js";
+import type { NetworkName } from "@polymedia/suitcase-core";
 
 export type NetworkConfig = {
 	packageId: string;
