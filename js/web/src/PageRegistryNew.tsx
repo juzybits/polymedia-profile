@@ -1,4 +1,4 @@
-import { useCurrentAccount, useSignTransaction, useSuiClient } from "@mysten/dapp-kit";
+import { useCurrentAccount, useSignTransaction } from "@mysten/dapp-kit";
 import { Transaction } from "@mysten/sui/transactions";
 import { create_registry } from "@polymedia/profile-sdk";
 import { type SyntheticEvent, useEffect, useState } from "react";
@@ -11,7 +11,6 @@ export function PageRegistryNew() {
 		document.title = "Polymedia Profile - New Registry";
 	}, []);
 
-	const suiClient = useSuiClient();
 	const currentAccount = useCurrentAccount();
 	const { mutateAsync: signTransaction } = useSignTransaction();
 
@@ -38,7 +37,7 @@ export function PageRegistryNew() {
 				transaction: tx,
 			});
 
-			const resp = await suiClient.executeTransactionBlock({
+			const resp = await profileClient.suiClient.executeTransactionBlock({
 				transactionBlock: signedTx.bytes,
 				signature: signedTx.signature,
 				options: { showEffects: true },

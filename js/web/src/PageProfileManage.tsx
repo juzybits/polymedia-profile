@@ -1,4 +1,4 @@
-import { useCurrentAccount, useSignTransaction, useSuiClient } from "@mysten/dapp-kit";
+import { useCurrentAccount, useSignTransaction } from "@mysten/dapp-kit";
 import { Transaction } from "@mysten/sui/transactions";
 import { create_profile, edit_profile } from "@polymedia/profile-sdk";
 import { LinkToPolymedia } from "@polymedia/suitcase-react";
@@ -11,7 +11,6 @@ import "./styles/ManageProfile.less";
 export const PageProfileManage: React.FC = () => {
 	/* State */
 
-	const suiClient = useSuiClient();
 	const currentAccount = useCurrentAccount();
 	const { mutateAsync: signTransaction } = useSignTransaction();
 
@@ -85,7 +84,7 @@ export const PageProfileManage: React.FC = () => {
 				transaction: tx,
 			});
 
-			const resp = await suiClient.executeTransactionBlock({
+			const resp = await profileClient.suiClient.executeTransactionBlock({
 				transactionBlock: signedTx.bytes,
 				signature: signedTx.signature,
 				options: { showEffects: true },
@@ -138,7 +137,7 @@ export const PageProfileManage: React.FC = () => {
 				transaction: tx,
 			});
 
-			const resp = await suiClient.executeTransactionBlock({
+			const resp = await profileClient.suiClient.executeTransactionBlock({
 				transactionBlock: signedTx.bytes,
 				signature: signedTx.signature,
 				options: { showEffects: true },

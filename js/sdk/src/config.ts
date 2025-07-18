@@ -19,7 +19,7 @@ export const PROFILE_IDS: Record<NetworkName, NetworkConfig> = {
 		registryId: "0xb0220f5db4d58f0b66546fc6c3a9c2e8b832f7b28b3fe1513f287f8979833a6a",
 	},
 	localnet: {
-		packageId: "",
-		registryId: "",
+		packageId: "0xeab0ae42feff4b74d6aa6d254fedc7dc205a1d2d7e08d1587ff15784bde41cbf",
+		registryId: "0x1d073c01f21ecb392e20729f6627ada65acc61e1e1063db509217881686fab34",
 	},
 };

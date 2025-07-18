@@ -52,10 +52,12 @@ A Sui address can own multiple `Profile` objects, but it can only register one `
 `get_profiles` is used to look up `Profile` objects in a `Registry` for a list of potential owner addresses. On the client side, `devInspectTransaction` can be used to query a `Registry` (see the SDK's [README.md](../sdk/README.md)).
 
 ## How to use from the command line
+
 #### Create a registry
 ```
 sui client call --package PACKAGE_ID --gas-budget 10000000 --module profile --function create_registry --args 'polymedia-main'
 ```
+
 #### Create a profile
 ```
 sui client call --package PACKAGE_ID --gas-budget 10000000 --module profile --function create_profile --args REGISTRY_ID 'Mr Guy' 'pfp.jpg' "Follow me on Myspace"
