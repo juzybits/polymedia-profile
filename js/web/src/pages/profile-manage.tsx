@@ -3,8 +3,8 @@ import { Transaction } from "@mysten/sui/transactions";
 import { create_profile, edit_profile } from "@polymedia/profile-sdk";
 import { LinkToPolymedia } from "@polymedia/suitcase-react";
 import { type SyntheticEvent, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { useAppContext } from "../app/context";
-import { notifyError, notifyOkay } from "../components/notification";
 import "../styles/manage-profile.less";
 
 export const PageProfileManage: React.FC = () => {
@@ -78,18 +78,18 @@ export const PageProfileManage: React.FC = () => {
 			console.debug("resp:", resp);
 
 			if (resp.errors || resp.effects?.status.status !== "success") {
-				notifyError(
+				toast.error(
 					`Txn digest: ${resp.digest}\n` +
 						`Txn status: ${resp.effects?.status.status}\n` +
 						`Txn errors: ${JSON.stringify(resp.errors)}`,
 				);
 			} else {
-				notifyOkay("SUCCESS");
+				toast.success("Success");
 				reloadProfile();
 			}
 		} catch (err) {
 			console.warn("[onSubmitCreateProfile]", err);
-			notifyError(String(err));
+			toast.error(String(err));
 		} finally {
 			setWaiting(false);
 		}
@@ -102,7 +102,7 @@ export const PageProfileManage: React.FC = () => {
 			return;
 		}
 		if (!profile) {
-			notifyError("[onSubmitEditProfile] Missing profile");
+			toast.error("[onSubmitEditProfile] Missing profile");
 			return;
 		}
 		console.debug("[onSubmitEditProfile] Attempting to edit profile");
@@ -123,18 +123,18 @@ export const PageProfileManage: React.FC = () => {
 			console.debug("resp:", resp);
 
 			if (resp.errors || resp.effects?.status.status !== "success") {
-				notifyError(
+				toast.error(
 					`Txn digest: ${resp.digest}\n` +
 						`Txn status: ${resp.effects?.status.status}\n` +
 						`Txn errors: ${JSON.stringify(resp.errors)}`,
 				);
 			} else {
-				notifyOkay("SUCCESS");
+				toast.success("Success");
 				reloadProfile();
 			}
 		} catch (err) {
 			console.warn("[onSubmitEditProfile]", err);
-			notifyError(String(err));
+			toast.error(String(err));
 		} finally {
 			setWaiting(false);
 		}

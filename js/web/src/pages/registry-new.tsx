@@ -2,8 +2,8 @@ import { useCurrentAccount } from "@mysten/dapp-kit";
 import { Transaction } from "@mysten/sui/transactions";
 import { create_registry } from "@polymedia/profile-sdk";
 import { type SyntheticEvent, useState } from "react";
+import toast from "react-hot-toast";
 import { useAppContext } from "../app/context";
-import { notifyError } from "../components/notification";
 
 export function PageRegistryNew() {
 	const currAcct = useCurrentAccount();
@@ -31,7 +31,7 @@ export function PageRegistryNew() {
 			console.debug("resp:", resp);
 
 			if (resp.errors || resp.effects?.status.status !== "success") {
-				notifyError(
+				toast.error(
 					`Txn digest: ${resp.digest}\n` +
 						`Txn status: ${resp.effects?.status.status}\n` +
 						`Txn errors: ${JSON.stringify(resp.errors)}`,
@@ -39,7 +39,7 @@ export function PageRegistryNew() {
 			}
 		} catch (err) {
 			console.warn("[onSubmitCreateRegistry]", err);
-			notifyError(String(err));
+			toast.error(String(err));
 		} finally {
 			setWaiting(false);
 		}

@@ -3,8 +3,8 @@ import { LinkToPolymedia } from "@polymedia/suitcase-react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAppContext } from "../app/context";
-import { notifyError } from "../components/notification";
 import "../styles/view-profile.less";
+import toast from "react-hot-toast";
 
 export const PageProfileView: React.FC = () => {
 	/* State */
@@ -25,7 +25,7 @@ export const PageProfileView: React.FC = () => {
 					if (!profile) {
 						const errorString = `Profile does not exist with ID: ${profileId}`;
 						console.warn("[loadProfile]", errorString);
-						notifyError(errorString);
+						toast.error(errorString);
 					} else {
 						console.debug("[loadProfile] Viewing profile:", profile);
 					}
@@ -33,7 +33,7 @@ export const PageProfileView: React.FC = () => {
 				.catch((err) => {
 					setProfile(null);
 					console.warn("[loadProfile]", err);
-					notifyError(String(err));
+					toast.error(String(err));
 				});
 		};
 		loadProfile();

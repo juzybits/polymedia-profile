@@ -13,8 +13,8 @@ import { type PolymediaProfile, ProfileClient } from "@polymedia/profile-sdk";
 import { loadNetwork, type Setter } from "@polymedia/suitcase-react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
 import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
-import { notifyError } from "../components/notification";
 import { PageDocs } from "../pages/docs";
 import { PageHome } from "../pages/home";
 import { PageNotFound } from "../pages/not-found";
@@ -117,7 +117,7 @@ const App: React.FC<{
 			})
 			.catch((err) => {
 				console.warn("[reloadProfile]", err);
-				notifyError(String(err));
+				toast.error(String(err));
 			});
 	}, [currAcct, profileClient]);
 
@@ -144,6 +144,7 @@ const App: React.FC<{
 				<Nav />
 				<Outlet /> {/* loads a page/*.tsx */}
 				<div id="filler-section"></div>
+				<Toaster position="bottom-right" />
 				<ConnectModal
 					trigger={<button style={{ display: "none" }} />}
 					open={showConnectModal}
