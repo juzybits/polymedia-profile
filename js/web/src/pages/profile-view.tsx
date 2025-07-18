@@ -16,27 +16,26 @@ export const PageProfileView: React.FC = () => {
 
 	/* Functions */
 
-	const loadProfile = async (): Promise<void> => {
-		return profileClient
-			.getProfileById(profileId)
-			.then((profile: PolymediaProfile | null) => {
-				setProfile(profile);
-				if (!profile) {
-					const errorString = `Profile does not exist with ID: ${profileId}`;
-					console.warn("[loadProfile]", errorString);
-					notifyError(errorString);
-				} else {
-					console.debug("[loadProfile] Viewing profile:", profile);
-				}
-			})
-			.catch((err) => {
-				setProfile(null);
-				console.warn("[loadProfile]", err);
-				notifyError(String(err));
-			});
-	};
-
 	useEffect(() => {
+		const loadProfile = async (): Promise<void> => {
+			return profileClient
+				.getProfileById(profileId)
+				.then((profile: PolymediaProfile | null) => {
+					setProfile(profile);
+					if (!profile) {
+						const errorString = `Profile does not exist with ID: ${profileId}`;
+						console.warn("[loadProfile]", errorString);
+						notifyError(errorString);
+					} else {
+						console.debug("[loadProfile] Viewing profile:", profile);
+					}
+				})
+				.catch((err) => {
+					setProfile(null);
+					console.warn("[loadProfile]", err);
+					notifyError(String(err));
+				});
+		};
 		loadProfile();
 	}, [profileId, profileClient]);
 

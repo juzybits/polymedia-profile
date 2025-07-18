@@ -16,7 +16,7 @@ import {
 } from "@polymedia/profile-sdk";
 import { loadNetwork, type Setter } from "@polymedia/suitcase-react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
 import { notifyError } from "../components/notification";
 import { PageDocs } from "../pages/docs";
@@ -107,7 +107,7 @@ const App: React.FC<{
 		});
 	}, [suiClient, walletSignTx, network]);
 
-	const reloadProfile = async (): Promise<void> => {
+	const reloadProfile = useCallback(async (): Promise<void> => {
 		if (!currAcct) {
 			setProfile(undefined);
 			return;
@@ -122,11 +122,11 @@ const App: React.FC<{
 				console.warn("[reloadProfile]", err);
 				notifyError(String(err));
 			});
-	};
+	}, [currAcct, profileClient]);
 
 	useEffect(() => {
 		reloadProfile();
-	}, [currAcct, profileClient]);
+	}, [reloadProfile]);
 
 	const openConnectModal = (): void => {
 		setShowConnectModal(true);
