@@ -110,7 +110,7 @@ const App: React.FC<{
 	const reloadProfile = async (): Promise<void> => {
 		if (!currAcct) {
 			setProfile(undefined);
-			return undefined;
+			return;
 		}
 		await profileClient
 			.getProfileByOwner(currAcct.address, false)

@@ -12,13 +12,12 @@ export const PageProfileView: React.FC = () => {
 	const profileId: string = useParams().profileId || "";
 
 	const { network, profileClient } = useAppContext();
-
 	const [profile, setProfile] = useState<PolymediaProfile | null | undefined>(undefined);
 
 	/* Functions */
 
 	const loadProfile = async (): Promise<void> => {
-		return await profileClient
+		return profileClient
 			.getProfileById(profileId)
 			.then((profile: PolymediaProfile | null) => {
 				setProfile(profile);
@@ -39,7 +38,7 @@ export const PageProfileView: React.FC = () => {
 
 	useEffect(() => {
 		loadProfile();
-	}, [loadProfile]);
+	}, [profileId, profileClient]);
 
 	let view: React.ReactNode;
 
