@@ -144,7 +144,13 @@ const App: React.FC<{
 				<Nav />
 				<Outlet /> {/* loads a page/*.tsx */}
 				<div id="filler-section"></div>
-				<Toaster position="bottom-right" />
+				<Toaster
+					position="bottom-right"
+					toastOptions={{
+						success: { className: "toast toast-success" },
+						error: { className: "toast toast-error" },
+					}}
+				/>
 				<ConnectModal
 					trigger={<button style={{ display: "none" }} />}
 					open={showConnectModal}
