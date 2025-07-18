@@ -9,11 +9,7 @@ import {
 } from "@mysten/dapp-kit";
 import "@mysten/dapp-kit/dist/index.css";
 import { getFullnodeUrl } from "@mysten/sui/client";
-import {
-	NETWORK_IDS,
-	type PolymediaProfile,
-	ProfileClient,
-} from "@polymedia/profile-sdk";
+import { type PolymediaProfile, ProfileClient } from "@polymedia/profile-sdk";
 import { loadNetwork, type Setter } from "@polymedia/suitcase-react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -27,6 +23,7 @@ import { PageProfileSearch } from "../pages/profile-search";
 import { PageProfileView } from "../pages/profile-view";
 import { PageRegistryNew } from "../pages/registry-new";
 import "../styles/app.less";
+import { networkIds } from "./config";
 import { AppContext } from "./context";
 import { Nav } from "./nav";
 
@@ -100,8 +97,8 @@ const App: React.FC<{
 
 	const profileClient = useMemo(() => {
 		return new ProfileClient({
-			profilePkgId: NETWORK_IDS[network].packageId,
-			registryId: NETWORK_IDS[network].registryId,
+			profilePkgId: networkIds[network].packageId,
+			registryId: networkIds[network].registryId,
 			suiClient,
 			signTx: (tx) => walletSignTx({ transaction: tx }),
 		});

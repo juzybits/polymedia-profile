@@ -5,7 +5,7 @@ export type NetworkConfig = {
 	registryId: string;
 };
 
-export const NETWORK_IDS: Record<NetworkName, NetworkConfig> = {
+export const networkIds: Record<NetworkName, NetworkConfig> = {
 	mainnet: {
 		packageId: "0x57138e18b82cc8ea6e92c3d5737d6078b1304b655f59cf5ae9668cc44aad4ead",
 		registryId: "0xd6eb0ca817dfe0763af9303a6bea89b88a524844d78e657dc25ed8ba3877deac",
