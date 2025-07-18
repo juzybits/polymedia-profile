@@ -1,8 +1,8 @@
 import type { PolymediaProfile } from "@polymedia/profile-sdk";
 import { LinkToPolymedia } from "@polymedia/suitcase-react";
 import { useEffect, useState } from "react";
-import { useOutletContext, useParams } from "react-router-dom";
-import type { AppContext } from "../app/app";
+import { useParams } from "react-router-dom";
+import { useAppContext } from "../app/context";
 import { notifyError } from "../components/notification";
 import "../styles/view-profile.less";
 
@@ -11,7 +11,7 @@ export const PageProfileView: React.FC = () => {
 
 	const profileId: string = useParams().profileId || "";
 
-	const { network, profileClient } = useOutletContext<AppContext>();
+	const { network, profileClient } = useAppContext();
 
 	const [profile, setProfile] = useState<PolymediaProfile | null | undefined>(undefined);
 

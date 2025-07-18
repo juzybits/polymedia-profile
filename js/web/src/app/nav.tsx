@@ -1,22 +1,15 @@
 import { useCurrentAccount, useDisconnectWallet } from "@mysten/dapp-kit";
 import type { PolymediaProfile } from "@polymedia/profile-sdk";
-import { type NetworkName, shortenAddress } from "@polymedia/suitcase-core";
-import {
-	isLocalhost,
-	NetworkRadioSelector,
-	type Setter,
-} from "@polymedia/suitcase-react";
+import { shortenAddress } from "@polymedia/suitcase-core";
+import { isLocalhost, NetworkRadioSelector } from "@polymedia/suitcase-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { supportedNetworks } from "./app";
 import "../styles/nav.less";
+import { useAppContext } from "./context";
 
-export const Nav: React.FC<{
-	network: NetworkName;
-	setNetwork: Setter<NetworkName>;
-	openConnectModal: () => void;
-	profile: PolymediaProfile | null | undefined;
-}> = ({ network, setNetwork, openConnectModal, profile }) => {
+export const Nav: React.FC = () => {
+	const { network, setNetwork, openConnectModal, profile } = useAppContext();
 	const currAcct = useCurrentAccount();
 
 	const [showMobileNav, setShowMobileNav] = useState(false);

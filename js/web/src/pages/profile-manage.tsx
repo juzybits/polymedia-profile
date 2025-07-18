@@ -3,8 +3,7 @@ import { Transaction } from "@mysten/sui/transactions";
 import { create_profile, edit_profile } from "@polymedia/profile-sdk";
 import { LinkToPolymedia } from "@polymedia/suitcase-react";
 import { type SyntheticEvent, useEffect, useState } from "react";
-import { useOutletContext } from "react-router-dom";
-import type { AppContext } from "../app/app";
+import { useAppContext } from "../app/context";
 import { notifyError, notifyOkay } from "../components/notification";
 import "../styles/manage-profile.less";
 
@@ -14,7 +13,7 @@ export const PageProfileManage: React.FC = () => {
 	const currAcct = useCurrentAccount();
 
 	const { network, profile, profileClient, reloadProfile, openConnectModal } =
-		useOutletContext<AppContext>();
+		useAppContext();
 
 	// Form inputs
 	const [inputName, setInputName] = useState("");

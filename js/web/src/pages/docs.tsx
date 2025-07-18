@@ -1,14 +1,13 @@
 import { makePolymediaUrl } from "@polymedia/suitcase-core";
 import { useEffect } from "react";
-import { useOutletContext } from "react-router-dom";
-import type { AppContext } from "../app/app";
+import { useAppContext } from "../app/context";
 
 export const PageDocs: React.FC = () => {
 	useEffect(() => {
 		document.title = "Polymedia Profile - Docs";
 	}, []);
 
-	const { network, profileClient } = useOutletContext<AppContext>();
+	const { network, profileClient } = useAppContext();
 
 	return (
 		<div id="page" className="page-about">

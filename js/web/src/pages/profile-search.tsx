@@ -2,8 +2,8 @@ import type { PolymediaProfile } from "@polymedia/profile-sdk";
 import { REGEX_ADDRESS } from "@polymedia/suitcase-core";
 import { LinkToPolymedia, makeCssUrl } from "@polymedia/suitcase-react";
 import { useEffect, useState } from "react";
-import { Link, useOutletContext } from "react-router-dom";
-import type { AppContext } from "../app/app";
+import { Link } from "react-router-dom";
+import { useAppContext } from "../app/context";
 import "../styles/search-profiles.less";
 
 const addressRegex = new RegExp(REGEX_ADDRESS, "g");
@@ -11,7 +11,7 @@ const addressRegex = new RegExp(REGEX_ADDRESS, "g");
 export const PageProfileSearch: React.FC = () => {
 	/* State */
 
-	const { network, profileClient } = useOutletContext<AppContext>();
+	const { network, profileClient } = useAppContext();
 
 	const [userInput, setUserInput] = useState<string>("");
 	const [addressCount, setAddressCount] = useState<number>(0);

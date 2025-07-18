@@ -19,7 +19,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
 import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
 import { notifyError } from "../components/notification";
-import { Nav } from "./nav";
 import { PageDocs } from "../pages/docs";
 import { PageHome } from "../pages/home";
 import { PageNotFound } from "../pages/not-found";
@@ -28,6 +27,8 @@ import { PageProfileSearch } from "../pages/profile-search";
 import { PageProfileView } from "../pages/profile-view";
 import { PageRegistryNew } from "../pages/registry-new";
 import "../styles/app.less";
+import { AppContext } from "./context";
+import { Nav } from "./nav";
 
 /* App router */
 
@@ -77,8 +78,9 @@ const AppSuiProviders: React.FC = () => {
 
 /* App */
 
-export type AppContext = {
+export type AppContextType = {
 	network: SupportedNetwork;
+	setNetwork: Setter<SupportedNetwork>;
 	profile: PolymediaProfile | null | undefined;
 	profileClient: ProfileClient;
 	reloadProfile: () => Promise<PolymediaProfile | null | undefined>;
@@ -132,8 +134,9 @@ const App: React.FC<{
 		setShowConnectModal(true);
 	};
 
-	const appContext: AppContext = {
+	const appContext: AppContextType = {
 		network,
+		setNetwork,
 		profile,
 		profileClient,
 		reloadProfile,
@@ -141,27 +144,19 @@ const App: React.FC<{
 	};
 
 	return (
-		<>
-			<ConnectModal
-				trigger={<button style={{ display: "none" }} />}
-				open={showConnectModal}
-				onOpenChange={(isOpen) => {
-					setShowConnectModal(isOpen);
-				}}
-			/>
-
+		<AppContext.Provider value={appContext}>
 			<div id="layout">
-				{/* #nav */}
-				<Nav
-					network={network}
-					setNetwork={setNetwork}
-					openConnectModal={openConnectModal}
-					profile={profile}
-				/>
-				{/* #page */}
-				<Outlet context={appContext} />
+				<Nav />
+				<Outlet /> {/* loads a page/*.tsx */}
 				<div id="filler-section"></div>
+				<ConnectModal
+					trigger={<button style={{ display: "none" }} />}
+					open={showConnectModal}
+					onOpenChange={(isOpen) => {
+						setShowConnectModal(isOpen);
+					}}
+				/>
 			</div>
-		</>
+		</AppContext.Provider>
 	);
 };

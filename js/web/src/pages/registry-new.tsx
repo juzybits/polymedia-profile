@@ -2,8 +2,7 @@ import { useCurrentAccount } from "@mysten/dapp-kit";
 import { Transaction } from "@mysten/sui/transactions";
 import { create_registry } from "@polymedia/profile-sdk";
 import { type SyntheticEvent, useEffect, useState } from "react";
-import { useOutletContext } from "react-router-dom";
-import type { AppContext } from "../app/app";
+import { useAppContext } from "../app/context";
 import { notifyError } from "../components/notification";
 
 export function PageRegistryNew() {
@@ -13,7 +12,7 @@ export function PageRegistryNew() {
 
 	const currAcct = useCurrentAccount();
 
-	const { profileClient, openConnectModal } = useOutletContext<AppContext>();
+	const { profileClient, openConnectModal } = useAppContext();
 
 	const [inputName, setInputName] = useState("");
 	const [waiting, setWaiting] = useState(false);
