@@ -83,7 +83,7 @@ export type AppContextType = {
 	setNetwork: Setter<SupportedNetwork>;
 	profile: PolymediaProfile | null | undefined;
 	profileClient: ProfileClient;
-	reloadProfile: () => Promise<PolymediaProfile | null | undefined>;
+	reloadProfile: () => Promise<void>;
 	openConnectModal: () => void;
 };
 
@@ -107,22 +107,20 @@ const App: React.FC<{
 		});
 	}, [suiClient, walletSignTx, network]);
 
-	const reloadProfile = async (): Promise<PolymediaProfile | null | undefined> => {
+	const reloadProfile = async (): Promise<void> => {
 		if (!currAcct) {
 			setProfile(undefined);
 			return undefined;
 		}
-		return await profileClient
+		await profileClient
 			.getProfileByOwner(currAcct.address, false)
 			.then((result: PolymediaProfile | null) => {
 				console.debug("[reloadProfile] Setting profile:", result);
 				setProfile(result);
-				return result;
 			})
 			.catch((err) => {
 				console.warn("[reloadProfile]", err);
 				notifyError(String(err));
-				return undefined;
 			});
 	};
 
