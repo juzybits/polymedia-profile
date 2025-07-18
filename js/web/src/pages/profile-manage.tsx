@@ -4,9 +4,9 @@ import { create_profile, edit_profile } from "@polymedia/profile-sdk";
 import { LinkToPolymedia } from "@polymedia/suitcase-react";
 import { type SyntheticEvent, useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
-import type { AppContext } from "./App";
-import { notifyError, notifyOkay } from "./components/Notification";
-import "./styles/ManageProfile.less";
+import type { AppContext } from "../app/app";
+import { notifyError, notifyOkay } from "../components/notification";
+import "../styles/manage-profile.less";
 
 export const PageProfileManage: React.FC = () => {
 	/* State */

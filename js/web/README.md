@@ -7,6 +7,6 @@ It lets users create and manage an on-chain profile associated to their Sui addr
 ## Local development
 
 ```
-pnpm install
+pnpm i
 pnpm dev
 ```

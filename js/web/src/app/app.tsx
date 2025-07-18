@@ -18,16 +18,16 @@ import { loadNetwork, type Setter } from "@polymedia/suitcase-react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
 import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
-import { notifyError } from "./components/Notification";
-import { Nav } from "./Nav";
-import { PageDocs } from "./PageDocs";
-import { PageHome } from "./PageHome";
-import { PageNotFound } from "./PageNotFound";
-import { PageProfileManage } from "./PageProfileManage";
-import { PageProfileSearch } from "./PageProfileSearch";
-import { PageProfileView } from "./PageProfileView";
-import { PageRegistryNew } from "./PageRegistryNew";
-import "./styles/App.less";
+import { notifyError } from "../components/notification";
+import { Nav } from "./nav";
+import { PageDocs } from "../pages/docs";
+import { PageHome } from "../pages/home";
+import { PageNotFound } from "../pages/not-found";
+import { PageProfileManage } from "../pages/profile-manage";
+import { PageProfileSearch } from "../pages/profile-search";
+import { PageProfileView } from "../pages/profile-view";
+import { PageRegistryNew } from "../pages/registry-new";
+import "../styles/app.less";
 
 /* App router */
 

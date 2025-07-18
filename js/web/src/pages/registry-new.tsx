@@ -3,8 +3,8 @@ import { Transaction } from "@mysten/sui/transactions";
 import { create_registry } from "@polymedia/profile-sdk";
 import { type SyntheticEvent, useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
-import type { AppContext } from "./App";
-import { notifyError } from "./components/Notification";
+import type { AppContext } from "../app/app";
+import { notifyError } from "../components/notification";
 
 export function PageRegistryNew() {
 	useEffect(() => {

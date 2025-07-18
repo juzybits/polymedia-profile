@@ -1,7 +1,7 @@
 import { makePolymediaUrl } from "@polymedia/suitcase-core";
 import { useEffect } from "react";
 import { Link, useOutletContext } from "react-router-dom";
-import type { AppContext } from "./App";
+import type { AppContext } from "../app/app";
 
 export const PageHome: React.FC = () => {
 	useEffect(() => {

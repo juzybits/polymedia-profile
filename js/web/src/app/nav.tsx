@@ -8,8 +8,8 @@ import {
 } from "@polymedia/suitcase-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { supportedNetworks } from "./App";
-import "./styles/Nav.less";
+import { supportedNetworks } from "./app";
+import "./styles/nav.less";
 
 export const Nav: React.FC<{
 	network: NetworkName;

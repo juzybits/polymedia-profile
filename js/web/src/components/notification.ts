@@ -1,4 +1,4 @@
-import "./Notification.less";
+import "./notification.less";
 
 export function notifyOkay(message: string): void {
 	notify("okay", message);

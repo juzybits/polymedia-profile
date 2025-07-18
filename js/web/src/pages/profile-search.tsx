@@ -3,8 +3,8 @@ import { REGEX_ADDRESS } from "@polymedia/suitcase-core";
 import { LinkToPolymedia, makeCssUrl } from "@polymedia/suitcase-react";
 import { useEffect, useState } from "react";
 import { Link, useOutletContext } from "react-router-dom";
-import type { AppContext } from "./App";
-import "./styles/SearchProfiles.less";
+import type { AppContext } from "../app/app";
+import "../styles/search-profiles.less";
 
 const addressRegex = new RegExp(REGEX_ADDRESS, "g");
 

@@ -2,9 +2,9 @@ import type { PolymediaProfile } from "@polymedia/profile-sdk";
 import { LinkToPolymedia } from "@polymedia/suitcase-react";
 import { useEffect, useState } from "react";
 import { useOutletContext, useParams } from "react-router-dom";
-import type { AppContext } from "./App";
-import { notifyError } from "./components/Notification";
-import "./styles/ViewProfile.less";
+import type { AppContext } from "../app/app";
+import { notifyError } from "../components/notification";
+import "../styles/view-profile.less";
 
 export const PageProfileView: React.FC = () => {
 	/* State */
