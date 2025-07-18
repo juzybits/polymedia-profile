@@ -1,0 +1,20 @@
+{
+	"extends": "../../tsconfig.base.json",
+	"compilerOptions": {
+		/* Language and Environment */
+		"lib": ["ESNext", "DOM", "DOM.Iterable"], // A set of bundled library declaration files that describe the target runtime environment.
+		"jsx": "react-jsx", // What JSX code is generated.
+
+		/* Modules */
+		"types": ["vite/client"], // Type package names to be included without being referenced in a source file.
+		"moduleResolution": "bundler", // How TypeScript looks up a file from a given module specifier.
+		"moduleDetection": "force", // Control what method is used to detect module-format JS files.
+		"allowImportingTsExtensions": true, // Allow imports to include TypeScript file extensions. Requires '--moduleResolution bundler' and either '--noEmit' or '--emitDeclarationOnly' to be set.
+		"verbatimModuleSyntax": true, // Do not transform or elide any imports or exports not marked as type-only, ensuring they are written in the output file's format based on the 'module' setting.
+		"erasableSyntaxOnly": true, // Do not allow runtime constructs that are not part of ECMAScript.
+		"noUncheckedSideEffectImports": true, // Check side effect imports.
+
+		/* Emit */
+		"noEmit": true // Disable emitting files from a compilation.
+	}
+}

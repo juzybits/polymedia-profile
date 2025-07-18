@@ -1,9 +1,10 @@
 .DS_Store
 
 # JavaScript
-.auth.ts
+.env.development.local
 .turbo
 .wrangler
+*.tsbuildinfo
 dist
 node_modules
 
@@ -11,4 +12,5 @@ node_modules
 .coverage_map.mvcov
 .trace
 build
-Move.lock
+sui-prover.log.*
+traces

@@ -1,0 +1,36 @@
+{
+	"name": "@polymedia/profile-web",
+	"private": true,
+	"sideEffects": false,
+	"type": "module",
+	"scripts": {
+		"build": "vite build",
+		"clean": "rm -rf dist/ node_modules/ .turbo/ .wrangler/",
+		"deploy-dev": "pnpm build && wrangler pages deploy dist/ --project-name polymedia-profile --branch dev",
+		"deploy-prod": "pnpm build && wrangler pages deploy dist/ --project-name polymedia-profile --branch main",
+		"dev": "vite",
+		"host": "vite --host",
+		"preview": "pnpm build && vite preview",
+		"typecheck": "tsc --noEmit"
+	},
+	"dependencies": {
+		"@mysten/dapp-kit": "^0.16.15",
+		"@mysten/sui": "^1.36.0",
+		"@polymedia/profile-sdk": "workspace:*",
+		"@polymedia/suitcase-core": "^0.0.60",
+		"@polymedia/suitcase-react": "^0.0.60",
+		"@tanstack/react-query": "^5.83.0",
+		"normalize.css": "^8.0.1",
+		"react": "^19.1.0",
+		"react-dom": "^19.1.0",
+		"react-router-dom": "^7.7.0"
+	},
+	"devDependencies": {
+		"@types/react": "^19.1.8",
+		"@types/react-dom": "^19.1.6",
+		"@vitejs/plugin-react-swc": "^3.11.0",
+		"less": "^4.4.0",
+		"vite": "^7.0.5",
+		"wrangler": "^4.25.0"
+	}
+}
