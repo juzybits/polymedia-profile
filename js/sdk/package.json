@@ -42,5 +42,8 @@
 			"import": "./dist/esm/index.js",
 			"require": "./dist/cjs/index.js"
 		}
+	},
+	"dependencies": {
+		"@polymedia/suitcase-core": "^0.0.60"
 	}
 }
