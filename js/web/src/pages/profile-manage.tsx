@@ -29,10 +29,6 @@ export const PageProfileManage: React.FC = () => {
 	/* Functions */
 
 	useEffect(() => {
-		document.title = "Polymedia Profile - Manage";
-	}, []);
-
-	useEffect(() => {
 		setInputName(profile?.name || "");
 		setInputImage(profile?.imageUrl || "");
 		setInputDescription(profile?.description || "");

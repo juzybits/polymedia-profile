@@ -38,7 +38,6 @@ export const PageProfileView: React.FC = () => {
 	};
 
 	useEffect(() => {
-		document.title = "Polymedia Profile - View";
 		loadProfile();
 	}, [loadProfile]);
 

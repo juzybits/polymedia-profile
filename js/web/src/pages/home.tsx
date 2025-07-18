@@ -1,13 +1,8 @@
 import { makePolymediaUrl } from "@polymedia/suitcase-core";
-import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAppContext } from "../app/context";
 
 export const PageHome: React.FC = () => {
-	useEffect(() => {
-		document.title = "Polymedia Profile - Home";
-	}, []);
-
 	const { network, profileClient } = useAppContext();
 
 	return (

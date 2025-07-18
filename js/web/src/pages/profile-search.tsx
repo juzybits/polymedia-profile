@@ -24,10 +24,6 @@ export const PageProfileSearch: React.FC = () => {
 	/* Functions */
 
 	useEffect(() => {
-		document.title = "Polymedia Profile - Search";
-	}, []);
-
-	useEffect(() => {
 		const loadProfiles = async () => {
 			setErrorMsg(null);
 			setResults(undefined);

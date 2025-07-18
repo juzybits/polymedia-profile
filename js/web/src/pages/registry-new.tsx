@@ -1,15 +1,11 @@
 import { useCurrentAccount } from "@mysten/dapp-kit";
 import { Transaction } from "@mysten/sui/transactions";
 import { create_registry } from "@polymedia/profile-sdk";
-import { type SyntheticEvent, useEffect, useState } from "react";
+import { type SyntheticEvent, useState } from "react";
 import { useAppContext } from "../app/context";
 import { notifyError } from "../components/notification";
 
 export function PageRegistryNew() {
-	useEffect(() => {
-		document.title = "Polymedia Profile - New Registry";
-	}, []);
-
 	const currAcct = useCurrentAccount();
 
 	const { profileClient, openConnectModal } = useAppContext();
