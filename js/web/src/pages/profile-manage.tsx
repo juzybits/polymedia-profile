@@ -53,7 +53,7 @@ export const PageProfileManage: React.FC = () => {
 		setInputDescription(profile?.description || "");
 	}, [profile]);
 
-	const onInputImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+	const onInputImageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
 		if (!e.target.value) {
 			setIsErrorImage(false);
 			setIsErrorForm(false);
@@ -215,16 +215,23 @@ export const PageProfileManage: React.FC = () => {
 					<label>
 						Image URL<span className="field-optional">[optional]</span>
 					</label>
-					<input
-						value={inputImage}
-						type="text"
-						className={waiting ? "waiting" : ""}
-						disabled={waiting}
-						spellCheck="false"
-						autoCorrect="off"
-						autoComplete="off"
-						onChange={onInputImageChange}
-					/>
+					<div className="image-input-container">
+						<textarea
+							value={inputImage}
+							className={waiting ? "waiting" : ""}
+							disabled={waiting}
+							spellCheck="false"
+							autoCorrect="off"
+							autoComplete="off"
+							onChange={onInputImageChange}
+							rows={3}
+						/>
+						{inputImage && !isErrorImage && (
+							<div className="image-preview">
+								<img src={inputImage} onLoad={onImageLoad} onError={onImageError} />
+							</div>
+						)}
+					</div>
 					{isErrorImage && (
 						<div className="field-error">That doesn't look like a valid image URL</div>
 					)}
@@ -257,13 +264,6 @@ export const PageProfileManage: React.FC = () => {
 			</form>
 		);
 	}
-
-	const imageSection = inputImage && (
-		<div className={`section section-image ${isErrorImage ? "hidden" : ""}`}>
-			<h2>Image preview</h2>
-			<img src={inputImage} onLoad={onImageLoad} onError={onImageError} />
-		</div>
-	);
 
 	const profileObjLabel = profile && (
 		<span className="profile-id">
@@ -309,7 +309,6 @@ export const PageProfileManage: React.FC = () => {
 			<h1>PROFILE{profileObjLabel}</h1>
 			{view}
 			{walrusSection}
-			{imageSection}
 		</div>
 	);
 };
