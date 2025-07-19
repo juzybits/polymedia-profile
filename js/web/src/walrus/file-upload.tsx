@@ -107,7 +107,6 @@ export default function FileUpload({ onUploadComplete }: FileUploadProps) {
 						<div className="upload-drop-zone">
 							{file ? (
 								<div className="upload-content">
-									[image]
 									<p className="file-name">{file.name}</p>
 									<p className="file-size">
 										{(file.size / (1024 * 1024)).toFixed(2)} MiB
@@ -123,7 +122,6 @@ export default function FileUpload({ onUploadComplete }: FileUploadProps) {
 								</div>
 							) : (
 								<div className="upload-content">
-									[image-up]
 									<p className="drop-text">Drag & drop a file</p>
 									<p className="max-size-text">
 										Max {MAX_FILE_SIZE / (1024 * 1024)} MiB.
@@ -142,7 +140,7 @@ export default function FileUpload({ onUploadComplete }: FileUploadProps) {
 					onClick={() => setShowAdvancedSettings(!showAdvancedSettings)}
 					className="advanced-toggle"
 				>
-					+Advanced Settings
+					{showAdvancedSettings ? "− Advanced Settings" : "+ Advanced Settings"}
 				</button>
 				{showAdvancedSettings && (
 					<div className="advanced-content">

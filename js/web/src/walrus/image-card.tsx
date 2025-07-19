@@ -13,7 +13,7 @@ const AGGREGATOR_URL = "https://aggregator.walrus-testnet.walrus.space";
 export function PlaceholderCard() {
 	return (
 		<div className="placeholder-card">
-			<div className="placeholder-image">[upload]</div>
+			<div className="placeholder-image">[image]</div>
 			<div className="placeholder-content">
 				<h3 className="placeholder-title">No uploads yet</h3>
 				<p className="placeholder-description">
@@ -33,7 +33,7 @@ export default function ImageCard(props: ImageCardProps) {
 		<div className="image-card">
 			<div className="image-preview">
 				{hasError ? (
-					<div className="image-placeholder">[image]</div>
+					<div className="image-placeholder"></div>
 				) : (
 					<img
 						src={IMAGE_URL}

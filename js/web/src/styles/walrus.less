@@ -19,10 +19,6 @@
     width: 100%;
     max-width: 1200px;
 
-    @media (min-width: 1280px) {
-        grid-template-columns: 1fr 1fr;
-    }
-
     .walrus-upload-section,
     .walrus-uploads-section {
         width: 100%;
@@ -85,6 +81,7 @@
                 align-items: center;
                 justify-content: center;
                 min-height: 100px;
+                box-sizing: border-box;
 
                 .upload-content {
                     display: flex;
