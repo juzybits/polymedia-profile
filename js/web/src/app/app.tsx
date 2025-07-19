@@ -107,9 +107,17 @@ const App: React.FC<{
 	}, [suiClient, walletSignTx, network]);
 
 	const walrusClient = useMemo(() => {
+		const network2 = network === "mainnet" ? "mainnet" : "testnet";
 		return new WalrusClient({
-			network: network === "mainnet" ? "mainnet" : "testnet",
+			network: network2,
 			suiClient,
+			uploadRelay: {
+				timeout: 600_000,
+				host: `https://upload-relay.${network2}.walrus.space`,
+				sendTip: {
+					max: 1_000,
+				},
+			},
 		});
 	}, [suiClient, network]);
 

@@ -1,5 +1,6 @@
 import { useCurrentAccount } from "@mysten/dapp-kit";
 import { useRef, useState } from "react";
+import type { ImageCardProps } from "./image-card";
 import { useStorageCost } from "./useStorageCost";
 import { useWalrusUpload } from "./useWalrusUpload";
 
@@ -427,15 +428,6 @@ export default function FileUpload({ onUploadComplete }: FileUploadProps) {
 		</div>
 	);
 }
-
-// === types ===
-
-export type ImageCardProps = {
-	blobId: string;
-	suiObjectId: string;
-	suiEventId: string;
-	endEpoch: number;
-};
 
 // === helpers ===
 
