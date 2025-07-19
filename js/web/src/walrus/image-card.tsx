@@ -33,20 +33,6 @@ export default function ImageCard(props: ImageCardProps) {
 
 	const [hasError, setHasError] = useState(false);
 
-	// Format file size for display
-	const formatFileSize = (bytes?: number) => {
-		if (!bytes) return null;
-		if (bytes < 1024) return `${bytes} B`;
-		if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-		return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-	};
-
-	// Format timestamp for display
-	const formatTimestamp = (timestamp?: number) => {
-		if (!timestamp) return null;
-		return new Date(timestamp).toLocaleDateString();
-	};
-
 	return (
 		<div className="image-card">
 			<div className="image-preview">
@@ -69,73 +55,29 @@ export default function ImageCard(props: ImageCardProps) {
 				)}
 			</div>
 			<div className="image-details">
-				{props.fileName && (
-					<div className="detail-row detail-row-top">
-						<span className="detail-label">File Name</span>
-						<div className="detail-value">
-							<span>{props.fileName}</span>
-						</div>
-					</div>
-				)}
-				{props.fileSize && (
-					<div className="detail-row">
-						<span className="detail-label">File Size</span>
-						<div className="detail-value">
-							<span>{formatFileSize(props.fileSize)}</span>
-						</div>
-					</div>
-				)}
-				{props.timestamp && (
-					<div className="detail-row">
-						<span className="detail-label">Uploaded</span>
-						<div className="detail-value">
-							<span>{formatTimestamp(props.timestamp)}</span>
-						</div>
-					</div>
-				)}
-				<div className="detail-row detail-row-top">
-					<span className="detail-label">End Epoch</span>
-					<div className="detail-value">
-						<span>{props.endEpoch}</span>
-					</div>
+				<div>End Epoch: {props.endEpoch}</div>
+				<div>
+					<a href={IMAGE_URL} target="_blank" rel="noopener noreferrer">
+						Image URL
+					</a>
 				</div>
-				<div className="detail-row">
-					<span className="detail-label">URL</span>
-					<div className="detail-value">
-						<span>{IMAGE_URL}</span>
-					</div>
+				<div>
+					<a
+						href={`https://walruscan.com/testnet/blob/${props.blobId}`}
+						target="_blank"
+						rel="noopener noreferrer"
+					>
+						Walruscan
+					</a>
 				</div>
-				<div className="detail-row detail-row-bottom">
-					<span className="detail-label">Walruscan</span>
-					<div className="detail-value">
-						<a
-							href={`https://walruscan.com/testnet/blob/${props.blobId}`}
-							target="_blank"
-							rel="noopener noreferrer"
-						>
-							{props.blobId}
-						</a>
-					</div>
-				</div>
-				<div className="detail-row">
-					<span className="detail-label">Associated Sui Object</span>
-					<div className="detail-value">
-						<a
-							href={`https://testnet.suivision.xyz/object/${props.suiObjectId}`}
-							target="_blank"
-							rel="noopener noreferrer"
-						>
-							{props.suiObjectId}
-						</a>
-					</div>
-				</div>
-				<div className="detail-row">
-					<span className="detail-label">Download Link</span>
-					<div className="detail-value">
-						<a href={IMAGE_URL} target="_blank" rel="noopener noreferrer">
-							{props.blobId}
-						</a>
-					</div>
+				<div>
+					<a
+						href={`https://testnet.suivision.xyz/object/${props.suiObjectId}`}
+						target="_blank"
+						rel="noopener noreferrer"
+					>
+						Sui Object
+					</a>
 				</div>
 			</div>
 		</div>

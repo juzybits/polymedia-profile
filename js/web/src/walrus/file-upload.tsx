@@ -356,7 +356,7 @@ export default function FileUpload({ onUploadComplete }: FileUploadProps) {
 					</button>
 
 					{/* Arrow Down */}
-					<div className="step-arrow">⌄</div>
+					<div className="step-arrow"></div>
 
 					{/* Step 2: Write to Upload Relay */}
 					<button
@@ -395,7 +395,7 @@ export default function FileUpload({ onUploadComplete }: FileUploadProps) {
 					</button>
 
 					{/* Arrow Down */}
-					<div className="step-arrow">⌄</div>
+					<div className="step-arrow"></div>
 
 					{/* Step 3: Certify Blob */}
 					<button
