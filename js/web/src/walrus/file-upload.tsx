@@ -97,7 +97,7 @@ export default function FileUpload({ onUploadComplete }: FileUploadProps) {
 	return (
 		<div className="form">
 			<div className="form-field">
-				<label>Blob to upload</label>
+				<h2>Upload to Walrus</h2>
 				<div className="walrus-file-upload-container">
 					<input
 						type="file"
@@ -136,13 +136,12 @@ export default function FileUpload({ onUploadComplete }: FileUploadProps) {
 			</div>
 
 			<div className="form-field">
-				<button
-					type="button"
+				<h4
 					onClick={() => setShowAdvancedSettings(!showAdvancedSettings)}
 					className="walrus-advanced-toggle"
 				>
-					{showAdvancedSettings ? "− Advanced Settings" : "+ Advanced Settings"}
-				</button>
+					{showAdvancedSettings ? "- Hide Advanced Settings" : "+ Show Advanced Settings"}
+				</h4>
 				{showAdvancedSettings && (
 					<div className="walrus-advanced-content">
 						<div className="form-field">

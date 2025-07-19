@@ -36,8 +36,6 @@ export const PageProfileManage: React.FC = () => {
 	const onUploadComplete = (uploadedBlob: ImageCardProps) => {
 		setUploadedBlobs((prev) => [uploadedBlob, ...prev]);
 	};
-
-	// Load uploads from localStorage when user changes
 	useEffect(() => {
 		if (currAcct?.address) {
 			const storedUploads = loadUploadsFromStorage(currAcct.address);
@@ -46,10 +44,6 @@ export const PageProfileManage: React.FC = () => {
 			setUploadedBlobs([]);
 		}
 	}, [currAcct?.address]);
-
-	useEffect(() => {
-		console.log("uploadedBlobs:", uploadedBlobs);
-	}, [uploadedBlobs]);
 
 	/* Functions */
 
@@ -295,7 +289,7 @@ export const PageProfileManage: React.FC = () => {
 				<FileUpload onUploadComplete={onUploadComplete} />
 			</section>
 
-			{/* Uploads Section - Always visible */}
+			{/* Uploads Section */}
 			<section>
 				<h2>
 					Uploads <span className="walrus-uploads-count">({uploadedBlobs.length})</span>
@@ -314,7 +308,6 @@ export const PageProfileManage: React.FC = () => {
 							);
 						})
 					) : (
-						// Show placeholder cards when no uploads
 						<PlaceholderCard />
 					)}
 				</div>
