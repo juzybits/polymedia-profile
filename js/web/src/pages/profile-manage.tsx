@@ -265,21 +265,10 @@ export const PageProfileManage: React.FC = () => {
 		</div>
 	);
 
-	const infoSection = profile && (
-		<div className="section section-info">
-			<h2>Details</h2>
-			<p>
-				Profile: <LinkToPolymedia network={network} kind="object" addr={profile.id} />
-			</p>
-			<p>
-				Registry:{" "}
-				<LinkToPolymedia
-					network={network}
-					kind="object"
-					addr={profileClient.registryId}
-				/>
-			</p>
-		</div>
+	const profileObjLabel = profile && (
+		<span className="profile-id">
+			<LinkToPolymedia network={network} kind="object" addr={profile.id} />
+		</span>
 	);
 
 	const walrusSection = showWalrus && (
@@ -317,11 +306,10 @@ export const PageProfileManage: React.FC = () => {
 
 	return (
 		<div id="page" className="page-manage-profile">
-			<h1>{profile ? "EDIT" : profile === null ? "CREATE" : "MANAGE"} PROFILE</h1>
+			<h1>PROFILE{profileObjLabel}</h1>
 			{view}
 			{walrusSection}
 			{imageSection}
-			{infoSection}
 		</div>
 	);
 };
