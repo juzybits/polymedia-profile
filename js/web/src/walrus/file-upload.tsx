@@ -1,6 +1,7 @@
 import { useCurrentAccount } from "@mysten/dapp-kit";
 import { useRef, useState } from "react";
 import type { ImageCardProps } from "./image-card";
+import { saveUploadToStorage } from "./localStorage";
 import { useStorageCost } from "./useStorageCost";
 import { useWalrusUpload } from "./useWalrusUpload";
 
@@ -71,6 +72,12 @@ export default function FileUpload({ onUploadComplete }: FileUploadProps) {
 
 	const handleCertifyBlob = async () => {
 		const result = await certifyBlob();
+
+		// Save to localStorage if user is connected
+		if (currentAccount?.address) {
+			saveUploadToStorage(currentAccount.address, result, file?.name, file?.size);
+		}
+
 		onUploadComplete(result);
 		resetUploadProcess();
 	};

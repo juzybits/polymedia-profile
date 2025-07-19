@@ -6,6 +6,10 @@ export type ImageCardProps = {
 	suiObjectId: string;
 	suiEventId: string;
 	endEpoch: number;
+	// Optional fields from localStorage
+	fileName?: string;
+	fileSize?: number;
+	timestamp?: number;
 };
 
 const AGGREGATOR_URL = "https://aggregator.walrus-testnet.walrus.space";
@@ -29,6 +33,20 @@ export default function ImageCard(props: ImageCardProps) {
 
 	const [hasError, setHasError] = useState(false);
 
+	// Format file size for display
+	const formatFileSize = (bytes?: number) => {
+		if (!bytes) return null;
+		if (bytes < 1024) return `${bytes} B`;
+		if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+		return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+	};
+
+	// Format timestamp for display
+	const formatTimestamp = (timestamp?: number) => {
+		if (!timestamp) return null;
+		return new Date(timestamp).toLocaleDateString();
+	};
+
 	return (
 		<div className="image-card">
 			<div className="image-preview">
@@ -37,7 +55,7 @@ export default function ImageCard(props: ImageCardProps) {
 				) : (
 					<img
 						src={IMAGE_URL}
-						alt={`uploaded image: ${props.blobId}`}
+						alt={`uploaded image: ${props.fileName || props.blobId}`}
 						width={142}
 						height={142}
 						onLoad={() => {
@@ -51,6 +69,30 @@ export default function ImageCard(props: ImageCardProps) {
 				)}
 			</div>
 			<div className="image-details">
+				{props.fileName && (
+					<div className="detail-row detail-row-top">
+						<span className="detail-label">File Name</span>
+						<div className="detail-value">
+							<span>{props.fileName}</span>
+						</div>
+					</div>
+				)}
+				{props.fileSize && (
+					<div className="detail-row">
+						<span className="detail-label">File Size</span>
+						<div className="detail-value">
+							<span>{formatFileSize(props.fileSize)}</span>
+						</div>
+					</div>
+				)}
+				{props.timestamp && (
+					<div className="detail-row">
+						<span className="detail-label">Uploaded</span>
+						<div className="detail-value">
+							<span>{formatTimestamp(props.timestamp)}</span>
+						</div>
+					</div>
+				)}
 				<div className="detail-row detail-row-top">
 					<span className="detail-label">End Epoch</span>
 					<div className="detail-value">

@@ -9,6 +9,7 @@ import "../styles/manage-profile.less";
 import "../styles/walrus.less";
 import FileUpload from "../walrus/file-upload";
 import ImageCard, { type ImageCardProps, PlaceholderCard } from "../walrus/image-card";
+import { loadUploadsFromStorage } from "../walrus/localStorage";
 
 export const PageProfileManage: React.FC = () => {
 	/* State */
@@ -35,6 +36,17 @@ export const PageProfileManage: React.FC = () => {
 	const onUploadComplete = (uploadedBlob: ImageCardProps) => {
 		setUploadedBlobs((prev) => [uploadedBlob, ...prev]);
 	};
+
+	// Load uploads from localStorage when user changes
+	useEffect(() => {
+		if (currAcct?.address) {
+			const storedUploads = loadUploadsFromStorage(currAcct.address);
+			setUploadedBlobs(storedUploads);
+		} else {
+			setUploadedBlobs([]);
+		}
+	}, [currAcct?.address]);
+
 	useEffect(() => {
 		console.log("uploadedBlobs:", uploadedBlobs);
 	}, [uploadedBlobs]);
