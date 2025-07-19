@@ -16,13 +16,11 @@ const AGGREGATOR_URL = "https://aggregator.walrus-testnet.walrus.space";
 
 export function PlaceholderCard() {
 	return (
-		<div className="placeholder-card">
-			<div className="placeholder-image">[image]</div>
-			<div className="placeholder-content">
-				<h3 className="placeholder-title">No uploads yet</h3>
-				<p className="placeholder-description">
-					Upload your first file to see it displayed here
-				</p>
+		<div className="walrus-placeholder-card">
+			<div className="walrus-placeholder-image">[image]</div>
+			<div className="walrus-placeholder-content">
+				<h2>No uploads yet</h2>
+				<p>Upload your first file to see it displayed here</p>
 			</div>
 		</div>
 	);
@@ -34,16 +32,16 @@ export default function ImageCard(props: ImageCardProps) {
 	const [hasError, setHasError] = useState(false);
 
 	return (
-		<div className="image-card">
-			<div className="image-preview">
+		<div className="walrus-image-card">
+			<div className="walrus-image-preview">
 				{hasError ? (
-					<div className="image-placeholder"></div>
+					<div className="walrus-image-placeholder">[image]</div>
 				) : (
 					<img
 						src={IMAGE_URL}
 						alt={`uploaded image: ${props.fileName || props.blobId}`}
-						width={142}
-						height={142}
+						width={120}
+						height={120}
 						onLoad={() => {
 							console.log(`[ImageCard ${props.blobId}] Image loaded successfully`);
 						}}
@@ -54,7 +52,7 @@ export default function ImageCard(props: ImageCardProps) {
 					/>
 				)}
 			</div>
-			<div className="image-details">
+			<div className="walrus-image-details">
 				<div>End Epoch: {props.endEpoch}</div>
 				<div>
 					<a href={IMAGE_URL} target="_blank" rel="noopener noreferrer">

@@ -289,39 +289,34 @@ export const PageProfileManage: React.FC = () => {
 	);
 
 	const walrusSection = showWalrus && (
-		<div className="walrus-section">
+		<div>
 			{/* Blob Upload Section */}
-			<section className="walrus-upload-section">
+			<section>
 				<FileUpload onUploadComplete={onUploadComplete} />
 			</section>
 
 			{/* Uploads Section - Always visible */}
-			<section className="walrus-uploads-section">
-				<div className="uploads-section">
-					<h2 className="uploads-header">
-						Uploads <span className="uploads-count">{uploadedBlobs.length}</span>
-					</h2>
-					<div className="uploads-container">
-						<div className="uploads-list">
-							{uploadedBlobs.length > 0 ? (
-								uploadedBlobs.map((blobId) => {
-									return (
-										<ImageCard
-											key={blobId.blobId}
-											blobId={blobId.blobId}
-											suiObjectId={blobId.suiObjectId}
-											suiEventId={blobId.suiEventId}
-											endEpoch={blobId.endEpoch}
-										/>
-									);
-								})
-							) : (
-								// Show placeholder cards when no uploads
-								<PlaceholderCard />
-							)}
-						</div>
-						{uploadedBlobs.length >= 4 && <div className="uploads-gradient" />}
-					</div>
+			<section>
+				<h2>
+					Uploads <span className="walrus-uploads-count">({uploadedBlobs.length})</span>
+				</h2>
+				<div className="walrus-uploads-list">
+					{uploadedBlobs.length > 0 ? (
+						uploadedBlobs.map((blobId) => {
+							return (
+								<ImageCard
+									key={blobId.blobId}
+									blobId={blobId.blobId}
+									suiObjectId={blobId.suiObjectId}
+									suiEventId={blobId.suiEventId}
+									endEpoch={blobId.endEpoch}
+								/>
+							);
+						})
+					) : (
+						// Show placeholder cards when no uploads
+						<PlaceholderCard />
+					)}
 				</div>
 			</section>
 		</div>

@@ -95,67 +95,60 @@ export default function FileUpload({ onUploadComplete }: FileUploadProps) {
 	const displayError = error || uploadError;
 
 	return (
-		<div className="walrus-file-upload">
-			<div>
-				<label className="upload-label">Blob to upload</label>
-				<div className="upload-container">
-					<div className="upload-input-wrapper">
-						<input
-							type="file"
-							ref={fileInputRef}
-							className="upload-file-input"
-							onChange={(e) => {
-								const selectedFile = e.target.files?.[0];
-								if (selectedFile) {
-									handleFileSelect(selectedFile);
-								}
-							}}
-						/>
-						<div className="upload-drop-zone">
-							{file ? (
-								<div className="upload-content">
-									<p className="file-name">{file.name}</p>
-									<p className="file-size">
-										{(file.size / (1024 * 1024)).toFixed(2)} MiB
-									</p>
-									{isComputingMetadata ? (
-										<div className="computing-metadata">
-											<div className="spinner"></div>
-											<span>Computing metadata...</span>
-										</div>
-									) : (
-										<button className="choose-file-btn">CHOOSE FILE</button>
-									)}
-								</div>
-							) : (
-								<div className="upload-content">
-									<p className="drop-text">Drag & drop a file</p>
-									<p className="max-size-text">
-										Max {MAX_FILE_SIZE / (1024 * 1024)} MiB.
-									</p>
-									<button className="choose-file-btn">CHOOSE FILE</button>
-								</div>
-							)}
-						</div>
+		<div className="form">
+			<div className="form-field">
+				<label>Blob to upload</label>
+				<div className="walrus-file-upload-container">
+					<input
+						type="file"
+						ref={fileInputRef}
+						className="walrus-file-input"
+						onChange={(e) => {
+							const selectedFile = e.target.files?.[0];
+							if (selectedFile) {
+								handleFileSelect(selectedFile);
+							}
+						}}
+					/>
+					<div className="walrus-drop-zone">
+						{file ? (
+							<div>
+								<p>
+									<b>{file.name}</b>
+								</p>
+								<p>{(file.size / (1024 * 1024)).toFixed(2)} MiB</p>
+								{isComputingMetadata ? (
+									<p>Computing metadata...</p>
+								) : (
+									<button type="button">CHOOSE FILE</button>
+								)}
+							</div>
+						) : (
+							<div>
+								<p>Drag & drop a file</p>
+								<p>Max {MAX_FILE_SIZE / (1024 * 1024)} MiB</p>
+								<button type="button">CHOOSE FILE</button>
+							</div>
+						)}
 					</div>
 				</div>
-				{displayError && <p className="upload-error">{displayError}</p>}
+				{displayError && <div className="field-error">{displayError}</div>}
 			</div>
 
-			<div className="advanced-settings">
+			<div className="form-field">
 				<button
+					type="button"
 					onClick={() => setShowAdvancedSettings(!showAdvancedSettings)}
-					className="advanced-toggle"
+					className="walrus-advanced-toggle"
 				>
 					{showAdvancedSettings ? "− Advanced Settings" : "+ Advanced Settings"}
 				</button>
 				{showAdvancedSettings && (
-					<div className="advanced-content">
-						<div className="advanced-field">
-							<label className="field-label">Epochs</label>
+					<div className="walrus-advanced-content">
+						<div className="form-field">
+							<label>Epochs</label>
 							<input
 								type="number"
-								className="field-input"
 								value={epochs}
 								onChange={(e) =>
 									setEpochs(Math.min(53, Math.max(1, Math.floor(Number(e.target.value)))))
@@ -164,267 +157,221 @@ export default function FileUpload({ onUploadComplete }: FileUploadProps) {
 								max="53"
 								step="1"
 							/>
-							<p className="field-help">
+							<div className="field-info">
 								The number of Walrus epochs for which to store the blob (max 53).
-							</p>
+							</div>
 						</div>
 
-						<div className="advanced-field">
-							<label className="field-label">Deletable</label>
-							<div className="checkbox-wrapper">
+						<div className="form-field">
+							<label>
 								<input
 									type="checkbox"
 									checked={deletable}
 									onChange={(e) => setDeletable(e.target.checked)}
-									className="field-checkbox"
+									className="walrus-checkbox"
 								/>
-								<span className="checkbox-label">Allow blob to be deleted</span>
-							</div>
-							<p className="field-help">
+								Allow blob to be deleted
+							</label>
+							<div className="field-info">
 								Whether the blob can be deleted before its storage period expires.
-							</p>
+							</div>
 						</div>
 					</div>
 				)}
 			</div>
 
 			{/* Cost Information */}
-			<div className="cost-display">
-				<h3 className="cost-title">Upload Cost Estimate</h3>
-				<div className="cost-rows">
-					<div className="cost-row">
-						<span className="cost-label">Storage Cost:</span>
-						<span className="cost-value">
+			<div className="walrus-cost-display">
+				<h2>Upload Cost Estimate</h2>
+				<div>
+					<p>
+						Storage Cost:{" "}
+						{storageCost
+							? (() => {
+									const storageValue = parseInt(storageCost.storageCost) / 10 ** 9;
+									const formatted = formatSmallNumber(storageValue);
+									return (
+										<>
+											{formatted.prefix}
+											{formatted.subscript && <sub>{formatted.subscript}</sub>}
+											{formatted.significantDigits}
+											{" WAL"}
+										</>
+									);
+								})()
+							: "---"}
+					</p>
+					<p>
+						Write Cost:{" "}
+						{storageCost
+							? (() => {
+									const storageValue = parseInt(storageCost.writeCost) / 10 ** 9;
+									const formatted = formatSmallNumber(storageValue);
+									return (
+										<>
+											{formatted.prefix}
+											{formatted.subscript && <sub>{formatted.subscript}</sub>}
+											{formatted.significantDigits}
+											{" WAL"}
+										</>
+									);
+								})()
+							: "---"}
+					</p>
+					<p>
+						Tip Amount:{" "}
+						{storageCost
+							? (() => {
+									const tipValue = parseInt(tipAmountMist) / 10 ** 9;
+									const formatted = formatSmallNumber(tipValue);
+									return (
+										<>
+											{formatted.prefix}
+											{formatted.subscript && <sub>{formatted.subscript}</sub>}
+											{formatted.significantDigits}
+											{" SUI"}
+										</>
+									);
+								})()
+							: "---"}
+					</p>
+					<p>
+						<b>
+							Total Cost:{" "}
 							{storageCost
 								? (() => {
-										const storageValue = parseInt(storageCost.storageCost) / 10 ** 9;
-										const formatted = formatSmallNumber(storageValue);
+										const totalCostMist = parseInt(tipAmountMist);
+										const totalCostFrost = parseInt(storageCost.totalCost);
+										const formattedMist = formatSmallNumber(totalCostMist / 10 ** 9);
+										const formattedFrost = formatSmallNumber(totalCostFrost / 10 ** 9);
 										return (
 											<>
-												{formatted.prefix}
-												{formatted.subscript && <sub>{formatted.subscript}</sub>}
-												{formatted.significantDigits}
-												{" WAL"}
-											</>
-										);
-									})()
-								: "---"}
-						</span>
-					</div>
-					<div className="cost-row">
-						<span className="cost-label">Write Cost:</span>
-						<span className="cost-value">
-							{storageCost
-								? (() => {
-										const storageValue = parseInt(storageCost.writeCost) / 10 ** 9;
-										const formatted = formatSmallNumber(storageValue);
-										return (
-											<>
-												{formatted.prefix}
-												{formatted.subscript && <sub>{formatted.subscript}</sub>}
-												{formatted.significantDigits}
-												{" WAL"}
-											</>
-										);
-									})()
-								: "---"}
-						</span>
-					</div>
-					<div className="cost-row">
-						<span className="cost-label">Tip Amount:</span>
-						<span className="cost-value">
-							{storageCost
-								? (() => {
-										const tipValue = parseInt(tipAmountMist) / 10 ** 9;
-										const formatted = formatSmallNumber(tipValue);
-										return (
-											<>
-												{formatted.prefix}
-												{formatted.subscript && <sub>{formatted.subscript}</sub>}
-												{formatted.significantDigits}
+												{formattedMist.prefix}
+												{formattedMist.subscript && <sub>{formattedMist.subscript}</sub>}
+												{formattedMist.significantDigits}
 												{" SUI"}
+												{" + "}
+												{formattedFrost.prefix}
+												{formattedFrost.subscript && (
+													<sub>{formattedFrost.subscript}</sub>
+												)}
+												{formattedFrost.significantDigits}
+												{" WAL"}
 											</>
 										);
 									})()
 								: "---"}
-						</span>
-					</div>
-					<div className="cost-total">
-						<div className="cost-row">
-							<span className="cost-label">Total Cost:</span>
-							<span className="cost-value">
-								{storageCost
-									? (() => {
-											const totalCostMist = parseInt(tipAmountMist);
-											const totalCostFrost = parseInt(storageCost.totalCost);
-											const formattedMist = formatSmallNumber(totalCostMist / 10 ** 9);
-											const formattedFrost = formatSmallNumber(totalCostFrost / 10 ** 9);
-											return (
-												<>
-													{formattedMist.prefix}
-													{formattedMist.subscript && (
-														<sub>{formattedMist.subscript}</sub>
-													)}
-													{formattedMist.significantDigits}
-													{" SUI"}
-													{" + "}
-													{formattedFrost.prefix}
-													{formattedFrost.subscript && (
-														<sub>{formattedFrost.subscript}</sub>
-													)}
-													{formattedFrost.significantDigits}
-													{" WAL"}
-												</>
-											);
-										})()
-									: "---"}
-							</span>
-						</div>
-					</div>
+						</b>
+					</p>
 				</div>
-				<p className="cost-disclaimer">
+				<div className="field-info">
 					Actual costs may vary based on current network conditions and file size.
-				</p>
+				</div>
 			</div>
 
-			{/* Upload Buttons - All Steps Displayed */}
-			<div className="upload-steps">
-				<div className="steps-container">
-					{/* Step 1: Register Blob */}
-					<button
-						className={`step-button ${
-							currentStep === "register" &&
-							!isRegistering &&
-							file &&
-							currentAccount &&
-							!isComputingMetadata &&
-							metadata
-								? "step-active"
-								: currentStep === "register"
-									? "step-disabled"
-									: registrationData
-										? "step-completed"
-										: "step-inactive"
-						}`}
-						onClick={() => {
-							if (currentStep !== "register") return;
-							if (!currentAccount) {
-								setError("Please connect your wallet first");
-								return;
-							}
-							if (!file) {
-								setError("Please select a file first");
-								return;
-							}
-							if (isComputingMetadata) {
-								setError("Metadata is still being computed. Please wait.");
-								return;
-							}
-							if (!metadata) {
-								setError("Metadata computation failed. Please try again.");
-								return;
-							}
-							handleRegisterBlob();
-						}}
-						disabled={
-							currentStep !== "register" ||
-							isRegistering ||
-							!file ||
-							!currentAccount ||
-							isComputingMetadata ||
-							!metadata
+			{/* Upload Buttons */}
+			<div className="walrus-upload-steps">
+				{/* Step 1: Register Blob */}
+				<button
+					className={
+						currentStep === "register" &&
+						!isRegistering &&
+						file &&
+						currentAccount &&
+						!isComputingMetadata &&
+						metadata
+							? ""
+							: registrationData
+								? "disabled"
+								: "disabled"
+					}
+					onClick={() => {
+						if (currentStep !== "register") return;
+						if (!currentAccount) {
+							setError("Please connect your wallet first");
+							return;
 						}
-					>
-						{currentStep === "register" && isRegistering ? (
-							<div className="step-content">
-								<div className="step-spinner"></div>
-								<span>Registering...</span>
-							</div>
-						) : registrationData ? (
-							<div className="step-content">
-								<span>✓ 1. Register Blob</span>
-							</div>
-						) : currentStep === "register" && !currentAccount ? (
-							<div className="step-content">
-								<span>1. Connect Wallet First</span>
-							</div>
-						) : (
-							<div className="step-content">
-								<span>1. Register Blob</span>
-							</div>
-						)}
-					</button>
-
-					{/* Arrow Down */}
-					<div className="step-arrow"></div>
-
-					{/* Step 2: Write to Upload Relay */}
-					<button
-						className={`step-button ${
-							currentStep === "relay" && !isWritingToUploadRelay && registrationData
-								? "step-active"
-								: currentStep === "relay"
-									? "step-disabled"
-									: uploadRelayData
-										? "step-completed"
-										: "step-inactive"
-						}`}
-						onClick={() => {
-							if (currentStep === "relay") {
-								handleWriteToUploadRelay();
-							}
-						}}
-						disabled={
-							currentStep !== "relay" || isWritingToUploadRelay || !registrationData
+						if (!file) {
+							setError("Please select a file first");
+							return;
 						}
-					>
-						{currentStep === "relay" && isWritingToUploadRelay ? (
-							<div className="step-content">
-								<div className="step-spinner"></div>
-								<span>Uploading to Network...</span>
-							</div>
-						) : uploadRelayData ? (
-							<div className="step-content">
-								<span>✓ 2. Uploaded to Network</span>
-							</div>
-						) : (
-							<div className="step-content">
-								<span>2. Upload to Network</span>
-							</div>
-						)}
-					</button>
+						if (isComputingMetadata) {
+							setError("Metadata is still being computed. Please wait.");
+							return;
+						}
+						if (!metadata) {
+							setError("Metadata computation failed. Please try again.");
+							return;
+						}
+						handleRegisterBlob();
+					}}
+					disabled={
+						currentStep !== "register" ||
+						isRegistering ||
+						!file ||
+						!currentAccount ||
+						isComputingMetadata ||
+						!metadata
+					}
+				>
+					{currentStep === "register" && isRegistering ? (
+						<span>Registering...</span>
+					) : registrationData ? (
+						<span>✓ 1. Register Blob</span>
+					) : currentStep === "register" && !currentAccount ? (
+						<span>1. Connect Wallet First</span>
+					) : (
+						<span>1. Register Blob</span>
+					)}
+				</button>
 
-					{/* Arrow Down */}
-					<div className="step-arrow"></div>
+				{/* Step 2: Write to Upload Relay */}
+				<button
+					className={
+						currentStep === "relay" && !isWritingToUploadRelay && registrationData
+							? ""
+							: uploadRelayData
+								? "disabled"
+								: "disabled"
+					}
+					onClick={() => {
+						if (currentStep === "relay") {
+							handleWriteToUploadRelay();
+						}
+					}}
+					disabled={
+						currentStep !== "relay" || isWritingToUploadRelay || !registrationData
+					}
+				>
+					{currentStep === "relay" && isWritingToUploadRelay ? (
+						<span>Uploading to Network...</span>
+					) : uploadRelayData ? (
+						<span>✓ 2. Uploaded to Network</span>
+					) : (
+						<span>2. Upload to Network</span>
+					)}
+				</button>
 
-					{/* Step 3: Certify Blob */}
-					<button
-						className={`step-button ${
-							currentStep === "certify" && !isCertifying && uploadRelayData
-								? "step-active"
-								: currentStep === "certify"
-									? "step-disabled"
-									: "step-inactive"
-						}`}
-						onClick={() => {
-							if (currentStep === "certify") {
-								handleCertifyBlob();
-							}
-						}}
-						disabled={currentStep !== "certify" || isCertifying || !uploadRelayData}
-					>
-						{currentStep === "certify" && isCertifying ? (
-							<div className="step-content">
-								<div className="step-spinner"></div>
-								<span>Certifying...</span>
-							</div>
-						) : (
-							<div className="step-content">
-								<span>3. Certify Upload</span>
-							</div>
-						)}
-					</button>
-				</div>
+				{/* Step 3: Certify Blob */}
+				<button
+					className={
+						currentStep === "certify" && !isCertifying && uploadRelayData
+							? ""
+							: "disabled"
+					}
+					onClick={() => {
+						if (currentStep === "certify") {
+							handleCertifyBlob();
+						}
+					}}
+					disabled={currentStep !== "certify" || isCertifying || !uploadRelayData}
+				>
+					{currentStep === "certify" && isCertifying ? (
+						<span>Certifying...</span>
+					) : (
+						<span>3. Certify Upload</span>
+					)}
+				</button>
 			</div>
 		</div>
 	);
