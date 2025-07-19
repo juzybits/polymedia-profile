@@ -6,6 +6,7 @@ import { type SyntheticEvent, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useAppContext } from "../app/context";
 import "../styles/manage-profile.less";
+import "../styles/walrus.less";
 import FileUpload from "../walrus/file-upload";
 import ImageCard, { type ImageCardProps, PlaceholderCard } from "../walrus/image-card";
 
@@ -276,39 +277,39 @@ export const PageProfileManage: React.FC = () => {
 	);
 
 	const walrusSection = showWalrus && (
-		<div className="grid grid-cols-1 xl:grid-cols-2 gap-8 w-full max-w-[1200px]">
+		<div className="walrus-section">
 			{/* Blob Upload Section */}
-			<section className="w-full max-w-[550px]">
+			<section className="walrus-upload-section">
 				<FileUpload onUploadComplete={onUploadComplete} />
 			</section>
 
 			{/* Uploads Section - Always visible */}
-			<section className="w-full max-w-[550px]">
-				<h2>
-					Uploads <span className="opacity-50 ">{uploadedBlobs.length}</span>
-				</h2>
-				<div className="relative">
-					<div className="flex flex-col gap-4 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
-						{uploadedBlobs.length > 0 ? (
-							uploadedBlobs.map((blobId) => {
-								return (
-									<ImageCard
-										key={blobId.blobId}
-										blobId={blobId.blobId}
-										suiObjectId={blobId.suiObjectId}
-										suiEventId={blobId.suiEventId}
-										endEpoch={blobId.endEpoch}
-									/>
-								);
-							})
-						) : (
-							// Show placeholder cards when no uploads
-							<PlaceholderCard />
-						)}
+			<section className="walrus-uploads-section">
+				<div className="uploads-section">
+					<h2 className="uploads-header">
+						Uploads <span className="uploads-count">{uploadedBlobs.length}</span>
+					</h2>
+					<div className="uploads-container">
+						<div className="uploads-list">
+							{uploadedBlobs.length > 0 ? (
+								uploadedBlobs.map((blobId) => {
+									return (
+										<ImageCard
+											key={blobId.blobId}
+											blobId={blobId.blobId}
+											suiObjectId={blobId.suiObjectId}
+											suiEventId={blobId.suiEventId}
+											endEpoch={blobId.endEpoch}
+										/>
+									);
+								})
+							) : (
+								// Show placeholder cards when no uploads
+								<PlaceholderCard />
+							)}
+						</div>
+						{uploadedBlobs.length >= 4 && <div className="uploads-gradient" />}
 					</div>
-					{uploadedBlobs.length >= 4 && (
-						<div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-[#0d0f1d] to-transparent pointer-events-none" />
-					)}
 				</div>
 			</section>
 		</div>

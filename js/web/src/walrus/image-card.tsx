@@ -12,13 +12,11 @@ const AGGREGATOR_URL = "https://aggregator.walrus-testnet.walrus.space";
 
 export function PlaceholderCard() {
 	return (
-		<div className="w-[480px] h-full max-h-[158px] min-h-[158px] bg-[#0C0F1D] rounded-2xl border border-2 border-dashed border-[#97F0E533] flex flex-row items-center justify-center gap-4 opacity-60">
-			<div className="w-[142px] h-[142px] relative rounded-lg overflow-hidden bg-[#97F0E514] flex items-center justify-center">
-				[upload]
-			</div>
-			<div className="flex flex-col items-center justify-center gap-2">
-				<h3 className="text-[#F7F7F7] text-lg font-medium">No uploads yet</h3>
-				<p className="text-[#97F0E5] text-sm text-center max-w-[250px]">
+		<div className="placeholder-card">
+			<div className="placeholder-image">[upload]</div>
+			<div className="placeholder-content">
+				<h3 className="placeholder-title">No uploads yet</h3>
+				<p className="placeholder-description">
 					Upload your first file to see it displayed here
 				</p>
 			</div>
@@ -32,12 +30,10 @@ export default function ImageCard(props: ImageCardProps) {
 	const [hasError, setHasError] = useState(false);
 
 	return (
-		<div className="w-[480px] h-full max-h-[158px] min-h-[158px] bg-[#0C0F1D] rounded-2xl border border-2 border-[#97F0E533] flex flex-row items-center justify-center gap-2">
-			<div className="w-[142px] h-[142px] relative rounded-lg overflow-hidden">
+		<div className="image-card">
+			<div className="image-preview">
 				{hasError ? (
-					<div className="w-full h-full bg-[#97F0E514] rounded-lg flex items-center justify-center">
-						[image]
-					</div>
+					<div className="image-placeholder">[image]</div>
 				) : (
 					<img
 						src={IMAGE_URL}
@@ -54,66 +50,47 @@ export default function ImageCard(props: ImageCardProps) {
 					/>
 				)}
 			</div>
-			<div className="h-[142px] flex flex-col items-center justify-between">
-				<div className="w-[314px] h-[34px] bg-[#97F0E514] flex flex-row items-center justify-between rounded-b-md rounded-t-none px-2">
-					<span className="text-[#F7F7F7] text-sm font-medium w-[157px] text-left">
-						End Epoch
-					</span>
-					<span className="text-[#97F0E5] text-sm font-medium w-[157px] text-left flex items-center">
-						{props.endEpoch}
-					</span>
-				</div>
-				<div className="w-[314px] h-[34px] bg-[#97F0E514] flex flex-row items-center justify-between px-2">
-					<span className="text-[#F7F7F7] text-sm font-medium w-[157px] text-left">
-						URL
-					</span>
-					<div className="w-[157px] overflow-hidden flex items-center">
-						<span className="text-[#97F0E5] text-sm font-medium block text-left text-ellipsis whitespace-nowrap overflow-hidden">
-							{IMAGE_URL}
-						</span>
+			<div className="image-details">
+				<div className="detail-row detail-row-top">
+					<span className="detail-label">End Epoch</span>
+					<div className="detail-value">
+						<span>{props.endEpoch}</span>
 					</div>
 				</div>
-				<div className="w-[314px] h-[34px] bg-[#97F0E514] flex flex-row items-center justify-between rounded-t-lg rounded-b-none px-2">
-					<span className="text-[#F7F7F7] text-sm font-medium w-[157px] text-left">
-						Walruscan
-					</span>
-					<div className="w-[157px] overflow-hidden flex items-center">
+				<div className="detail-row">
+					<span className="detail-label">URL</span>
+					<div className="detail-value">
+						<span>{IMAGE_URL}</span>
+					</div>
+				</div>
+				<div className="detail-row detail-row-bottom">
+					<span className="detail-label">Walruscan</span>
+					<div className="detail-value">
 						<a
 							href={`https://walruscan.com/testnet/blob/${props.blobId}`}
 							target="_blank"
 							rel="noopener noreferrer"
-							className="text-[#C684F6] underline text-sm font-medium block text-left text-ellipsis whitespace-nowrap overflow-hidden"
 						>
 							{props.blobId}
 						</a>
 					</div>
 				</div>
-				<div className="w-[314px] h-[34px] bg-[#97F0E514] flex flex-row items-center justify-between px-2">
-					<span className="text-[#F7F7F7] text-sm font-medium w-[157px] text-left">
-						Associated Sui Object
-					</span>
-					<div className="w-[157px] overflow-hidden flex items-center">
+				<div className="detail-row">
+					<span className="detail-label">Associated Sui Object</span>
+					<div className="detail-value">
 						<a
 							href={`https://testnet.suivision.xyz/object/${props.suiObjectId}`}
 							target="_blank"
 							rel="noopener noreferrer"
-							className="text-[#C684F6] underline text-sm font-medium block text-left text-ellipsis whitespace-nowrap overflow-hidden"
 						>
 							{props.suiObjectId}
 						</a>
 					</div>
 				</div>
-				<div className="w-[314px] h-[34px] bg-[#97F0E514] flex flex-row items-center justify-between px-2">
-					<span className="text-[#F7F7F7] text-sm font-medium w-[157px] text-left">
-						Download Link
-					</span>
-					<div className="w-[157px] overflow-hidden flex items-center">
-						<a
-							href={IMAGE_URL}
-							target="_blank"
-							rel="noopener noreferrer"
-							className="text-[#C684F6] underline text-sm font-medium block text-left text-ellipsis whitespace-nowrap overflow-hidden"
-						>
+				<div className="detail-row">
+					<span className="detail-label">Download Link</span>
+					<div className="detail-value">
+						<a href={IMAGE_URL} target="_blank" rel="noopener noreferrer">
 							{props.blobId}
 						</a>
 					</div>

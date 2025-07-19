@@ -88,15 +88,15 @@ export default function FileUpload({ onUploadComplete }: FileUploadProps) {
 	const displayError = error || uploadError;
 
 	return (
-		<div className="flex flex-col gap-4">
+		<div className="walrus-file-upload">
 			<div>
-				<label className="block text-sm font-medium mb-1">Blob to upload</label>
-				<div className="w-full p-2 bg-[#0C0F1D] border-2 border-[#97F0E599] rounded-md">
-					<div className="relative">
+				<label className="upload-label">Blob to upload</label>
+				<div className="upload-container">
+					<div className="upload-input-wrapper">
 						<input
 							type="file"
 							ref={fileInputRef}
-							className="absolute inset-0 w-full h-full opacity-0 cursor-pointer [&::-webkit-file-upload-button]:hidden [&::file-selector-button]:hidden focus:outline-none focus:ring-0"
+							className="upload-file-input"
 							onChange={(e) => {
 								const selectedFile = e.target.files?.[0];
 								if (selectedFile) {
@@ -104,57 +104,53 @@ export default function FileUpload({ onUploadComplete }: FileUploadProps) {
 								}
 							}}
 						/>
-						<div className="w-full p-2 border border-2 border-[#97F0E599] border-dashed rounded-md flex items-center justify-center min-h-[100px]">
+						<div className="upload-drop-zone">
 							{file ? (
-								<div className="flex flex-col items-center justify-center gap-2">
+								<div className="upload-content">
 									[image]
-									<p className="text-[#F7F7F7]">{file.name}</p>
-									<p className="text-sm text-[#F7F7F7]">
+									<p className="file-name">{file.name}</p>
+									<p className="file-size">
 										{(file.size / (1024 * 1024)).toFixed(2)} MiB
 									</p>
 									{isComputingMetadata ? (
-										<div className="flex items-center gap-2 text-sm text-[#97F0E5]">
-											<div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#97F0E5]"></div>
+										<div className="computing-metadata">
+											<div className="spinner"></div>
 											<span>Computing metadata...</span>
 										</div>
 									) : (
-										<button className="border border-[#C684F6] rounded-md px-2 py-1 text-sm text-[#C684F6]">
-											CHOOSE FILE
-										</button>
+										<button className="choose-file-btn">CHOOSE FILE</button>
 									)}
 								</div>
 							) : (
-								<div className="flex flex-col items-center justify-center gap-2">
+								<div className="upload-content">
 									[image-up]
-									<p className="text-[#FFFFFF]">Drag & drop a file</p>
-									<p className="text-sm text-[#F7F7F7]">
+									<p className="drop-text">Drag & drop a file</p>
+									<p className="max-size-text">
 										Max {MAX_FILE_SIZE / (1024 * 1024)} MiB.
 									</p>
-									<button className="border border-[#C684F6] rounded-md px-2 py-1 text-sm text-[#C684F6]">
-										CHOOSE FILE
-									</button>
+									<button className="choose-file-btn">CHOOSE FILE</button>
 								</div>
 							)}
 						</div>
 					</div>
 				</div>
-				{displayError && <p className="text-red-500 text-sm mt-1">{displayError}</p>}
+				{displayError && <p className="upload-error">{displayError}</p>}
 			</div>
 
-			<div className="w-full">
+			<div className="advanced-settings">
 				<button
 					onClick={() => setShowAdvancedSettings(!showAdvancedSettings)}
-					className="flex items-center gap-2 text-sm text-[#F7F7F7] hover:text-[#97F0E5] transition-colors"
+					className="advanced-toggle"
 				>
 					+Advanced Settings
 				</button>
 				{showAdvancedSettings && (
-					<div className="mt-2 space-y-4">
-						<div>
-							<label className="block text-sm font-medium mb-1">Epochs</label>
+					<div className="advanced-content">
+						<div className="advanced-field">
+							<label className="field-label">Epochs</label>
 							<input
 								type="number"
-								className="w-full p-2 bg-[#0C0F1D] border-2 border-[#97F0E599] rounded-md focus:outline-none focus:ring-0 focus:border-[#97F0E5]"
+								className="field-input"
 								value={epochs}
 								onChange={(e) =>
 									setEpochs(Math.min(53, Math.max(1, Math.floor(Number(e.target.value)))))
@@ -163,23 +159,23 @@ export default function FileUpload({ onUploadComplete }: FileUploadProps) {
 								max="53"
 								step="1"
 							/>
-							<p className="text-sm opacity-50 text-[#F7F7F7] mt-1">
+							<p className="field-help">
 								The number of Walrus epochs for which to store the blob (max 53).
 							</p>
 						</div>
 
-						<div>
-							<label className="block text-sm font-medium mb-1">Deletable</label>
-							<div className="flex items-center gap-2">
+						<div className="advanced-field">
+							<label className="field-label">Deletable</label>
+							<div className="checkbox-wrapper">
 								<input
 									type="checkbox"
 									checked={deletable}
 									onChange={(e) => setDeletable(e.target.checked)}
-									className="w-4 h-4 bg-[#0C0F1D] border-2 border-[#97F0E599] rounded focus:outline-none focus:ring-0 focus:border-[#97F0E5] checked:bg-[#97F0E5] checked:border-[#97F0E5]"
+									className="field-checkbox"
 								/>
-								<span className="text-sm text-[#F7F7F7]">Allow blob to be deleted</span>
+								<span className="checkbox-label">Allow blob to be deleted</span>
 							</div>
-							<p className="text-sm opacity-50 text-[#F7F7F7] mt-1">
+							<p className="field-help">
 								Whether the blob can be deleted before its storage period expires.
 							</p>
 						</div>
@@ -188,12 +184,12 @@ export default function FileUpload({ onUploadComplete }: FileUploadProps) {
 			</div>
 
 			{/* Cost Information */}
-			<div className="w-full p-3 bg-[#0C0F1D] border border-[#97F0E599] rounded-md">
-				<h3 className="text-sm font-medium text-[#F7F7F7] mb-2">Upload Cost Estimate</h3>
-				<div className="space-y-2">
-					<div className="flex justify-between items-center text-sm">
-						<span className="text-[#F7F7F7] opacity-75">Storage Cost:</span>
-						<span className="text-[#F7F7F7]">
+			<div className="cost-display">
+				<h3 className="cost-title">Upload Cost Estimate</h3>
+				<div className="cost-rows">
+					<div className="cost-row">
+						<span className="cost-label">Storage Cost:</span>
+						<span className="cost-value">
 							{storageCost
 								? (() => {
 										const storageValue = parseInt(storageCost.storageCost) / 10 ** 9;
@@ -210,9 +206,9 @@ export default function FileUpload({ onUploadComplete }: FileUploadProps) {
 								: "---"}
 						</span>
 					</div>
-					<div className="flex justify-between items-center text-sm">
-						<span className="text-[#F7F7F7] opacity-75">Write Cost:</span>
-						<span className="text-[#F7F7F7]">
+					<div className="cost-row">
+						<span className="cost-label">Write Cost:</span>
+						<span className="cost-value">
 							{storageCost
 								? (() => {
 										const storageValue = parseInt(storageCost.writeCost) / 10 ** 9;
@@ -229,9 +225,9 @@ export default function FileUpload({ onUploadComplete }: FileUploadProps) {
 								: "---"}
 						</span>
 					</div>
-					<div className="flex justify-between items-center text-sm">
-						<span className="text-[#F7F7F7] opacity-75">Tip Amount:</span>
-						<span className="text-[#F7F7F7]">
+					<div className="cost-row">
+						<span className="cost-label">Tip Amount:</span>
+						<span className="cost-value">
 							{storageCost
 								? (() => {
 										const tipValue = parseInt(tipAmountMist) / 10 ** 9;
@@ -248,10 +244,10 @@ export default function FileUpload({ onUploadComplete }: FileUploadProps) {
 								: "---"}
 						</span>
 					</div>
-					<div className="border-t border-[#97F0E599] pt-2">
-						<div className="flex justify-between items-center text-sm font-medium">
-							<span className="text-[#F7F7F7]">Total Cost:</span>
-							<span className="text-[#97F0E5]">
+					<div className="cost-total">
+						<div className="cost-row">
+							<span className="cost-label">Total Cost:</span>
+							<span className="cost-value">
 								{storageCost
 									? (() => {
 											const totalCostMist = parseInt(tipAmountMist);
@@ -281,29 +277,29 @@ export default function FileUpload({ onUploadComplete }: FileUploadProps) {
 						</div>
 					</div>
 				</div>
-				<p className="text-xs text-[#F7F7F7] opacity-50 mt-2">
+				<p className="cost-disclaimer">
 					Actual costs may vary based on current network conditions and file size.
 				</p>
 			</div>
 
 			{/* Upload Buttons - All Steps Displayed */}
-			<div className="space-y-4">
-				<div className="flex flex-col items-center gap-0">
+			<div className="upload-steps">
+				<div className="steps-container">
 					{/* Step 1: Register Blob */}
 					<button
-						className={`text-[#0C0F1D] w-full py-2 px-4 rounded-md transition-colors duration-200 ${
+						className={`step-button ${
 							currentStep === "register" &&
 							!isRegistering &&
 							file &&
 							currentAccount &&
 							!isComputingMetadata &&
 							metadata
-								? "bg-[#97F0E5] hover:bg-[#97F0E5]/80 cursor-pointer"
+								? "step-active"
 								: currentStep === "register"
-									? "bg-[#97F0E5]/50 cursor-not-allowed"
+									? "step-disabled"
 									: registrationData
-										? "bg-[#07b09a] cursor-not-allowed"
-										: "bg-gray-500/50 cursor-not-allowed"
+										? "step-completed"
+										: "step-inactive"
 						}`}
 						onClick={() => {
 							if (currentStep !== "register") return;
@@ -335,38 +331,38 @@ export default function FileUpload({ onUploadComplete }: FileUploadProps) {
 						}
 					>
 						{currentStep === "register" && isRegistering ? (
-							<div className="flex items-center justify-center gap-2">
-								<div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#0C0F1D]"></div>
+							<div className="step-content">
+								<div className="step-spinner"></div>
 								<span>Registering...</span>
 							</div>
 						) : registrationData ? (
-							<div className="flex items-center justify-center gap-2">
+							<div className="step-content">
 								<span>✓ 1. Register Blob</span>
 							</div>
 						) : currentStep === "register" && !currentAccount ? (
-							<div className="flex items-center justify-center gap-2">
+							<div className="step-content">
 								<span>1. Connect Wallet First</span>
 							</div>
 						) : (
-							<div className="flex items-center justify-center gap-2">
+							<div className="step-content">
 								<span>1. Register Blob</span>
 							</div>
 						)}
 					</button>
 
 					{/* Arrow Down */}
-					<div className="flex items-center justify-center">⌄</div>
+					<div className="step-arrow">⌄</div>
 
 					{/* Step 2: Write to Upload Relay */}
 					<button
-						className={`text-[#0C0F1D] w-full py-2 px-4 rounded-md transition-colors duration-200 ${
+						className={`step-button ${
 							currentStep === "relay" && !isWritingToUploadRelay && registrationData
-								? "bg-[#97F0E5] hover:bg-[#97F0E5]/80 cursor-pointer"
+								? "step-active"
 								: currentStep === "relay"
-									? "bg-[#97F0E5]/50 cursor-not-allowed"
+									? "step-disabled"
 									: uploadRelayData
-										? "bg-[#07b09a] cursor-not-allowed"
-										: "bg-gray-500/50 cursor-not-allowed"
+										? "step-completed"
+										: "step-inactive"
 						}`}
 						onClick={() => {
 							if (currentStep === "relay") {
@@ -378,32 +374,32 @@ export default function FileUpload({ onUploadComplete }: FileUploadProps) {
 						}
 					>
 						{currentStep === "relay" && isWritingToUploadRelay ? (
-							<div className="flex items-center justify-center gap-2">
-								<div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#0C0F1D]"></div>
+							<div className="step-content">
+								<div className="step-spinner"></div>
 								<span>Uploading to Network...</span>
 							</div>
 						) : uploadRelayData ? (
-							<div className="flex items-center justify-center gap-2">
+							<div className="step-content">
 								<span>✓ 2. Uploaded to Network</span>
 							</div>
 						) : (
-							<div className="flex items-center justify-center gap-2">
+							<div className="step-content">
 								<span>2. Upload to Network</span>
 							</div>
 						)}
 					</button>
 
 					{/* Arrow Down */}
-					<div className="flex items-center justify-center">⌄</div>
+					<div className="step-arrow">⌄</div>
 
 					{/* Step 3: Certify Blob */}
 					<button
-						className={`text-[#0C0F1D] w-full py-2 px-4 rounded-md transition-colors duration-200 ${
+						className={`step-button ${
 							currentStep === "certify" && !isCertifying && uploadRelayData
-								? "bg-[#97F0E5] hover:bg-[#97F0E5]/80 cursor-pointer"
+								? "step-active"
 								: currentStep === "certify"
-									? "bg-[#97F0E5]/50 cursor-not-allowed"
-									: "bg-gray-500/50 cursor-not-allowed"
+									? "step-disabled"
+									: "step-inactive"
 						}`}
 						onClick={() => {
 							if (currentStep === "certify") {
@@ -413,12 +409,12 @@ export default function FileUpload({ onUploadComplete }: FileUploadProps) {
 						disabled={currentStep !== "certify" || isCertifying || !uploadRelayData}
 					>
 						{currentStep === "certify" && isCertifying ? (
-							<div className="flex items-center justify-center gap-2">
-								<div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#0C0F1D]"></div>
+							<div className="step-content">
+								<div className="step-spinner"></div>
 								<span>Certifying...</span>
 							</div>
 						) : (
-							<div className="flex items-center justify-center gap-2">
+							<div className="step-content">
 								<span>3. Certify Upload</span>
 							</div>
 						)}
