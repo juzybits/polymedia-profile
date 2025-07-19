@@ -10,6 +10,9 @@
 		"deploy-prod": "pnpm build && wrangler pages deploy dist/ --project-name polymedia-profile --branch main",
 		"dev": "vite",
 		"host": "vite --host",
+		"lint:fix": "biome check --write .",
+		"lint:unsafe": "biome check --write --unsafe .",
+		"lint": "biome check .",
 		"preview": "pnpm build && vite preview",
 		"typecheck": "tsc --noEmit"
 	},

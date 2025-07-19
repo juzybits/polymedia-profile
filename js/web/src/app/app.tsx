@@ -23,6 +23,7 @@ import { PageProfileSearch } from "../pages/profile-search";
 import { PageProfileView } from "../pages/profile-view";
 import { PageRegistryNew } from "../pages/registry-new";
 import "../styles/app.less";
+import { WalrusClient } from "@mysten/walrus";
 import { networkIds } from "./config";
 import { AppContext } from "./context";
 import { Nav } from "./nav";
@@ -80,6 +81,7 @@ export type AppContextType = {
 	setNetwork: Setter<SupportedNetwork>;
 	profile: PolymediaProfile | null | undefined;
 	profileClient: ProfileClient;
+	walrusClient: WalrusClient;
 	reloadProfile: () => Promise<void>;
 	openConnectModal: () => void;
 };
@@ -103,6 +105,13 @@ const App: React.FC<{
 			signTx: (tx) => walletSignTx({ transaction: tx }),
 		});
 	}, [suiClient, walletSignTx, network]);
+
+	const walrusClient = useMemo(() => {
+		return new WalrusClient({
+			network: network === "mainnet" ? "mainnet" : "testnet",
+			suiClient,
+		});
+	}, [suiClient, network]);
 
 	const reloadProfile = useCallback(async (): Promise<void> => {
 		if (!currAcct) {
@@ -134,6 +143,7 @@ const App: React.FC<{
 		setNetwork,
 		profile,
 		profileClient,
+		walrusClient,
 		reloadProfile,
 		openConnectModal,
 	};

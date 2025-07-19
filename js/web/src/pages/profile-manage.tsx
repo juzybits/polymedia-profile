@@ -6,6 +6,7 @@ import { type SyntheticEvent, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useAppContext } from "../app/context";
 import "../styles/manage-profile.less";
+import FileUpload, { type ImageCardProps } from "../walrus/file-upload";
 
 export const PageProfileManage: React.FC = () => {
 	/* State */
@@ -25,6 +26,16 @@ export const PageProfileManage: React.FC = () => {
 	const [isErrorImgur, setIsErrorImgur] = useState(false);
 	// Other state
 	const [waiting, setWaiting] = useState(false);
+
+	// Walrus
+	const showWalrus = ["mainnet", "testnet"].includes(network);
+	const [uploadedBlobs, setUploadedBlobs] = useState<ImageCardProps[]>([]);
+	const onUploadComplete = (uploadedBlob: ImageCardProps) => {
+		setUploadedBlobs((prev) => [uploadedBlob, ...prev]);
+	};
+	useEffect(() => {
+		console.log("uploadedBlobs:", uploadedBlobs);
+	}, [uploadedBlobs]);
 
 	/* Functions */
 
@@ -239,14 +250,14 @@ export const PageProfileManage: React.FC = () => {
 		);
 	}
 
-	const imageSection = inputImage && (
+	/*const imageSection = */ inputImage && (
 		<div className={`section section-image ${isErrorImage ? "hidden" : ""}`}>
 			<h2>Image preview</h2>
 			<img src={inputImage} onLoad={onImageLoad} onError={onImageError} />
 		</div>
 	);
 
-	const infoSection = profile && (
+	/* const infoSection = */ profile && (
 		<div className="section section-info">
 			<h2>Details</h2>
 			<p>
@@ -267,8 +278,15 @@ export const PageProfileManage: React.FC = () => {
 		<div id="page" className="page-manage-profile">
 			<h1>{profile ? "EDIT" : profile === null ? "CREATE" : "MANAGE"} PROFILE</h1>
 			{view}
-			{imageSection}
-			{infoSection}
+			{/* {imageSection} */}
+			{/* {infoSection} */}
+			{showWalrus && (
+				<>
+					<hr />
+					<h2>Upload to Walrus</h2>
+					<FileUpload onUploadComplete={onUploadComplete} />
+				</>
+			)}
 		</div>
 	);
 };
