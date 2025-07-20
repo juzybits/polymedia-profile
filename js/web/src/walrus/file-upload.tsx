@@ -6,6 +6,7 @@ import { useStorageCost } from "./useStorageCost";
 import { useWalrusUpload } from "./useWalrusUpload";
 
 const MAX_FILE_SIZE = 500 * 1024 * 1024; // 500 MiB in bytes
+const DELETABLE = true; // always allow blobs to be deleted
 
 interface FileUploadProps {
 	onUploadComplete: (uploadedBlob: ImageCardProps) => void;
@@ -19,7 +20,6 @@ export default function FileUpload({ onUploadComplete }: FileUploadProps) {
 	const fileInputRef = useRef<HTMLInputElement>(null);
 	const [file, setFile] = useState<File | null>(null);
 	const [epochs, setEpochs] = useState(1);
-	const [deletable, setDeletable] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 	const [tipAmountMist] = useState("105");
 
@@ -62,7 +62,7 @@ export default function FileUpload({ onUploadComplete }: FileUploadProps) {
 	const handleRegisterBlob = async () => {
 		await registerBlob({
 			epochs,
-			deletable,
+			deletable: DELETABLE,
 		});
 	};
 
@@ -157,21 +157,6 @@ export default function FileUpload({ onUploadComplete }: FileUploadProps) {
 							/>
 							<div className="field-info">
 								The number of Walrus epochs for which to store the blob (max 53).
-							</div>
-						</div>
-
-						<div className="form-field">
-							<label>
-								<input
-									type="checkbox"
-									checked={deletable}
-									onChange={(e) => setDeletable(e.target.checked)}
-									className="walrus-checkbox"
-								/>
-								Allow blob to be deleted
-							</label>
-							<div className="field-info">
-								Whether the blob can be deleted before its storage period expires.
 							</div>
 						</div>
 					</div>
