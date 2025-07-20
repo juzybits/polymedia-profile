@@ -1,4 +1,4 @@
-@import './variables.css';
+@import "./variables.css";
 
 #page.page-manage-profile {
 	h1 {
@@ -43,7 +43,8 @@
 		}
 	}
 
-	.field-error, .field-info {
+	.field-error,
+	.field-info {
 		font-size: 0.7em;
 		margin-bottom: 0.25em;
 		margin-top: 0.25em;

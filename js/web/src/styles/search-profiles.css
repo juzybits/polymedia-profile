@@ -1,4 +1,4 @@
-@import './variables.css';
+@import "./variables.css";
 
 #page.page-search-profiles {
 	.form-field textarea {
@@ -13,7 +13,7 @@
 
 	.search-loading {
 		margin: 1em 0;
-		padding: .45em 0;
+		padding: 0.45em 0;
 	}
 
 	.search-results {
@@ -21,10 +21,11 @@
 
 		th {
 			text-align: left;
-			font-variation-settings: 'wght' 600;
+			font-variation-settings: "wght" 600;
 		}
 
-		th, td {
+		th,
+		td {
 			padding: 0.4em 0;
 		}
 
@@ -53,7 +54,7 @@
 
 				.profile-img {
 					display: block;
-					background-image: url('/img/anon.webp');
+					background-image: url("/img/anon.webp");
 					background-size: cover;
 					background-position: center;
 					height: 1.2em;
