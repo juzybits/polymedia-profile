@@ -5,7 +5,7 @@ import { isLocalhost, NetworkRadioSelector } from "@polymedia/suitcase-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { supportedNetworks } from "./app";
-import "../styles/nav.less";
+import "../styles/nav.css";
 import { useAppContext } from "./context";
 
 export const Nav: React.FC = () => {

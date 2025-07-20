@@ -4,7 +4,7 @@ import { LinkToPolymedia, makeCssUrl } from "@polymedia/suitcase-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAppContext } from "../app/context";
-import "../styles/search-profiles.less";
+import "../styles/search-profiles.css";
 
 const addressRegex = new RegExp(REGEX_ADDRESS, "g");
 

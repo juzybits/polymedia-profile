@@ -3,7 +3,7 @@ import { LinkToPolymedia } from "@polymedia/suitcase-react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAppContext } from "../app/context";
-import "../styles/view-profile.less";
+import "../styles/view-profile.css";
 import toast from "react-hot-toast";
 
 export const PageProfileView: React.FC = () => {

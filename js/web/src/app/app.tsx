@@ -22,7 +22,7 @@ import { PageProfileManage } from "../pages/profile-manage";
 import { PageProfileSearch } from "../pages/profile-search";
 import { PageProfileView } from "../pages/profile-view";
 import { PageRegistryNew } from "../pages/registry-new";
-import "../styles/app.less";
+import "../styles/app.css";
 import { WalrusClient } from "@mysten/walrus";
 import { networkIds } from "./config";
 import { AppContext } from "./context";

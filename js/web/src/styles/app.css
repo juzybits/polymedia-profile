@@ -1,4 +1,4 @@
-@import './variables.less';
+@import './variables.css';
 
 :root {
 	--text-color: rgb(224, 224, 224);
