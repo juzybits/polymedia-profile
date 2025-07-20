@@ -18,7 +18,7 @@ export function loadUploadsFromStorage(
 	if (!userAddress || !network) return [];
 
 	try {
-		const key = `${WALRUS_UPLOADS_KEY}-${userAddress}-${network}`;
+		const key = makeKey(userAddress, network);
 		const stored = localStorage.getItem(key);
 		if (!stored) return [];
 
@@ -53,7 +53,7 @@ export function saveUploadToStorage(
 	fileSize?: number,
 ): void {
 	try {
-		const key = `${WALRUS_UPLOADS_KEY}-${userAddress}-${network}`;
+		const key = makeKey(userAddress, network);
 		const existingUploads = loadUploadsFromStorage(userAddress, network);
 
 		// Check if this upload already exists (prevent duplicates)
@@ -90,7 +90,7 @@ export function removeUploadFromStorage(
 	blobId: string,
 ): void {
 	try {
-		const key = `${WALRUS_UPLOADS_KEY}-${userAddress}-${network}`;
+		const key = makeKey(userAddress, network);
 		const existingUploads = loadUploadsFromStorage(userAddress, network);
 		const filteredUploads = existingUploads.filter((upload) => upload.blobId !== blobId);
 
@@ -105,9 +105,13 @@ export function removeUploadFromStorage(
  */
 export function clearUploadsFromStorage(userAddress: string, network: string): void {
 	try {
-		const key = `${WALRUS_UPLOADS_KEY}-${userAddress}-${network}`;
+		const key = makeKey(userAddress, network);
 		localStorage.removeItem(key);
 	} catch (error) {
 		console.error("Error clearing uploads from localStorage:", error);
 	}
+}
+
+function makeKey(userAddress: string, network: string) {
+	return `${WALRUS_UPLOADS_KEY}-${network}-${userAddress}`;
 }
