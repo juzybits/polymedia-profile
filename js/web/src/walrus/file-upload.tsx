@@ -1,6 +1,7 @@
 import { useCurrentAccount } from "@mysten/dapp-kit";
 import { useEffect, useRef, useState } from "react";
 import { useAppContext } from "../app/context";
+import { Spinner } from "../comp/spinner";
 import { useStorageCost } from "./useStorageCost";
 import { useWalrusUpload } from "./useWalrusUpload";
 
@@ -255,8 +256,11 @@ export default function FileUpload({
 						!metadata
 					}
 				>
-					{currentStep === "register" && isRegistering ? (
-						<span>Registering...</span>
+					{isRegistering ? (
+						<div className="button-loading">
+							<Spinner />
+							<span>Registering...</span>
+						</div>
 					) : registrationData ? (
 						<span>✓ 1. Register Blob</span>
 					) : currentStep === "register" && !currentAccount ? (
@@ -284,8 +288,11 @@ export default function FileUpload({
 						currentStep !== "relay" || isWritingToUploadRelay || !registrationData
 					}
 				>
-					{currentStep === "relay" && isWritingToUploadRelay ? (
-						<span>Uploading to Network...</span>
+					{isWritingToUploadRelay ? (
+						<div className="button-loading">
+							<Spinner />
+							<span>Uploading to Network...</span>
+						</div>
 					) : uploadRelayData ? (
 						<span>✓ 2. Uploaded to Network</span>
 					) : (
@@ -307,8 +314,11 @@ export default function FileUpload({
 					}}
 					disabled={currentStep !== "certify" || isCertifying || !uploadRelayData}
 				>
-					{currentStep === "certify" && isCertifying ? (
-						<span>Certifying...</span>
+					{isCertifying ? (
+						<div className="button-loading">
+							<Spinner />
+							<span>Certifying...</span>
+						</div>
 					) : (
 						<span>3. Certify Upload</span>
 					)}

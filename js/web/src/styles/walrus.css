@@ -59,7 +59,7 @@
 	margin-top: 0.75em;
 
 	&:hover {
-		background-color: rgba(150, 240, 229, 0.2);
+		background-color: rgba(150, 240, 229, 0.2) !important;
 	}
 
 	.walrus-icon {
@@ -78,4 +78,35 @@
 		width: 48px;
 		height: 48px;
 	}
+}
+
+/* Spinner styles */
+.spinner-icon {
+	width: 1em;
+	height: 1em;
+	animation: spin 1s linear infinite;
+}
+
+.spinner-track {
+	opacity: 0.25;
+}
+
+.spinner-indicator {
+	opacity: 0.75;
+}
+
+@keyframes spin {
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+.button-loading {
+	display: flex;
+	align-items: center;
+	gap: 0.5em;
+	justify-content: center;
 }
