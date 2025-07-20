@@ -1,5 +1,7 @@
 @import './variables.less';
 
+@input-size: 70px;
+
 #page.page-manage-profile {
     h1 {
         display: flex;
@@ -62,21 +64,20 @@
         color: #ccc;
         font-size: 0.7em;
     }
+    textarea {
+        flex: 1;
+        height: @input-size;
+        resize: none;
+    }
     .image-input-container {
         display: flex;
         flex-direction: row;
         align-items: flex-start;
         gap: 0.75em;
 
-        textarea {
-            flex: 1;
-            height: 60px;
-            resize: none;
-        }
-
         .image-preview {
-            width: 60px;
-            height: 60px;
+            width: @input-size;
+            height: @input-size;
             border-radius: 0.5em;
             border: 1px solid var(--text-color);
             overflow: hidden;
