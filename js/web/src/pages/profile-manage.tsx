@@ -33,8 +33,14 @@ export const PageProfileManage: React.FC = () => {
 	// Walrus
 	const enableWalrus = ["mainnet", "testnet"].includes(network);
 	const [showWalrusModal, setShowWalrusModal] = useState(false);
+	const [hasUploadProgress, setHasUploadProgress] = useState(false);
+
 	const onUploadComplete = (_uploadedBlob: ImageCardProps) => {
 		setShowWalrusModal(false);
+	};
+
+	const onUploadProgressChange = (hasProgress: boolean) => {
+		setHasUploadProgress(hasProgress);
 	};
 
 	/* Functions */
@@ -269,6 +275,8 @@ export const PageProfileManage: React.FC = () => {
 			<Modal
 				open={showWalrusModal}
 				onClose={() => setShowWalrusModal(false)}
+				confirmBeforeClose={hasUploadProgress}
+				confirmMessage="Are you sure you want to close? Your upload progress will be lost and you'll need to start over."
 				title={
 					<div className="walrus-modal-title">
 						<img src="/img/walrus-blue.svg" alt="Walrus" className="walrus-icon" />
@@ -276,7 +284,10 @@ export const PageProfileManage: React.FC = () => {
 					</div>
 				}
 			>
-				<FileUpload onUploadComplete={onUploadComplete} />
+				<FileUpload
+					onUploadComplete={onUploadComplete}
+					onUploadProgressChange={onUploadProgressChange}
+				/>
 			</Modal>
 		</div>
 	);

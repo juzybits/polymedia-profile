@@ -15,9 +15,13 @@ const TESTNET_EPOCH_DAYS = 1;
 
 interface FileUploadProps {
 	onUploadComplete: (uploadedBlob: ImageCardProps) => void;
+	onUploadProgressChange?: (hasProgress: boolean) => void;
 }
 
-export default function FileUpload({ onUploadComplete }: FileUploadProps) {
+export default function FileUpload({
+	onUploadComplete,
+	onUploadProgressChange,
+}: FileUploadProps) {
 	const currentAccount = useCurrentAccount();
 	const { network } = useAppContext();
 
@@ -48,6 +52,23 @@ export default function FileUpload({ onUploadComplete }: FileUploadProps) {
 	} = useWalrusUpload();
 
 	const { data: storageCost } = useStorageCost(file?.size || 0, epochs);
+
+	// Check if there's upload progress that would be lost
+	const hasUploadProgress = !!(
+		file &&
+		(metadata ||
+			registrationData ||
+			uploadRelayData ||
+			isComputingMetadata ||
+			isRegistering ||
+			isWritingToUploadRelay ||
+			isCertifying)
+	);
+
+	// Notify parent about progress changes
+	useEffect(() => {
+		onUploadProgressChange?.(hasUploadProgress);
+	}, [hasUploadProgress, onUploadProgressChange]);
 
 	// Load uploaded blobs from localStorage
 	useEffect(() => {
