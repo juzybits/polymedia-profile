@@ -46,21 +46,6 @@
 	flex-direction: column;
 }
 
-.walrus-upload-steps {
-	display: flex;
-	flex-direction: column;
-}
-
-/* Animation for any remaining spinners */
-@keyframes spin {
-	from {
-		transform: rotate(0deg);
-	}
-	to {
-		transform: rotate(360deg);
-	}
-}
-
 .walrus-upload-btn {
 	display: flex;
 	align-items: center;
