@@ -23,6 +23,7 @@ export const PageProfileManage: React.FC = () => {
 	const [inputName, setInputName] = useState("");
 	const [inputImage, setInputImage] = useState("");
 	const [inputDescription, setInputDescription] = useState("");
+	const [hasChanged, setHasChanged] = useState(false);
 	// Form errors
 	const [isErrorImage, setIsErrorImage] = useState(false);
 	const [isErrorForm, setIsErrorForm] = useState(false);
@@ -51,6 +52,7 @@ export const PageProfileManage: React.FC = () => {
 		setInputName(profile?.name || "");
 		setInputImage(profile?.imageUrl || "");
 		setInputDescription(profile?.description || "");
+		setHasChanged(false);
 	}, [profile]);
 
 	const onInputImageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -60,6 +62,7 @@ export const PageProfileManage: React.FC = () => {
 			setIsErrorImgur(false);
 		}
 		setInputImage(e.target.value);
+		setHasChanged(true);
 	};
 	const onImageLoad = () => {
 		setIsErrorImage(false);
@@ -193,7 +196,10 @@ export const PageProfileManage: React.FC = () => {
 						spellCheck="false"
 						autoCorrect="off"
 						autoComplete="off"
-						onChange={(e) => setInputName(e.target.value)}
+						onChange={(e) => {
+							setInputName(e.target.value);
+							setHasChanged(true);
+						}}
 					/>
 				</div>
 				<div className="form-field">
@@ -208,7 +214,10 @@ export const PageProfileManage: React.FC = () => {
 						spellCheck="true"
 						autoCorrect="off"
 						autoComplete="off"
-						onChange={(e) => setInputDescription(e.target.value)}
+						onChange={(e) => {
+							setInputDescription(e.target.value);
+							setHasChanged(true);
+						}}
 					/>
 				</div>
 				<div className="form-field">
@@ -255,7 +264,7 @@ export const PageProfileManage: React.FC = () => {
 				</div>
 				<button
 					type="submit"
-					disabled={waiting || isErrorForm}
+					disabled={waiting || isErrorForm || !inputName.trim() || !hasChanged}
 					className={isErrorForm ? "disabled" : waiting ? "waiting" : ""}
 				>
 					{profile === null ? "CREATE PROFILE" : "EDIT PROFILE"}

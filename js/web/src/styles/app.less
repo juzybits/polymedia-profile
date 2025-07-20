@@ -102,6 +102,9 @@ input, textarea, button, .btn {
     }
 }
 
+.disabled {
+    cursor: not-allowed;
+}
 .disabled, .waiting {
     color: #bbb;
     background-color: #777;
@@ -129,7 +132,7 @@ button, .btn {
         cursor: pointer;
         text-decoration: none;
     }
-    &.disabled {
+    &.disabled, &:disabled {
         .disabled();
     }
     &.waiting {
