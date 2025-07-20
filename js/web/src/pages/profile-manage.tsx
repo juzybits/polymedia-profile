@@ -9,8 +9,7 @@ import "../styles/manage-profile.css";
 import "../styles/walrus.css";
 import { Modal } from "../comp/modal";
 import FileUpload from "../walrus/file-upload";
-import ImageCard, { type ImageCardProps, PlaceholderCard } from "../walrus/image-card";
-import { loadUploadsFromStorage } from "../walrus/localStorage";
+import type { ImageCardProps } from "../walrus/image-card";
 
 export const PageProfileManage: React.FC = () => {
 	/* State */
@@ -33,20 +32,10 @@ export const PageProfileManage: React.FC = () => {
 
 	// Walrus
 	const enableWalrus = ["mainnet", "testnet"].includes(network);
-	const [uploadedBlobs, setUploadedBlobs] = useState<ImageCardProps[]>([]);
 	const [showWalrusModal, setShowWalrusModal] = useState(false);
-	const onUploadComplete = (uploadedBlob: ImageCardProps) => {
-		setUploadedBlobs((prev) => [uploadedBlob, ...prev]);
+	const onUploadComplete = (_uploadedBlob: ImageCardProps) => {
 		setShowWalrusModal(false);
 	};
-	useEffect(() => {
-		if (currAcct?.address) {
-			const storedUploads = loadUploadsFromStorage(currAcct.address);
-			setUploadedBlobs(storedUploads);
-		} else {
-			setUploadedBlobs([]);
-		}
-	}, [currAcct?.address]);
 
 	/* Functions */
 
@@ -288,32 +277,6 @@ export const PageProfileManage: React.FC = () => {
 				}
 			>
 				<FileUpload onUploadComplete={onUploadComplete} />
-				<div>
-					{/* Uploads Section */}
-					<section>
-						<h2>
-							Uploads{" "}
-							<span className="walrus-uploads-count">({uploadedBlobs.length})</span>
-						</h2>
-						<div className="walrus-uploads-list">
-							{uploadedBlobs.length > 0 ? (
-								uploadedBlobs.map((blobId) => {
-									return (
-										<ImageCard
-											key={blobId.blobId}
-											blobId={blobId.blobId}
-											suiObjectId={blobId.suiObjectId}
-											suiEventId={blobId.suiEventId}
-											endEpoch={blobId.endEpoch}
-										/>
-									);
-								})
-							) : (
-								<PlaceholderCard />
-							)}
-						</div>
-					</section>
-				</div>
 			</Modal>
 		</div>
 	);
