@@ -28,7 +28,6 @@ export function PageRegistryNew() {
 			create_registry(tx, profileClient.profilePkgId, inputName);
 
 			const resp = await profileClient.signAndExecuteTx({ tx });
-			console.debug("resp:", resp);
 
 			if (resp.errors || resp.effects?.status.status !== "success") {
 				toast.error(
@@ -37,6 +36,13 @@ export function PageRegistryNew() {
 						`Txn errors: ${JSON.stringify(resp.errors)}`,
 				);
 			}
+
+			const registryObj = resp.objectChanges
+				?.filter((c) => c.type === "created")
+				.find((c) => c.objectType.endsWith("::profile::Registry"));
+			console.debug("[onSubmitCreateRegistry] status:", resp.effects?.status.status);
+			console.debug("[onSubmitCreateRegistry] digest:", resp.digest);
+			console.debug("[onSubmitCreateRegistry] registryId", registryObj?.objectId);
 		} catch (err) {
 			console.warn("[onSubmitCreateRegistry]", err);
 			toast.error(String(err));
