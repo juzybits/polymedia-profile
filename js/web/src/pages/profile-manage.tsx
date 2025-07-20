@@ -9,7 +9,8 @@ import "../styles/manage-profile.css";
 import "../styles/walrus.css";
 import { Modal } from "../comp/modal";
 import FileUpload from "../walrus/file-upload";
-import type { ImageCardProps } from "../walrus/image-card";
+import type { UploadResult } from "../walrus/useWalrusUpload";
+import { makeWalrusImageUrl } from "../walrus/utils";
 
 export const PageProfileManage: React.FC = () => {
 	/* State */
@@ -35,8 +36,9 @@ export const PageProfileManage: React.FC = () => {
 	const [showWalrusModal, setShowWalrusModal] = useState(false);
 	const [hasUploadProgress, setHasUploadProgress] = useState(false);
 
-	const onUploadComplete = (_uploadedBlob: ImageCardProps) => {
+	const onUploadComplete = (uploadedBlob: UploadResult) => {
 		setShowWalrusModal(false);
+		setInputImage(makeWalrusImageUrl(network, uploadedBlob.blobId));
 	};
 
 	const onUploadProgressChange = (hasProgress: boolean) => {
