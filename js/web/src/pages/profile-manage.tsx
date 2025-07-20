@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import { useAppContext } from "../app/context";
 import "../styles/manage-profile.less";
 import "../styles/walrus.less";
+import { Modal } from "../comp/modal";
 import FileUpload from "../walrus/file-upload";
 import ImageCard, { type ImageCardProps, PlaceholderCard } from "../walrus/image-card";
 import { loadUploadsFromStorage } from "../walrus/localStorage";
@@ -31,10 +32,12 @@ export const PageProfileManage: React.FC = () => {
 	const [waiting, setWaiting] = useState(false);
 
 	// Walrus
-	const showWalrus = ["mainnet", "testnet"].includes(network);
+	const enableWalrus = ["mainnet", "testnet"].includes(network);
 	const [uploadedBlobs, setUploadedBlobs] = useState<ImageCardProps[]>([]);
+	const [showWalrusModal, setShowWalrusModal] = useState(false);
 	const onUploadComplete = (uploadedBlob: ImageCardProps) => {
 		setUploadedBlobs((prev) => [uploadedBlob, ...prev]);
+		setShowWalrusModal(false);
 	};
 	useEffect(() => {
 		if (currAcct?.address) {
@@ -240,10 +243,16 @@ export const PageProfileManage: React.FC = () => {
 					{isErrorImage && (
 						<div className="field-error">That doesn't look like a valid image URL</div>
 					)}
-					<button className="walrus-upload-btn">
-						<img src="/img/walrus-blue.svg" alt="Walrus" className="walrus-icon" />
-						Upload to Walrus
-					</button>
+					{enableWalrus && (
+						<button
+							type="button"
+							className="walrus-upload-btn"
+							onClick={() => setShowWalrusModal(true)}
+						>
+							<img src="/img/walrus-blue.svg" alt="Walrus" className="walrus-icon" />
+							Upload to Walrus
+						</button>
+					)}
 				</div>
 				<button
 					type="submit"
@@ -263,44 +272,44 @@ export const PageProfileManage: React.FC = () => {
 		</span>
 	);
 
-	const walrusSection = showWalrus && (
-		<div>
-			{/* Blob Upload Section */}
-			<section>
-				<FileUpload onUploadComplete={onUploadComplete} />
-			</section>
-
-			{/* Uploads Section */}
-			<section>
-				<h2>
-					Uploads <span className="walrus-uploads-count">({uploadedBlobs.length})</span>
-				</h2>
-				<div className="walrus-uploads-list">
-					{uploadedBlobs.length > 0 ? (
-						uploadedBlobs.map((blobId) => {
-							return (
-								<ImageCard
-									key={blobId.blobId}
-									blobId={blobId.blobId}
-									suiObjectId={blobId.suiObjectId}
-									suiEventId={blobId.suiEventId}
-									endEpoch={blobId.endEpoch}
-								/>
-							);
-						})
-					) : (
-						<PlaceholderCard />
-					)}
-				</div>
-			</section>
-		</div>
-	);
-
 	return (
 		<div id="page" className="page-manage-profile">
 			<h1>PROFILE{profileObjLabel}</h1>
 			{view}
-			{walrusSection}
+
+			<Modal
+				open={showWalrusModal}
+				onClose={() => setShowWalrusModal(false)}
+				title="Upload to Walrus"
+			>
+				<FileUpload onUploadComplete={onUploadComplete} />
+				<div>
+					{/* Uploads Section */}
+					<section>
+						<h2>
+							Uploads{" "}
+							<span className="walrus-uploads-count">({uploadedBlobs.length})</span>
+						</h2>
+						<div className="walrus-uploads-list">
+							{uploadedBlobs.length > 0 ? (
+								uploadedBlobs.map((blobId) => {
+									return (
+										<ImageCard
+											key={blobId.blobId}
+											blobId={blobId.blobId}
+											suiObjectId={blobId.suiObjectId}
+											suiEventId={blobId.suiEventId}
+											endEpoch={blobId.endEpoch}
+										/>
+									);
+								})
+							) : (
+								<PlaceholderCard />
+							)}
+						</div>
+					</section>
+				</div>
+			</Modal>
 		</div>
 	);
 };
