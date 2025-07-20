@@ -1,8 +1,25 @@
 @import "./variables.css";
 
-/* Minimal Walrus styles - clean and simple, matching app design */
+.walrus-form {
+	display: flex;
+	flex-direction: column;
+	gap: 2em;
 
-/* File upload component */
+	.btn-group {
+		display: flex;
+		flex-direction: column;
+		gap: 1em;
+		button {
+			margin: 0;
+			padding: 0.5em 1em;
+		}
+	}
+
+	input {
+		width: 100%;
+	}
+}
+
 .walrus-file-upload-container {
 	position: relative;
 }
@@ -33,7 +50,6 @@
 	flex-direction: column;
 }
 
-/* Image card component */
 .walrus-image-card {
 	display: flex;
 	gap: 1em;
@@ -74,7 +90,6 @@
 	gap: 0.5em;
 }
 
-/* Uploads section */
 .walrus-uploads-list {
 	display: flex;
 	flex-direction: column;

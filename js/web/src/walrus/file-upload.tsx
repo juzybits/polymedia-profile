@@ -114,7 +114,7 @@ export default function FileUpload({ onUploadComplete }: FileUploadProps) {
 	const displayError = error || uploadError;
 
 	return (
-		<div className="form walrus-form">
+		<div className="walrus-form">
 			<div className="form-field">
 				<div className="walrus-file-upload-container">
 					<input
@@ -154,7 +154,7 @@ export default function FileUpload({ onUploadComplete }: FileUploadProps) {
 			</div>
 
 			<div className="form-field">
-				<label>Storage Duration</label>
+				<h3>Storage Duration</h3>
 				<input
 					type="range"
 					value={epochs}
@@ -178,7 +178,7 @@ export default function FileUpload({ onUploadComplete }: FileUploadProps) {
 
 			{/* Cost Information */}
 			<div className="form-field">
-				<label>Cost Estimate</label>
+				<h3>Cost Estimate</h3>
 				<div>
 					<p>
 						<b>
@@ -211,7 +211,8 @@ export default function FileUpload({ onUploadComplete }: FileUploadProps) {
 			</div>
 
 			{/* Upload Buttons */}
-			<div className="walrus-upload-steps">
+			<div className="btn-group">
+				<h3>Upload Steps</h3>
 				{/* Step 1: Register Blob */}
 				<button
 					className={
