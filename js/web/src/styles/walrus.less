@@ -1,181 +1,181 @@
 @import './variables.less';
 
-// Minimal Walrus styles - clean and simple, matching app design
+/* Minimal Walrus styles - clean and simple, matching app design */
 
-// File upload component
+/* File upload component */
 .walrus-file-upload-container {
-    position: relative;
+	position: relative;
 }
 
 .walrus-file-input {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-    cursor: pointer;
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	opacity: 0;
+	cursor: pointer;
 }
 
 .walrus-drop-zone {
-    border: 2px dashed #ccc;
-    border-radius: 0.5em;
-    padding: 1em;
-    text-align: center;
-    min-height: 100px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
+	border: 2px dashed #ccc;
+	border-radius: 0.5em;
+	padding: 1em;
+	text-align: center;
+	min-height: 100px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
 }
 
 .walrus-advanced-content {
-    margin-top: 1em;
+	margin-top: 1em;
 }
 
 .walrus-cost-display {
-    border: 1px solid #ccc;
-    border-radius: 0.5em;
-    padding: 1em;
-    margin-top: 1em;
+	border: 1px solid #ccc;
+	border-radius: 0.5em;
+	padding: 1em;
+	margin-top: 1em;
 }
 
 .walrus-upload-steps {
-    display: flex;
-    flex-direction: column;
+	display: flex;
+	flex-direction: column;
 }
 
-// Image card component
+/* Image card component */
 .walrus-image-card {
-    display: flex;
-    gap: 1em;
-    padding: 1em;
-    border: 1px solid #ccc;
-    border-radius: 0.5em;
-    align-items: center;
+	display: flex;
+	gap: 1em;
+	padding: 1em;
+	border: 1px solid #ccc;
+	border-radius: 0.5em;
+	align-items: center;
 }
 
 .walrus-image-preview {
-    width: 120px;
-    height: 120px;
-    flex-shrink: 0;
-    border-radius: 0.5em;
-    overflow: hidden;
+	width: 120px;
+	height: 120px;
+	flex-shrink: 0;
+	border-radius: 0.5em;
+	overflow: hidden;
 }
 
 .walrus-image-preview img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
 }
 
 .walrus-image-placeholder {
-    width: 100%;
-    height: 100%;
-    background-color: #333;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #ccc;
+	width: 100%;
+	height: 100%;
+	background-color: #333;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: #ccc;
 }
 
 .walrus-image-details {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5em;
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	gap: 0.5em;
 }
 
-// Placeholder card component
+/* Placeholder card component */
 .walrus-placeholder-card {
-    display: flex;
-    gap: 1em;
-    padding: 1em;
-    border: 2px dashed #ccc;
-    border-radius: 0.5em;
-    align-items: center;
-    opacity: 0.6;
+	display: flex;
+	gap: 1em;
+	padding: 1em;
+	border: 2px dashed #ccc;
+	border-radius: 0.5em;
+	align-items: center;
+	opacity: 0.6;
 }
 
 .walrus-placeholder-image {
-    width: 120px;
-    height: 120px;
-    flex-shrink: 0;
-    border-radius: 0.5em;
-    background-color: #333;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #ccc;
+	width: 120px;
+	height: 120px;
+	flex-shrink: 0;
+	border-radius: 0.5em;
+	background-color: #333;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: #ccc;
 }
 
 .walrus-placeholder-content {
-    flex: 1;
+	flex: 1;
 }
 
-// Uploads section
+/* Uploads section */
 .walrus-uploads-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1em;
-    max-height: 500px;
-    overflow-y: auto;
+	display: flex;
+	flex-direction: column;
+	gap: 1em;
+	max-height: 500px;
+	overflow-y: auto;
 }
 
 .walrus-uploads-count {
-    opacity: 0.5;
+	opacity: 0.5;
 }
 
-// Advanced settings toggle
+/* Advanced settings toggle */
 .walrus-advanced-toggle {
-    margin-top: 0.5em;
-    cursor: pointer;
+	margin-top: 0.5em;
+	cursor: pointer;
 }
 
-// Checkbox styling
+/* Checkbox styling */
 .walrus-checkbox {
-    margin-right: 0.5em;
+	margin-right: 0.5em;
 }
 
-// Animation for any remaining spinners
+/* Animation for any remaining spinners */
 @keyframes spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
 }
 
 .walrus-upload-btn {
-    display: flex;
-    align-items: center;
-    gap: 0.5em;
-    border: 1px solid rgb(150 240 229);
-    color: white;
-    background: transparent;
-    background-color: rgba(150, 240, 229, 0.1);
-    cursor: pointer;
-    font-size: 0.9em;
-    margin-top: 0.75em;
+	display: flex;
+	align-items: center;
+	gap: 0.5em;
+	border: 1px solid rgb(150 240 229);
+	color: white;
+	background: transparent;
+	background-color: rgba(150, 240, 229, 0.1);
+	cursor: pointer;
+	font-size: 0.9em;
+	margin-top: 0.75em;
 
-    &:hover {
-        background-color: rgba(150, 240, 229, 0.2);
-    }
+	&:hover {
+		background-color: rgba(150, 240, 229, 0.2);
+	}
 
-    .walrus-icon {
-        width: 20px;
-    }
+	.walrus-icon {
+		width: 20px;
+	}
 }
 
 .walrus-modal-title {
-    display: flex;
-    align-items: center;
-    gap: 0.5em;
-    font-variation-settings: 'wght' 400;
-    margin: 0;
+	display: flex;
+	align-items: center;
+	gap: 0.5em;
+	font-variation-settings: 'wght' 400;
+	margin: 0;
 
-    .walrus-icon {
-        width: 48px;
-        height: 48px;
-    }
+	.walrus-icon {
+		width: 48px;
+		height: 48px;
+	}
 }

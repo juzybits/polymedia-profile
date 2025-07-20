@@ -1,160 +1,179 @@
 @import './variables.less';
 
 :root {
-    --text-color: rgb(224, 224, 224);
+	--text-color: rgb(224, 224, 224);
 }
 
 html {
-    font-size: 140%;
+	font-size: 140%;
 }
 
 html, body, p, h1, h2, h3, h4, h5, input, button, div, textarea {
-    font-family: 'Exo 2', sans-serif;
-    font-variation-settings: 'wght' 300;
-    margin: 0;
-    padding: 0;
+	font-family: 'Exo 2', sans-serif;
+	font-variation-settings: 'wght' 300;
+	margin: 0;
+	padding: 0;
 }
 
 body {
-    background-color: #202226;
-    color: var(--text-color);
+	background-color: #202226;
+	color: var(--text-color);
 }
 
 h1, h2 {
-    margin-bottom: 1rem;
+	margin-bottom: 1rem;
 }
 
 h1 {
-    font-variation-settings: 'wght' 400;
-    font-size: 2em;
-    font-size: 2.1em;
+	font-variation-settings: 'wght' 400;
+	font-size: 2em;
+	font-size: 2.1em;
 }
 
 h2 {
-    font-variation-settings: 'wght' 350;
+	font-variation-settings: 'wght' 350;
 }
 
 b {
-    font-variation-settings: 'wght' 500;
+	font-variation-settings: 'wght' 500;
 }
 
 a {
-    color: @color-blue;
-    text-decoration: none;
-    &:hover {
-        color: #a8faff;
-        text-decoration: underline;
-        cursor: pointer;
-    }
+	color: var(--color-blue);
+	text-decoration: none;
+	&:hover {
+		color: #a8faff;
+		text-decoration: underline;
+		cursor: pointer;
+	}
 }
+
 li {
-    margin-bottom: 1em;
+	margin-bottom: 1em;
 }
 
 #layout {
-    display: flex;
-    flex-flow: row;
-    margin: 0 auto;
-    max-width: 1200px;
-    width: 100%;
-    @media (max-width: @mobile-width) {
-        flex-flow: column;
-    }
-    #nav {
-        flex: 1 1 15%;
-    }
-    #page {
-        flex: 1 1 50%;
-        padding: 1em;
-        @media (max-width: @mobile-width) {
-            max-width: none;
-            padding-top: 4.2em;
-        }
-    }
-    #filler-section {
-        flex: 1 1 15%;
-        @media (max-width: 1100px) {
-            display: none;
-        }
-    }
+	display: flex;
+	flex-flow: row;
+	margin: 0 auto;
+	max-width: 1200px;
+	width: 100%;
+
+	@media (max-width: 750px) {
+		flex-flow: column;
+	}
+
+	#nav {
+		flex: 1 1 15%;
+	}
+
+	#page {
+		flex: 1 1 50%;
+		padding: 1em;
+
+		@media (max-width: 750px) {
+			max-width: none;
+			padding-top: 4.2em;
+		}
+	}
+
+	#filler-section {
+		flex: 1 1 15%;
+
+		@media (max-width: 1100px) {
+			display: none;
+		}
+	}
 }
 
 input, textarea, button, .btn {
-    border-radius: 0.5em;
+	border-radius: 0.5em;
 }
 
 .form {
-    .form-field {
-        label, input {
-            display: block;
-        }
-        label {
-            margin: 0.8em 0 0.2em 0.1em;
-        }
-        input, textarea {
-            border: 0;
-            padding: 0.5em 0.8em;
-            width: 100%;
-            box-sizing: border-box;
-            font-size: 0.85em;
-            font-variation-settings: 'wght' 350;
-        }
-    }
+	.form-field {
+		label, input {
+			display: block;
+		}
+
+		label {
+			margin: 0.8em 0 0.2em 0.1em;
+		}
+
+		input, textarea {
+			border: 0;
+			padding: 0.5em 0.8em;
+			width: 100%;
+			box-sizing: border-box;
+			font-size: 0.85em;
+			font-variation-settings: 'wght' 350;
+		}
+	}
 }
 
 .disabled {
-    cursor: not-allowed;
+	cursor: not-allowed;
 }
+
 .disabled, .waiting {
-    color: #bbb;
-    background-color: #777;
+	color: #bbb;
+	background-color: #777;
 }
+
 .disabled:hover {
-    cursor: not-allowed;
+	cursor: not-allowed;
 }
+
 .waiting:hover {
-    cursor: wait;
+	cursor: wait;
 }
 
 button, .btn {
-    background-color: #007ae0;
-    border: 0;
-    color: white;
-    display: inline-block;
-    font-size: 1em;
-    font-variation-settings: 'wght' 700;
-    margin-top: 1.4em;
-    padding: 0.45em 0.8em;
-    user-select: none;
-    &:hover {
-        background-color: #1c97ff;
-        color: white;
-        cursor: pointer;
-        text-decoration: none;
-    }
-    &.disabled, &:disabled {
-        .disabled();
-    }
-    &.waiting {
-        .waiting();
-    }
+	background-color: #007ae0;
+	border: 0;
+	color: white;
+	display: inline-block;
+	font-size: 1em;
+	font-variation-settings: 'wght' 700;
+	margin-top: 1.4em;
+	padding: 0.45em 0.8em;
+	user-select: none;
+
+	&:hover {
+		background-color: #1c97ff;
+		color: white;
+		cursor: pointer;
+		text-decoration: none;
+	}
+
+	&.disabled, &:disabled {
+		cursor: not-allowed;
+		color: #bbb;
+		background-color: #777;
+	}
+
+	&.waiting {
+		color: #bbb;
+		background-color: #777;
+	}
 }
 
 .error {
-    overflow-wrap: anywhere;
+	overflow-wrap: anywhere;
 }
 
 .hidden {
-    display: none;
+	display: none;
 }
 
 .toast {
-    &.toast-success {
-        color: white;
-        background-color: rgba(0, 142, 11, 0.9);
-    }
-    &.toast-error {
-        background-color: rgba(139, 0, 0, 0.9);
-        color: white;
-    }
+	&.toast-success {
+		color: white;
+		background-color: rgba(0, 142, 11, 0.9);
+	}
+
+	&.toast-error {
+		background-color: rgba(139, 0, 0, 0.9);
+		color: white;
+	}
 }
