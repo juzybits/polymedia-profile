@@ -52,12 +52,12 @@ export default function FileUpload({ onUploadComplete }: FileUploadProps) {
 	// Load uploaded blobs from localStorage
 	useEffect(() => {
 		if (currentAccount?.address) {
-			const storedUploads = loadUploadsFromStorage(currentAccount.address);
+			const storedUploads = loadUploadsFromStorage(currentAccount.address, network);
 			setUploadedBlobs(storedUploads);
 		} else {
 			setUploadedBlobs([]);
 		}
-	}, [currentAccount?.address]);
+	}, [currentAccount?.address, network]);
 
 	const handleFileSelect = async (selectedFile: File) => {
 		// Check file size against MAX_FILE_SIZE
@@ -91,7 +91,7 @@ export default function FileUpload({ onUploadComplete }: FileUploadProps) {
 
 		// Save to localStorage if user is connected
 		if (currentAccount?.address) {
-			saveUploadToStorage(currentAccount.address, result, file?.name, file?.size);
+			saveUploadToStorage(currentAccount.address, network, result, file?.name, file?.size);
 		}
 
 		// Update local state

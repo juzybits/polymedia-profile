@@ -9,13 +9,13 @@ export interface StoredUpload extends ImageCardProps {
 }
 
 /**
- * Load uploads from localStorage for the current user
+ * Load uploads from localStorage for the current user and network
  */
-export function loadUploadsFromStorage(userAddress?: string): StoredUpload[] {
-	if (!userAddress) return [];
+export function loadUploadsFromStorage(userAddress?: string, network?: string): StoredUpload[] {
+	if (!userAddress || !network) return [];
 
 	try {
-		const key = `${WALRUS_UPLOADS_KEY}-${userAddress}`;
+		const key = `${WALRUS_UPLOADS_KEY}-${userAddress}-${network}`;
 		const stored = localStorage.getItem(key);
 		if (!stored) return [];
 
@@ -40,17 +40,18 @@ export function loadUploadsFromStorage(userAddress?: string): StoredUpload[] {
 }
 
 /**
- * Save an upload to localStorage for the current user
+ * Save an upload to localStorage for the current user and network
  */
 export function saveUploadToStorage(
 	userAddress: string,
+	network: string,
 	upload: ImageCardProps,
 	fileName?: string,
 	fileSize?: number,
 ): void {
 	try {
-		const key = `${WALRUS_UPLOADS_KEY}-${userAddress}`;
-		const existingUploads = loadUploadsFromStorage(userAddress);
+		const key = `${WALRUS_UPLOADS_KEY}-${userAddress}-${network}`;
+		const existingUploads = loadUploadsFromStorage(userAddress, network);
 
 		// Check if this upload already exists (prevent duplicates)
 		const exists = existingUploads.some((existing) => existing.blobId === upload.blobId);
@@ -80,10 +81,10 @@ export function saveUploadToStorage(
 /**
  * Remove a specific upload from localStorage
  */
-export function removeUploadFromStorage(userAddress: string, blobId: string): void {
+export function removeUploadFromStorage(userAddress: string, network: string, blobId: string): void {
 	try {
-		const key = `${WALRUS_UPLOADS_KEY}-${userAddress}`;
-		const existingUploads = loadUploadsFromStorage(userAddress);
+		const key = `${WALRUS_UPLOADS_KEY}-${userAddress}-${network}`;
+		const existingUploads = loadUploadsFromStorage(userAddress, network);
 		const filteredUploads = existingUploads.filter((upload) => upload.blobId !== blobId);
 
 		localStorage.setItem(key, JSON.stringify(filteredUploads));
@@ -93,11 +94,11 @@ export function removeUploadFromStorage(userAddress: string, blobId: string): vo
 }
 
 /**
- * Clear all uploads for the current user
+ * Clear all uploads for the current user and network
  */
-export function clearUploadsFromStorage(userAddress: string): void {
+export function clearUploadsFromStorage(userAddress: string, network: string): void {
 	try {
-		const key = `${WALRUS_UPLOADS_KEY}-${userAddress}`;
+		const key = `${WALRUS_UPLOADS_KEY}-${userAddress}-${network}`;
 		localStorage.removeItem(key);
 	} catch (error) {
 		console.error("Error clearing uploads from localStorage:", error);
