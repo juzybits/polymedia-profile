@@ -97,7 +97,6 @@ export default function FileUpload({ onUploadComplete }: FileUploadProps) {
 	return (
 		<div className="form">
 			<div className="form-field">
-				<h2>Upload to Walrus</h2>
 				<div className="walrus-file-upload-container">
 					<input
 						type="file"

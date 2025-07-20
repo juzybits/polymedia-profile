@@ -280,7 +280,12 @@ export const PageProfileManage: React.FC = () => {
 			<Modal
 				open={showWalrusModal}
 				onClose={() => setShowWalrusModal(false)}
-				title="Upload to Walrus"
+				title={
+					<div className="walrus-modal-title">
+						<img src="/img/walrus-blue.svg" alt="Walrus" className="walrus-icon" />
+						Upload to Walrus
+					</div>
+				}
 			>
 				<FileUpload onUploadComplete={onUploadComplete} />
 				<div>

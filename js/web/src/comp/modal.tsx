@@ -5,7 +5,7 @@ type ModalProps = {
 	open: boolean;
 	onClose: () => void;
 	children: React.ReactNode;
-	title?: string;
+	title?: React.ReactNode;
 };
 
 export const Modal: React.FC<ModalProps> = ({ open, onClose, children, title }) => {
