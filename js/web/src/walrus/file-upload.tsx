@@ -1,10 +1,6 @@
 import { useCurrentAccount } from "@mysten/dapp-kit";
 import { useEffect, useRef, useState } from "react";
 import { useAppContext } from "../app/context";
-import type { ImageCardProps } from "./image-card";
-import ImageCard from "./image-card";
-import { loadUploadsFromStorage, saveUploadToStorage } from "./localStorage";
-import { useCurrentEpoch } from "./useCurrentEpoch";
 import { useStorageCost } from "./useStorageCost";
 import { useWalrusUpload } from "./useWalrusUpload";
 
@@ -15,7 +11,7 @@ const MAINNET_EPOCH_DAYS = 14;
 const TESTNET_EPOCH_DAYS = 1;
 
 interface FileUploadProps {
-	onUploadComplete: (uploadedBlob: ImageCardProps) => void;
+	onUploadComplete: (uploadedBlob: any) => void;
 	onUploadProgressChange?: (hasProgress: boolean) => void;
 }
 
@@ -25,7 +21,6 @@ export default function FileUpload({
 }: FileUploadProps) {
 	const currentAccount = useCurrentAccount();
 	const { network } = useAppContext();
-	const { data: currentEpoch } = useCurrentEpoch();
 
 	// UI state
 	const fileInputRef = useRef<HTMLInputElement>(null);
@@ -33,7 +28,6 @@ export default function FileUpload({
 	const [epochs, setEpochs] = useState(1);
 	const [error, setError] = useState<string | null>(null);
 	const [tipAmountMist] = useState("105");
-	const [uploadedBlobs, setUploadedBlobs] = useState<ImageCardProps[]>([]);
 
 	// Use the new Walrus upload hook
 	const {
@@ -72,20 +66,6 @@ export default function FileUpload({
 		onUploadProgressChange?.(hasUploadProgress);
 	}, [hasUploadProgress, onUploadProgressChange]);
 
-	// Load uploaded blobs from localStorage
-	useEffect(() => {
-		if (currentAccount?.address) {
-			const storedUploads = loadUploadsFromStorage(
-				currentAccount.address,
-				network,
-				currentEpoch,
-			);
-			setUploadedBlobs(storedUploads);
-		} else {
-			setUploadedBlobs([]);
-		}
-	}, [currentAccount?.address, network, currentEpoch]);
-
 	const handleFileSelect = async (selectedFile: File) => {
 		// Check file size against MAX_FILE_SIZE
 		if (selectedFile.size > MAX_FILE_SIZE) {
@@ -115,20 +95,6 @@ export default function FileUpload({
 
 	const handleCertifyBlob = async () => {
 		const result = await certifyBlob();
-
-		// Save to localStorage if user is connected
-		if (currentAccount?.address) {
-			saveUploadToStorage(
-				currentAccount.address,
-				network,
-				result,
-				file?.name,
-				file?.size,
-			);
-		}
-
-		// Update local state
-		setUploadedBlobs((prev) => [result, ...prev]);
 
 		onUploadComplete(result);
 		resetUploadProcess();
@@ -348,28 +314,6 @@ export default function FileUpload({
 					)}
 				</button>
 			</div>
-
-			{/* Uploads Section */}
-			{uploadedBlobs.length > 0 && (
-				<div>
-					<h2>
-						Uploads <span className="walrus-uploads-count">({uploadedBlobs.length})</span>
-					</h2>
-					<div className="walrus-uploads-list">
-						{uploadedBlobs.map((blobId) => {
-							return (
-								<ImageCard
-									key={blobId.blobId}
-									blobId={blobId.blobId}
-									suiObjectId={blobId.suiObjectId}
-									suiEventId={blobId.suiEventId}
-									endEpoch={blobId.endEpoch}
-								/>
-							);
-						})}
-					</div>
-				</div>
-			)}
 		</div>
 	);
 }
