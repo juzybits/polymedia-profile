@@ -165,62 +165,10 @@ export default function FileUpload({ onUploadComplete }: FileUploadProps) {
 
 			{/* Cost Information */}
 			<div className="walrus-cost-display">
-				<h2>Upload Cost Estimate</h2>
+				<h2>Cost Estimate</h2>
 				<div>
 					<p>
-						Storage Cost:{" "}
-						{storageCost
-							? (() => {
-									const storageValue = parseInt(storageCost.storageCost) / 10 ** 9;
-									const formatted = formatSmallNumber(storageValue);
-									return (
-										<>
-											{formatted.prefix}
-											{formatted.subscript && <sub>{formatted.subscript}</sub>}
-											{formatted.significantDigits}
-											{" WAL"}
-										</>
-									);
-								})()
-							: "---"}
-					</p>
-					<p>
-						Write Cost:{" "}
-						{storageCost
-							? (() => {
-									const storageValue = parseInt(storageCost.writeCost) / 10 ** 9;
-									const formatted = formatSmallNumber(storageValue);
-									return (
-										<>
-											{formatted.prefix}
-											{formatted.subscript && <sub>{formatted.subscript}</sub>}
-											{formatted.significantDigits}
-											{" WAL"}
-										</>
-									);
-								})()
-							: "---"}
-					</p>
-					<p>
-						Tip Amount:{" "}
-						{storageCost
-							? (() => {
-									const tipValue = parseInt(tipAmountMist) / 10 ** 9;
-									const formatted = formatSmallNumber(tipValue);
-									return (
-										<>
-											{formatted.prefix}
-											{formatted.subscript && <sub>{formatted.subscript}</sub>}
-											{formatted.significantDigits}
-											{" SUI"}
-										</>
-									);
-								})()
-							: "---"}
-					</p>
-					<p>
 						<b>
-							Total Cost:{" "}
 							{storageCost
 								? (() => {
 										const totalCostMist = parseInt(tipAmountMist);
