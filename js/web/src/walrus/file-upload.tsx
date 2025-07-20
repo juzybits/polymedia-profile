@@ -16,7 +16,6 @@ export default function FileUpload({ onUploadComplete }: FileUploadProps) {
 	const currentAccount = useCurrentAccount();
 
 	// UI state
-	const [showAdvancedSettings, setShowAdvancedSettings] = useState(false);
 	const fileInputRef = useRef<HTMLInputElement>(null);
 	const [file, setFile] = useState<File | null>(null);
 	const [epochs, setEpochs] = useState(1);
@@ -135,32 +134,20 @@ export default function FileUpload({ onUploadComplete }: FileUploadProps) {
 			</div>
 
 			<div className="form-field">
-				<h4
-					onClick={() => setShowAdvancedSettings(!showAdvancedSettings)}
-					className="walrus-advanced-toggle"
-				>
-					{showAdvancedSettings ? "- Hide Advanced Settings" : "+ Show Advanced Settings"}
-				</h4>
-				{showAdvancedSettings && (
-					<div className="walrus-advanced-content">
-						<div className="form-field">
-							<label>Epochs</label>
-							<input
-								type="number"
-								value={epochs}
-								onChange={(e) =>
-									setEpochs(Math.min(53, Math.max(1, Math.floor(Number(e.target.value)))))
-								}
-								min="1"
-								max="53"
-								step="1"
-							/>
-							<div className="field-info">
-								The number of Walrus epochs for which to store the blob (max 53).
-							</div>
-						</div>
-					</div>
-				)}
+				<label>Epochs</label>
+				<input
+					type="number"
+					value={epochs}
+					onChange={(e) =>
+						setEpochs(Math.min(53, Math.max(1, Math.floor(Number(e.target.value)))))
+					}
+					min="1"
+					max="53"
+					step="1"
+				/>
+				<div className="field-info">
+					The number of Walrus epochs for which to store the blob (max 53).
+				</div>
 			</div>
 
 			{/* Cost Information */}
