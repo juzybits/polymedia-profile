@@ -2,7 +2,7 @@ import { useCurrentAccount } from "@mysten/dapp-kit";
 import { useEffect, useRef, useState } from "react";
 import { useAppContext } from "../app/context";
 import type { ImageCardProps } from "./image-card";
-import ImageCard, { PlaceholderCard } from "./image-card";
+import ImageCard from "./image-card";
 import { loadUploadsFromStorage, saveUploadToStorage } from "./localStorage";
 import { useStorageCost } from "./useStorageCost";
 import { useWalrusUpload } from "./useWalrusUpload";
@@ -91,7 +91,13 @@ export default function FileUpload({ onUploadComplete }: FileUploadProps) {
 
 		// Save to localStorage if user is connected
 		if (currentAccount?.address) {
-			saveUploadToStorage(currentAccount.address, network, result, file?.name, file?.size);
+			saveUploadToStorage(
+				currentAccount.address,
+				network,
+				result,
+				file?.name,
+				file?.size,
+			);
 		}
 
 		// Update local state
@@ -317,13 +323,13 @@ export default function FileUpload({ onUploadComplete }: FileUploadProps) {
 			</div>
 
 			{/* Uploads Section */}
-			<div>
-				<h2>
-					Uploads <span className="walrus-uploads-count">({uploadedBlobs.length})</span>
-				</h2>
-				<div className="walrus-uploads-list">
-					{uploadedBlobs.length > 0 ? (
-						uploadedBlobs.map((blobId) => {
+			{uploadedBlobs.length > 0 && (
+				<div>
+					<h2>
+						Uploads <span className="walrus-uploads-count">({uploadedBlobs.length})</span>
+					</h2>
+					<div className="walrus-uploads-list">
+						{uploadedBlobs.map((blobId) => {
 							return (
 								<ImageCard
 									key={blobId.blobId}
@@ -333,12 +339,10 @@ export default function FileUpload({ onUploadComplete }: FileUploadProps) {
 									endEpoch={blobId.endEpoch}
 								/>
 							);
-						})
-					) : (
-						<PlaceholderCard />
-					)}
+						})}
+					</div>
 				</div>
-			</div>
+			)}
 		</div>
 	);
 }

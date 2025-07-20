@@ -14,18 +14,6 @@ export type ImageCardProps = {
 
 const AGGREGATOR_URL = "https://aggregator.walrus-testnet.walrus.space";
 
-export function PlaceholderCard() {
-	return (
-		<div className="walrus-placeholder-card">
-			<div className="walrus-placeholder-image">[image]</div>
-			<div className="walrus-placeholder-content">
-				<h2>No uploads yet</h2>
-				<p>Upload your first file to see it displayed here</p>
-			</div>
-		</div>
-	);
-}
-
 export default function ImageCard(props: ImageCardProps) {
 	const IMAGE_URL = `${AGGREGATOR_URL}/v1/blobs/${props.blobId}`;
 

@@ -11,7 +11,10 @@ export interface StoredUpload extends ImageCardProps {
 /**
  * Load uploads from localStorage for the current user and network
  */
-export function loadUploadsFromStorage(userAddress?: string, network?: string): StoredUpload[] {
+export function loadUploadsFromStorage(
+	userAddress?: string,
+	network?: string,
+): StoredUpload[] {
 	if (!userAddress || !network) return [];
 
 	try {
@@ -81,7 +84,11 @@ export function saveUploadToStorage(
 /**
  * Remove a specific upload from localStorage
  */
-export function removeUploadFromStorage(userAddress: string, network: string, blobId: string): void {
+export function removeUploadFromStorage(
+	userAddress: string,
+	network: string,
+	blobId: string,
+): void {
 	try {
 		const key = `${WALRUS_UPLOADS_KEY}-${userAddress}-${network}`;
 		const existingUploads = loadUploadsFromStorage(userAddress, network);
