@@ -4,6 +4,7 @@ import { useAppContext } from "../app/context";
 import type { ImageCardProps } from "./image-card";
 import ImageCard from "./image-card";
 import { loadUploadsFromStorage, saveUploadToStorage } from "./localStorage";
+import { useCurrentEpoch } from "./useCurrentEpoch";
 import { useStorageCost } from "./useStorageCost";
 import { useWalrusUpload } from "./useWalrusUpload";
 
@@ -24,6 +25,7 @@ export default function FileUpload({
 }: FileUploadProps) {
 	const currentAccount = useCurrentAccount();
 	const { network } = useAppContext();
+	const { data: currentEpoch } = useCurrentEpoch();
 
 	// UI state
 	const fileInputRef = useRef<HTMLInputElement>(null);
@@ -73,12 +75,16 @@ export default function FileUpload({
 	// Load uploaded blobs from localStorage
 	useEffect(() => {
 		if (currentAccount?.address) {
-			const storedUploads = loadUploadsFromStorage(currentAccount.address, network);
+			const storedUploads = loadUploadsFromStorage(
+				currentAccount.address,
+				network,
+				currentEpoch,
+			);
 			setUploadedBlobs(storedUploads);
 		} else {
 			setUploadedBlobs([]);
 		}
-	}, [currentAccount?.address, network]);
+	}, [currentAccount?.address, network, currentEpoch]);
 
 	const handleFileSelect = async (selectedFile: File) => {
 		// Check file size against MAX_FILE_SIZE

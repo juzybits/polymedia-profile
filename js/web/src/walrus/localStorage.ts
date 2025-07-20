@@ -12,11 +12,10 @@ export interface StoredUpload extends ImageCardProps {
  * Load uploads from localStorage for the current user and network
  */
 export function loadUploadsFromStorage(
-	userAddress?: string,
-	network?: string,
+	userAddress: string,
+	network: string,
+	removeOlderThanEpoch?: number,
 ): StoredUpload[] {
-	if (!userAddress || !network) return [];
-
 	try {
 		const key = makeKey(userAddress, network);
 		const stored = localStorage.getItem(key);
@@ -24,15 +23,16 @@ export function loadUploadsFromStorage(
 
 		const uploads: StoredUpload[] = JSON.parse(stored);
 
-		// Filter out expired uploads (past endEpoch)
-		// Note: This is a simplified check - in production you'd want to compare against current epoch
-		const now = Date.now();
-		const validUploads = uploads.filter((upload) => {
-			// Keep uploads that are less than 1 year old as a simple filter
-			const age = now - upload.timestamp;
-			const oneYear = 365 * 24 * 60 * 60 * 1000;
-			return age < oneYear;
-		});
+		// Filter out expired uploads based on current epoch
+		const validUploads = uploads.filter(
+			(upload) =>
+				removeOlderThanEpoch === undefined || upload.endEpoch >= removeOlderThanEpoch,
+		);
+
+		// If we filtered out expired items, update localStorage
+		if (validUploads.length !== uploads.length) {
+			localStorage.setItem(key, JSON.stringify(validUploads));
+		}
 
 		// Sort by timestamp (newest first)
 		return validUploads.sort((a, b) => b.timestamp - a.timestamp);
