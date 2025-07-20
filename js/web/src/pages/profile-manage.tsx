@@ -27,7 +27,6 @@ export const PageProfileManage: React.FC = () => {
 	// Form errors
 	const [isErrorImage, setIsErrorImage] = useState(false);
 	const [isErrorForm, setIsErrorForm] = useState(false);
-	const [isErrorImgur, setIsErrorImgur] = useState(false);
 	// Other state
 	const [waiting, setWaiting] = useState(false);
 
@@ -59,7 +58,6 @@ export const PageProfileManage: React.FC = () => {
 		if (!e.target.value) {
 			setIsErrorImage(false);
 			setIsErrorForm(false);
-			setIsErrorImgur(false);
 		}
 		setInputImage(e.target.value);
 		setHasChanged(true);
@@ -67,13 +65,11 @@ export const PageProfileManage: React.FC = () => {
 	const onImageLoad = () => {
 		setIsErrorImage(false);
 		setIsErrorForm(false);
-		setIsErrorImgur(false);
 	};
 
 	const onImageError = () => {
 		setIsErrorImage(true);
 		setIsErrorForm(true);
-		setIsErrorImgur(inputImage.startsWith("https://imgur.com/"));
 	};
 
 	const onSubmitCreateProfile = async (e: SyntheticEvent) => {
@@ -244,23 +240,10 @@ export const PageProfileManage: React.FC = () => {
 					{isErrorImage && (
 						<div className="field-error">That doesn't look like a valid image URL</div>
 					)}
-					<div className="field-info">
-						Right click the image, then click 'Copy Image Address'. To use a picture from
-						your device, upload it to a service like{" "}
-						<a
-							href="https://imgur.com/upload"
-							target="_blank"
-							rel="noopener nofollow noreferrer"
-						>
-							imgur.com
-						</a>
-						, then copy the image address.
-					</div>
-					{isErrorImgur && (
-						<div className="field-error-imgur">
-							<img src="/img/drake.webp" />
-						</div>
-					)}
+					<button className="walrus-upload-btn">
+						<img src="/img/walrus-blue.svg" alt="Walrus" className="walrus-icon" />
+						Upload to Walrus
+					</button>
 				</div>
 				<button
 					type="submit"
