@@ -149,10 +149,15 @@ export default function FileUpload({ onUploadComplete }: FileUploadProps) {
 					step="1"
 				/>
 				<div className="field-info">
-					{network === "mainnet"
-						? `${Math.floor((epochs * MAINNET_EPOCH_DAYS) / 7)} weeks (${epochs * MAINNET_EPOCH_DAYS} days)`
-						: `${epochs} days`}{" "}
-					- Max {network === "mainnet" ? `${Math.floor((MAX_EPOCHS * MAINNET_EPOCH_DAYS) / 7)} weeks` : `${MAX_EPOCHS} days`}
+					{formatEpochDuration(
+						epochs,
+						network === "mainnet" ? MAINNET_EPOCH_DAYS : TESTNET_EPOCH_DAYS,
+					)}{" "}
+					- Max{" "}
+					{formatEpochDuration(
+						MAX_EPOCHS,
+						network === "mainnet" ? MAINNET_EPOCH_DAYS : TESTNET_EPOCH_DAYS,
+					)}
 				</div>
 			</div>
 
@@ -302,6 +307,18 @@ export default function FileUpload({ onUploadComplete }: FileUploadProps) {
 }
 
 // === helpers ===
+
+const formatEpochDuration = (epochs: number, epochDurationDays: number) => {
+	if (epochDurationDays % 7 === 0) {
+		const weeks = Math.floor((epochs * epochDurationDays) / 7);
+		const days = epochs * epochDurationDays;
+		const weekLabel = weeks === 1 ? "week" : "weeks";
+		const dayLabel = days === 1 ? "day" : "days";
+		return `${weeks} ${weekLabel} (${days} ${dayLabel})`;
+	}
+	const dayLabel = epochs === 1 ? "day" : "days";
+	return `${epochs} ${dayLabel}`;
+};
 
 const formatSmallNumber = (
 	value: number,
