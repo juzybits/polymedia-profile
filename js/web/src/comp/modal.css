@@ -16,12 +16,11 @@
 	background-color: #202226;
 	border: 1px solid #ccc;
 	border-radius: 0.5em;
-	max-width: 90vw;
+	max-width: 800px;
 	max-height: 90vh;
 	overflow-y: auto;
 	position: relative;
 	width: 100%;
-	max-width: 800px;
 }
 
 .modal-header {
