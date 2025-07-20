@@ -120,7 +120,12 @@ export const Nav: React.FC = () => {
 
 				<div id="nav-watermark" className="nav-section">
 					<div className="nav-social-link">
-						<a href="https://polymedia.app" target="_blank" rel="noopener noreferrer">
+						<a
+							id="nav-watermark-link"
+							href="https://polymedia.app"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
 							Polymedia {new Date().getFullYear()}
 						</a>
 					</div>
@@ -152,7 +157,7 @@ const NavProfile: React.FC<{
 			}}
 		>
 			<div id="nav-profile-image-wrap">
-				<img src={profile?.imageUrl || "/img/anon.webp"} />
+				<img id="nav-profile-image" src={profile?.imageUrl || "/img/anon.webp"} />
 			</div>
 			<div id="nav-profile-name-wrap">
 				<div id="nav-profile-name">{profile ? profile.name : "Anon"}</div>
