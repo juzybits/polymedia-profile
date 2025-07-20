@@ -114,213 +114,209 @@ export default function FileUpload({ onUploadComplete }: FileUploadProps) {
 	const displayError = error || uploadError;
 
 	return (
-		<div>
-			<div className="form">
-				<div className="form-field">
-					<div className="walrus-file-upload-container">
-						<input
-							type="file"
-							ref={fileInputRef}
-							className="walrus-file-input"
-							onChange={(e) => {
-								const selectedFile = e.target.files?.[0];
-								if (selectedFile) {
-									handleFileSelect(selectedFile);
-								}
-							}}
-						/>
-						<div className="walrus-drop-zone">
-							{file ? (
-								<div>
-									<p>
-										<b>{file.name}</b>
-									</p>
-									<p>{(file.size / (1024 * 1024)).toFixed(2)} MiB</p>
-									{isComputingMetadata ? (
-										<p>Computing metadata...</p>
-									) : (
-										<button type="button">CHOOSE FILE</button>
-									)}
-								</div>
-							) : (
-								<div>
-									<p>Drag & drop a file</p>
-									<p>Max {MAX_FILE_SIZE / (1024 * 1024)} MiB</p>
-									<button type="button">CHOOSE FILE</button>
-								</div>
-							)}
-						</div>
-					</div>
-					{displayError && <div className="field-error">{displayError}</div>}
-				</div>
-
-				<div className="form-field">
-					<label>Storage Duration</label>
+		<div className="form walrus-form">
+			<div className="form-field">
+				<div className="walrus-file-upload-container">
 					<input
-						type="range"
-						value={epochs}
-						onChange={(e) => setEpochs(Math.max(1, Math.floor(Number(e.target.value))))}
-						min="1"
-						max={MAX_EPOCHS}
-						step="1"
+						type="file"
+						ref={fileInputRef}
+						className="walrus-file-input"
+						onChange={(e) => {
+							const selectedFile = e.target.files?.[0];
+							if (selectedFile) {
+								handleFileSelect(selectedFile);
+							}
+						}}
 					/>
-					<div className="field-info">
-						{formatEpochDuration(
-							epochs,
-							network === "mainnet" ? MAINNET_EPOCH_DAYS : TESTNET_EPOCH_DAYS,
-						)}{" "}
-						- Max{" "}
-						{formatEpochDuration(
-							MAX_EPOCHS,
-							network === "mainnet" ? MAINNET_EPOCH_DAYS : TESTNET_EPOCH_DAYS,
+					<div className="walrus-drop-zone">
+						{file ? (
+							<div>
+								<p>
+									<b>{file.name}</b>
+								</p>
+								<p>{(file.size / (1024 * 1024)).toFixed(2)} MiB</p>
+								{isComputingMetadata ? (
+									<p>Computing metadata...</p>
+								) : (
+									<button type="button">CHOOSE FILE</button>
+								)}
+							</div>
+						) : (
+							<div>
+								<p>Drag & drop a file</p>
+								<p>Max {MAX_FILE_SIZE / (1024 * 1024)} MiB</p>
+								<button type="button">CHOOSE FILE</button>
+							</div>
 						)}
 					</div>
 				</div>
+				{displayError && <div className="field-error">{displayError}</div>}
+			</div>
 
-				{/* Cost Information */}
-				<div className="form-field">
-					<label>Cost Estimate</label>
-					<div>
-						<p>
-							<b>
-								{storageCost
-									? (() => {
-											const totalCostMist = parseInt(tipAmountMist);
-											const totalCostFrost = parseInt(storageCost.totalCost);
-											const formattedMist = formatSmallNumber(totalCostMist / 10 ** 9);
-											const formattedFrost = formatSmallNumber(totalCostFrost / 10 ** 9);
-											return (
-												<>
-													{formattedMist.prefix}
-													{formattedMist.subscript && (
-														<sub>{formattedMist.subscript}</sub>
-													)}
-													{formattedMist.significantDigits}
-													{" SUI"}
-													{" + "}
-													{formattedFrost.prefix}
-													{formattedFrost.subscript && (
-														<sub>{formattedFrost.subscript}</sub>
-													)}
-													{formattedFrost.significantDigits}
-													{" WAL"}
-												</>
-											);
-										})()
-									: "---"}
-							</b>
-						</p>
-					</div>
-				</div>
-
-				{/* Upload Buttons */}
-				<div className="walrus-upload-steps">
-					{/* Step 1: Register Blob */}
-					<button
-						className={
-							currentStep === "register" &&
-							!isRegistering &&
-							file &&
-							currentAccount &&
-							!isComputingMetadata &&
-							metadata
-								? ""
-								: registrationData
-									? "disabled"
-									: "disabled"
-						}
-						onClick={() => {
-							if (currentStep !== "register") return;
-							if (!currentAccount) {
-								setError("Please connect your wallet first");
-								return;
-							}
-							if (!file) {
-								setError("Please select a file first");
-								return;
-							}
-							if (isComputingMetadata) {
-								setError("Metadata is still being computed. Please wait.");
-								return;
-							}
-							if (!metadata) {
-								setError("Metadata computation failed. Please try again.");
-								return;
-							}
-							handleRegisterBlob();
-						}}
-						disabled={
-							currentStep !== "register" ||
-							isRegistering ||
-							!file ||
-							!currentAccount ||
-							isComputingMetadata ||
-							!metadata
-						}
-					>
-						{currentStep === "register" && isRegistering ? (
-							<span>Registering...</span>
-						) : registrationData ? (
-							<span>✓ 1. Register Blob</span>
-						) : currentStep === "register" && !currentAccount ? (
-							<span>1. Connect Wallet First</span>
-						) : (
-							<span>1. Register Blob</span>
-						)}
-					</button>
-
-					{/* Step 2: Write to Upload Relay */}
-					<button
-						className={
-							currentStep === "relay" && !isWritingToUploadRelay && registrationData
-								? ""
-								: uploadRelayData
-									? "disabled"
-									: "disabled"
-						}
-						onClick={() => {
-							if (currentStep === "relay") {
-								handleWriteToUploadRelay();
-							}
-						}}
-						disabled={
-							currentStep !== "relay" || isWritingToUploadRelay || !registrationData
-						}
-					>
-						{currentStep === "relay" && isWritingToUploadRelay ? (
-							<span>Uploading to Network...</span>
-						) : uploadRelayData ? (
-							<span>✓ 2. Uploaded to Network</span>
-						) : (
-							<span>2. Upload to Network</span>
-						)}
-					</button>
-
-					{/* Step 3: Certify Blob */}
-					<button
-						className={
-							currentStep === "certify" && !isCertifying && uploadRelayData
-								? ""
-								: "disabled"
-						}
-						onClick={() => {
-							if (currentStep === "certify") {
-								handleCertifyBlob();
-							}
-						}}
-						disabled={currentStep !== "certify" || isCertifying || !uploadRelayData}
-					>
-						{currentStep === "certify" && isCertifying ? (
-							<span>Certifying...</span>
-						) : (
-							<span>3. Certify Upload</span>
-						)}
-					</button>
+			<div className="form-field">
+				<label>Storage Duration</label>
+				<input
+					type="range"
+					value={epochs}
+					onChange={(e) => setEpochs(Math.max(1, Math.floor(Number(e.target.value))))}
+					min="1"
+					max={MAX_EPOCHS}
+					step="1"
+				/>
+				<div className="field-info">
+					{formatEpochDuration(
+						epochs,
+						network === "mainnet" ? MAINNET_EPOCH_DAYS : TESTNET_EPOCH_DAYS,
+					)}{" "}
+					- Max{" "}
+					{formatEpochDuration(
+						MAX_EPOCHS,
+						network === "mainnet" ? MAINNET_EPOCH_DAYS : TESTNET_EPOCH_DAYS,
+					)}
 				</div>
 			</div>
 
+			{/* Cost Information */}
+			<div className="form-field">
+				<label>Cost Estimate</label>
+				<div>
+					<p>
+						<b>
+							{storageCost
+								? (() => {
+										const totalCostMist = parseInt(tipAmountMist);
+										const totalCostFrost = parseInt(storageCost.totalCost);
+										const formattedMist = formatSmallNumber(totalCostMist / 10 ** 9);
+										const formattedFrost = formatSmallNumber(totalCostFrost / 10 ** 9);
+										return (
+											<>
+												{formattedMist.prefix}
+												{formattedMist.subscript && <sub>{formattedMist.subscript}</sub>}
+												{formattedMist.significantDigits}
+												{" SUI"}
+												{" + "}
+												{formattedFrost.prefix}
+												{formattedFrost.subscript && (
+													<sub>{formattedFrost.subscript}</sub>
+												)}
+												{formattedFrost.significantDigits}
+												{" WAL"}
+											</>
+										);
+									})()
+								: "---"}
+						</b>
+					</p>
+				</div>
+			</div>
+
+			{/* Upload Buttons */}
+			<div className="walrus-upload-steps">
+				{/* Step 1: Register Blob */}
+				<button
+					className={
+						currentStep === "register" &&
+						!isRegistering &&
+						file &&
+						currentAccount &&
+						!isComputingMetadata &&
+						metadata
+							? ""
+							: registrationData
+								? "disabled"
+								: "disabled"
+					}
+					onClick={() => {
+						if (currentStep !== "register") return;
+						if (!currentAccount) {
+							setError("Please connect your wallet first");
+							return;
+						}
+						if (!file) {
+							setError("Please select a file first");
+							return;
+						}
+						if (isComputingMetadata) {
+							setError("Metadata is still being computed. Please wait.");
+							return;
+						}
+						if (!metadata) {
+							setError("Metadata computation failed. Please try again.");
+							return;
+						}
+						handleRegisterBlob();
+					}}
+					disabled={
+						currentStep !== "register" ||
+						isRegistering ||
+						!file ||
+						!currentAccount ||
+						isComputingMetadata ||
+						!metadata
+					}
+				>
+					{currentStep === "register" && isRegistering ? (
+						<span>Registering...</span>
+					) : registrationData ? (
+						<span>✓ 1. Register Blob</span>
+					) : currentStep === "register" && !currentAccount ? (
+						<span>1. Connect Wallet First</span>
+					) : (
+						<span>1. Register Blob</span>
+					)}
+				</button>
+
+				{/* Step 2: Write to Upload Relay */}
+				<button
+					className={
+						currentStep === "relay" && !isWritingToUploadRelay && registrationData
+							? ""
+							: uploadRelayData
+								? "disabled"
+								: "disabled"
+					}
+					onClick={() => {
+						if (currentStep === "relay") {
+							handleWriteToUploadRelay();
+						}
+					}}
+					disabled={
+						currentStep !== "relay" || isWritingToUploadRelay || !registrationData
+					}
+				>
+					{currentStep === "relay" && isWritingToUploadRelay ? (
+						<span>Uploading to Network...</span>
+					) : uploadRelayData ? (
+						<span>✓ 2. Uploaded to Network</span>
+					) : (
+						<span>2. Upload to Network</span>
+					)}
+				</button>
+
+				{/* Step 3: Certify Blob */}
+				<button
+					className={
+						currentStep === "certify" && !isCertifying && uploadRelayData
+							? ""
+							: "disabled"
+					}
+					onClick={() => {
+						if (currentStep === "certify") {
+							handleCertifyBlob();
+						}
+					}}
+					disabled={currentStep !== "certify" || isCertifying || !uploadRelayData}
+				>
+					{currentStep === "certify" && isCertifying ? (
+						<span>Certifying...</span>
+					) : (
+						<span>3. Certify Upload</span>
+					)}
+				</button>
+			</div>
+
 			{/* Uploads Section */}
-			<section>
+			<div>
 				<h2>
 					Uploads <span className="walrus-uploads-count">({uploadedBlobs.length})</span>
 				</h2>
@@ -341,7 +337,7 @@ export default function FileUpload({ onUploadComplete }: FileUploadProps) {
 						<PlaceholderCard />
 					)}
 				</div>
-			</section>
+			</div>
 		</div>
 	);
 }
