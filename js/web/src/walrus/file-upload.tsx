@@ -1,5 +1,6 @@
 import { useCurrentAccount } from "@mysten/dapp-kit";
 import { useRef, useState } from "react";
+import { useAppContext } from "../app/context";
 import type { ImageCardProps } from "./image-card";
 import { saveUploadToStorage } from "./localStorage";
 import { useStorageCost } from "./useStorageCost";
@@ -7,6 +8,9 @@ import { useWalrusUpload } from "./useWalrusUpload";
 
 const MAX_FILE_SIZE = 500 * 1024 * 1024; // 500 MiB in bytes
 const DELETABLE = true; // always allow blobs to be deleted
+const MAX_EPOCHS = 53;
+const MAINNET_EPOCH_DAYS = 14;
+const TESTNET_EPOCH_DAYS = 1;
 
 interface FileUploadProps {
 	onUploadComplete: (uploadedBlob: ImageCardProps) => void;
@@ -14,6 +18,7 @@ interface FileUploadProps {
 
 export default function FileUpload({ onUploadComplete }: FileUploadProps) {
 	const currentAccount = useCurrentAccount();
+	const { network } = useAppContext();
 
 	// UI state
 	const fileInputRef = useRef<HTMLInputElement>(null);
@@ -134,19 +139,20 @@ export default function FileUpload({ onUploadComplete }: FileUploadProps) {
 			</div>
 
 			<div className="form-field">
-				<label>Epochs</label>
+				<label>Storage Duration</label>
 				<input
-					type="number"
+					type="range"
 					value={epochs}
-					onChange={(e) =>
-						setEpochs(Math.min(53, Math.max(1, Math.floor(Number(e.target.value)))))
-					}
+					onChange={(e) => setEpochs(Math.max(1, Math.floor(Number(e.target.value))))}
 					min="1"
-					max="53"
+					max={MAX_EPOCHS}
 					step="1"
 				/>
 				<div className="field-info">
-					The number of Walrus epochs for which to store the blob (max 53).
+					{network === "mainnet"
+						? `${Math.floor((epochs * MAINNET_EPOCH_DAYS) / 7)} weeks (${epochs * MAINNET_EPOCH_DAYS} days)`
+						: `${epochs} days`}{" "}
+					- Max {network === "mainnet" ? `${Math.floor((MAX_EPOCHS * MAINNET_EPOCH_DAYS) / 7)} weeks` : `${MAX_EPOCHS} days`}
 				</div>
 			</div>
 
