@@ -162,8 +162,8 @@ export default function FileUpload({ onUploadComplete }: FileUploadProps) {
 			</div>
 
 			{/* Cost Information */}
-			<div className="walrus-cost-display">
-				<h2>Cost Estimate</h2>
+			<div className="form-field">
+				<label>Cost Estimate</label>
 				<div>
 					<p>
 						<b>
@@ -192,9 +192,6 @@ export default function FileUpload({ onUploadComplete }: FileUploadProps) {
 								: "---"}
 						</b>
 					</p>
-				</div>
-				<div className="field-info">
-					Actual costs may vary based on current network conditions and file size.
 				</div>
 			</div>
 

@@ -28,17 +28,6 @@
 	flex-direction: column;
 }
 
-.walrus-advanced-content {
-	margin-top: 1em;
-}
-
-.walrus-cost-display {
-	border: 1px solid #ccc;
-	border-radius: 0.5em;
-	padding: 1em;
-	margin-top: 1em;
-}
-
 .walrus-upload-steps {
 	display: flex;
 	flex-direction: column;
@@ -85,33 +74,6 @@
 	gap: 0.5em;
 }
 
-/* Placeholder card component */
-.walrus-placeholder-card {
-	display: flex;
-	gap: 1em;
-	padding: 1em;
-	border: 2px dashed #ccc;
-	border-radius: 0.5em;
-	align-items: center;
-	opacity: 0.6;
-}
-
-.walrus-placeholder-image {
-	width: 120px;
-	height: 120px;
-	flex-shrink: 0;
-	border-radius: 0.5em;
-	background-color: #333;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	color: #ccc;
-}
-
-.walrus-placeholder-content {
-	flex: 1;
-}
-
 /* Uploads section */
 .walrus-uploads-list {
 	display: flex;
@@ -123,17 +85,6 @@
 
 .walrus-uploads-count {
 	opacity: 0.5;
-}
-
-/* Advanced settings toggle */
-.walrus-advanced-toggle {
-	margin-top: 0.5em;
-	cursor: pointer;
-}
-
-/* Checkbox styling */
-.walrus-checkbox {
-	margin-right: 0.5em;
 }
 
 /* Animation for any remaining spinners */
