@@ -17,6 +17,10 @@ interface FileUploadProps {
 	onUploadProgressChange?: (hasProgress: boolean) => void;
 }
 
+// TODO: disable "CHOOSE FILE" and "duration" selector if step 1 has started
+// TODO: fixed height for "CHOOSE FILE" and "computing metadata"
+// MAYBE: show USD cost estimate
+
 export default function FileUpload({
 	onUploadComplete,
 	onUploadProgressChange,
