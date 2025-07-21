@@ -118,6 +118,8 @@ export default function FileUpload({
 	// Combine errors from UI and upload hook
 	const displayError = error || uploadError;
 
+	const disableFileAndDuration = currentStep !== "register" || isRegistering;
+
 	return (
 		<div className="walrus-form">
 			<div className="form-field">
@@ -132,6 +134,7 @@ export default function FileUpload({
 								handleFileSelect(selectedFile);
 							}
 						}}
+						disabled={disableFileAndDuration}
 					/>
 					<div className="walrus-drop-zone">
 						{file ? (
@@ -143,19 +146,19 @@ export default function FileUpload({
 								{isComputingMetadata ? (
 									<p>Computing metadata...</p>
 								) : (
-									<button type="button">CHOOSE FILE</button>
+									<button type="button" disabled={disableFileAndDuration}>CHOOSE FILE</button>
 								)}
 							</div>
 						) : (
 							<div>
 								<p>Drag & drop a file</p>
 								<p>Max {MAX_FILE_SIZE / (1024 * 1024)} MiB</p>
-								<button type="button">CHOOSE FILE</button>
+								<button type="button" disabled={disableFileAndDuration}>CHOOSE FILE</button>
 							</div>
 						)}
 					</div>
 				</div>
-				{displayError && <div className="field-error">{displayError}</div>}
+				{displayError && <div className="field-error">{displayError}</div>} {/* TODO: move elsewhere */}
 			</div>
 
 			<div className="form-field">
@@ -167,6 +170,7 @@ export default function FileUpload({
 					min="1"
 					max={MAX_EPOCHS}
 					step="1"
+					disabled={disableFileAndDuration}
 				/>
 				<div className="field-info">
 					{formatEpochDuration(
