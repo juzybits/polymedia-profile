@@ -26,6 +26,7 @@ import "../styles/app.css";
 import { WalrusClient } from "@mysten/walrus";
 import { networkIds } from "./config";
 import { AppContext } from "./context";
+import { NetworkRibbon } from "./NetworkRibbon";
 import { Nav } from "./nav";
 
 /* App router */
@@ -159,6 +160,7 @@ const App: React.FC<{
 	return (
 		<AppContext.Provider value={appContext}>
 			<div id="layout">
+				<NetworkRibbon />
 				<Nav />
 				<Outlet /> {/* loads a page/*.tsx */}
 				<div id="filler-section"></div>

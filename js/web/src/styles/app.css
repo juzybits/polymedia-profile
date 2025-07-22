@@ -196,3 +196,22 @@ button,
 		color: white;
 	}
 }
+
+.network-ribbon {
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	z-index: 1;
+	width: 200px;
+	background: #e74c3c;
+	color: white;
+	text-align: center;
+	font-variation-settings: "wght" 500;
+	font-size: 0.5rem;
+	padding: 0.3em 0;
+	transform: rotate(-45deg) translate(-61px, -40px);
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+	pointer-events: none;
+	letter-spacing: 0.1em;
+	user-select: none;
+}

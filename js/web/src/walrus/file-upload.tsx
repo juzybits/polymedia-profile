@@ -142,14 +142,18 @@ export default function FileUpload({
 								{isComputingMetadata ? (
 									<button disabled>Processing...</button>
 								) : (
-									<button type="button" disabled={disableFileAndDuration}>CHOOSE FILE</button>
+									<button type="button" disabled={disableFileAndDuration}>
+										CHOOSE FILE
+									</button>
 								)}
 							</div>
 						) : (
 							<div>
 								<p>Drag & drop a file</p>
 								<p>Max {MAX_FILE_SIZE / (1024 * 1024)} MiB</p>
-								<button type="button" disabled={disableFileAndDuration}>CHOOSE FILE</button>
+								<button type="button" disabled={disableFileAndDuration}>
+									CHOOSE FILE
+								</button>
 							</div>
 						)}
 					</div>

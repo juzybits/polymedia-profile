@@ -6,7 +6,7 @@
 	"scripts": {
 		"build": "vite build",
 		"clean": "rm -rf dist/ node_modules/ .turbo/ .wrangler/",
-		"deploy-dev": "pnpm build && wrangler pages deploy dist/ --project-name polymedia-profile --branch dev",
+		"deploy-testnet": "pnpm build && wrangler pages deploy dist/ --project-name polymedia-profile --branch testnet",
 		"deploy-prod": "pnpm build && wrangler pages deploy dist/ --project-name polymedia-profile --branch main",
 		"dev": "vite",
 		"host": "vite --host",
