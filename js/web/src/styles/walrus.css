@@ -13,6 +13,8 @@
 		button {
 			margin: 0;
 			padding: 0.5em 1em;
+			font-size: 0.9em;
+			text-transform: uppercase;
 		}
 	}
 
@@ -44,6 +46,10 @@
 	align-items: center;
 	justify-content: center;
 	flex-direction: column;
+	button {
+		margin-top: 0.8em;
+		font-size: 0.9em;
+	}
 }
 
 .walrus-upload-btn {
@@ -109,4 +115,5 @@
 	align-items: center;
 	gap: 0.5em;
 	justify-content: center;
+	font-variation-settings: "wght" 700;
 }

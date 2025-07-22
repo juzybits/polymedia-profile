@@ -17,9 +17,6 @@ interface FileUploadProps {
 	onUploadProgressChange?: (hasProgress: boolean) => void;
 }
 
-// TODO: fixed height for "CHOOSE FILE" and "computing metadata"
-// MAYBE: show USD cost estimate
-
 export default function FileUpload({
 	onUploadComplete,
 	onUploadProgressChange,
@@ -143,7 +140,7 @@ export default function FileUpload({
 								</p>
 								<p>{(file.size / (1024 * 1024)).toFixed(2)} MiB</p>
 								{isComputingMetadata ? (
-									<p>Computing metadata...</p>
+									<button disabled>Processing...</button>
 								) : (
 									<button type="button" disabled={disableFileAndDuration}>CHOOSE FILE</button>
 								)}
@@ -157,7 +154,7 @@ export default function FileUpload({
 						)}
 					</div>
 				</div>
-				{displayError && <div className="field-error">{displayError}</div>} {/* TODO: move elsewhere */}
+				{displayError && <div className="field-error">{displayError}</div>}
 			</div>
 
 			<div className="form-field">
@@ -299,12 +296,12 @@ export default function FileUpload({
 					{isWritingToUploadRelay ? (
 						<div className="button-loading">
 							<Spinner />
-							<span>Uploading to Network...</span>
+							<span>Uploading to Walrus...</span>
 						</div>
 					) : uploadRelayData ? (
-						<span>✓ 2. Uploaded to Network</span>
+						<span>✓ 2. Uploaded to Walrus</span>
 					) : (
-						<span>2. Upload to Network</span>
+						<span>2. Upload to Walrus</span>
 					)}
 				</button>
 
