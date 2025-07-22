@@ -14,7 +14,7 @@ export const PageHome: React.FC = () => {
 					Sui
 				</a>
 				. It lets users attach a profile (name, picture, etc) to their Sui address. Over
-				137,000 profiles have been created to date.
+				138,000 profiles have been created to date.
 				<br />
 				<br />
 				This web app lets users manage their profiles on the default registry, called{" "}
