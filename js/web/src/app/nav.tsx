@@ -107,15 +107,6 @@ export const Nav: React.FC = () => {
 							Twitter
 						</a>
 					</div>
-					<div className="nav-social-link">
-						<a
-							href="https://discord.gg/3ZaE69Eq78"
-							target="_blank"
-							rel="noopener noreferrer"
-						>
-							Discord
-						</a>
-					</div>
 				</div>
 
 				<div id="nav-watermark" className="nav-section">

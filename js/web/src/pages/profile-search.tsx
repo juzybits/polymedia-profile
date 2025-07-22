@@ -84,7 +84,7 @@ export const PageProfileSearch: React.FC = () => {
 
 	return (
 		<div id="page" className="page-search-profiles">
-			<h1>SEARCH PROFILES</h1>
+			<h1>SEARCH</h1>
 
 			<p>Enter one or more Sui addresses to fetch their profiles.</p>
 
