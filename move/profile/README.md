@@ -4,13 +4,20 @@ A simple and flexible profile system on Sui.
 
 For an overview of Polymedia Profile, see _[../../README.md](../../README.md)_.
 
-For details about the TypeScript SDK, see _[../sdk/README.md](../sdk/README.md)_.
+For details about the TypeScript SDK, see _[../../js/sdk/README.md](../../js/sdk/README.md)_.
 
-## Mainnet objects
+## Mainnet IDs
 
-Package: [0x57138e18b82cc8ea6e92c3d5737d6078b1304b655f59cf5ae9668cc44aad4ead](https://suiexplorer.com/object/0x57138e18b82cc8ea6e92c3d5737d6078b1304b655f59cf5ae9668cc44aad4ead?network=mainnet)
+Package: [0x57138e18b82cc8ea6e92c3d5737d6078b1304b655f59cf5ae9668cc44aad4ead](https://explorer.polymedia.app/object/0x57138e18b82cc8ea6e92c3d5737d6078b1304b655f59cf5ae9668cc44aad4ead)
 
-Registry: [0xd6eb0ca817dfe0763af9303a6bea89b88a524844d78e657dc25ed8ba3877deac](https://suiexplorer.com/object/0xd6eb0ca817dfe0763af9303a6bea89b88a524844d78e657dc25ed8ba3877deac?network=mainnet)
+Registry: [0xd6eb0ca817dfe0763af9303a6bea89b88a524844d78e657dc25ed8ba3877deac](https://explorer.polymedia.app/object/0xd6eb0ca817dfe0763af9303a6bea89b88a524844d78e657dc25ed8ba3877deac)
+
+## Testnet IDs
+
+Package: [0xb33f86890ab0a1b1c980593e66f6f33a9909c2453c04994ba825c703569bebb2](https://explorer.polymedia.app/object/0xb33f86890ab0a1b1c980593e66f6f33a9909c2453c04994ba825c703569bebb2?network=testnet)
+
+Registry: [0x20fd7037a01bdd549091c0c4ccf426c21762c3dbe331c5b6001800a58640cc77](https://explorer.polymedia.app/object/0x20fd7037a01bdd549091c0c4ccf426c21762c3dbe331c5b6001800a58640cc77?network=testnet)
+
 
 ## Basics
 

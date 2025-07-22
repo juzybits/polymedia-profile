@@ -4,7 +4,7 @@ A library to interact with the _PolymediaProfile_ package on Sui.
 
 For an overview of Polymedia Profile, see [../../README.md](../../README.md).
 
-For details about the Sui package, see [../sui/README.md](../sui/README.md).
+For details about the Sui package, see [../../move/profile/README.md](../../move/profile/README.md).
 
 ## Installation
 ```bash
@@ -32,16 +32,21 @@ export type PolymediaProfile = {
 ## Instantiate `ProfileClient`
 
 ```ts
-import { SuiClient } from '@mysten/sui/client';
-import { ProfileClient } from '@polymedia/profile-sdk';
+import { ProfileClient } from "@polymedia/profile-sdk";
+import { useSignTransaction, useSuiClient } from "@mysten/dapp-kit";
 
-const profileClient = new ProfileClient(
-    "mainnet",
-    new SuiClient({url: 'https://your_rpc_endpoint'}),
-);
+const suiClient = useSuiClient();
+const { mutateAsync: walletSignTx } = useSignTransaction();
+
+const profileClient = new ProfileClient({
+    profilePkgId: "0x...",
+    registryId: "0x...",
+    suiClient,
+    signTx: (tx) => walletSignTx({ transaction: tx }),
+    // waitForTxOptions: ... optional ...
+    // txRespOptions: ... optional ...
+});
 ```
-
-`ProfileClient` uses Polymedia's package and registry by default, but you can change that by providing additional arguments to the constructor.
 
 ## Find profiles
 
