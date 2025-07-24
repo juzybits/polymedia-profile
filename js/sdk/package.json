@@ -24,7 +24,7 @@
 	},
 	"peerDependencies": {
 		"@mysten/bcs": "^1.6.4",
-		"@mysten/sui": "^1.36.0"
+		"@mysten/sui": "^1.36.2"
 	},
 	"type": "module",
 	"sideEffects": false,
@@ -44,6 +44,6 @@
 		}
 	},
 	"dependencies": {
-		"@polymedia/suitcase-core": "^0.0.60"
+		"@polymedia/suitcase-core": "^0.0.61"
 	}
 }
