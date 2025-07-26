@@ -186,11 +186,6 @@ export default function FileUpload({
 					{formatEpochDuration(
 						epochs,
 						network === "mainnet" ? MAINNET_EPOCH_DAYS : TESTNET_EPOCH_DAYS,
-					)}{" "}
-					- Max{" "}
-					{formatEpochDuration(
-						MAX_EPOCHS,
-						network === "mainnet" ? MAINNET_EPOCH_DAYS : TESTNET_EPOCH_DAYS,
 					)}
 				</div>
 			</div>

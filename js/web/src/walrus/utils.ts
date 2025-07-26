@@ -6,10 +6,8 @@ export const makeWalrusImageUrl = (network: string, patchId: string) => {
 export const formatEpochDuration = (epochs: number, epochDurationDays: number) => {
 	if (epochDurationDays % 7 === 0) {
 		const weeks = Math.floor((epochs * epochDurationDays) / 7);
-		const days = epochs * epochDurationDays;
 		const weekLabel = weeks === 1 ? "week" : "weeks";
-		const dayLabel = days === 1 ? "day" : "days";
-		return `${weeks} ${weekLabel} (${days} ${dayLabel})`;
+		return `${weeks} ${weekLabel}`;
 	}
 	const dayLabel = epochs === 1 ? "day" : "days";
 	return `${epochs} ${dayLabel}`;
