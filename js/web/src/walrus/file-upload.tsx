@@ -124,7 +124,7 @@ export default function FileUpload({
 	// Combine errors from UI and upload hook
 	const displayError = error || uploadError;
 
-	const disableFileAndDuration = !canRegister || isRegistering;
+	const disableFileAndDuration = isRegistering || isRelaying || isCertifying || isEncoding;
 
 	return (
 		<div className="walrus-form">
