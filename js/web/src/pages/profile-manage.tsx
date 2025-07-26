@@ -9,7 +9,7 @@ import "../styles/manage-profile.css";
 import "../styles/walrus.css";
 import { Modal } from "../comp/modal";
 import FileUpload from "../walrus/file-upload";
-import type { UploadResult } from "../walrus/useWalrusUpload";
+import type { UploadResult } from "../walrus/file-upload";
 import { makeWalrusImageUrl } from "../walrus/utils";
 
 export const PageProfileManage: React.FC = () => {

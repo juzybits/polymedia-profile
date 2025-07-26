@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { useAppContext } from "../app/context";
 import { Spinner } from "../comp/spinner";
 import { useStorageCost } from "./useStorageCost";
-import { type UploadResult, useWalrusUpload } from "./useWalrusUpload";
+import { useWalrusUpload } from "./useWalrusUpload";
 import { formatEpochDuration, formatSmallNumber } from "./utils";
 
 const MAX_FILE_SIZE = 500 * 1024 * 1024; // 500 MiB in bytes
@@ -11,6 +11,13 @@ const DELETABLE = true; // always allow blobs to be deleted
 const MAX_EPOCHS = 53;
 const MAINNET_EPOCH_DAYS = 14;
 const TESTNET_EPOCH_DAYS = 1;
+
+export interface UploadResult {
+	blobId: string;
+	suiObjectId: string;
+	suiEventId: string;
+	endEpoch: number;
+}
 
 interface FileUploadProps {
 	onUploadComplete: (uploadedBlob: UploadResult) => void;
@@ -33,34 +40,32 @@ export default function FileUpload({
 
 	// Use the new Walrus upload hook
 	const {
-		currentStep,
-		registrationData,
-		uploadRelayData,
-		error: uploadError,
-		metadata,
-		isComputingMetadata,
-		computeMetadata,
+		state,
+		encodeFile,
 		registerBlob,
 		writeToUploadRelay,
 		certifyBlob,
-		isRegistering,
-		isWritingToUploadRelay,
-		isCertifying,
 		reset: resetUpload,
 	} = useWalrusUpload();
+
+	// Derive convenient flags from the state
+	const uploadStatus = state.status;
+	const isEncoding = uploadStatus === "encoding";
+	const canRegister = uploadStatus === "can-register";
+	const isRegistering = uploadStatus === "registering";
+	const canRelay = uploadStatus === "can-relay";
+	const isRelaying = uploadStatus === "relaying";
+	const canCertify = uploadStatus === "can-certify";
+	const isCertifying = uploadStatus === "certifying";
+	const uploadError = uploadStatus === "error" ? state.message : null;
 
 	const { data: storageCost } = useStorageCost(file?.size || 0, epochs);
 
 	// Check if there's upload progress that would be lost
 	const hasUploadProgress = !!(
 		file &&
-		(metadata ||
-			registrationData ||
-			uploadRelayData ||
-			isComputingMetadata ||
-			isRegistering ||
-			isWritingToUploadRelay ||
-			isCertifying)
+		uploadStatus !== "idle" &&
+		uploadStatus !== "error"
 	);
 
 	// Notify parent about progress changes
@@ -80,8 +85,7 @@ export default function FileUpload({
 
 		setError(null);
 		setFile(selectedFile);
-
-		await computeMetadata(selectedFile);
+		await encodeFile(selectedFile);
 	};
 
 	const handleRegisterBlob = async () => {
@@ -98,7 +102,13 @@ export default function FileUpload({
 	const handleCertifyBlob = async () => {
 		const result = await certifyBlob();
 
-		onUploadComplete(result);
+		// Transform the result to match the expected UploadResult interface
+		onUploadComplete({
+			blobId: result[0].blobId,
+			suiObjectId: result[0].blobObject.id.id,
+			suiEventId: result[0].id, // using patch id as event id
+			endEpoch: result[0].blobObject.storage.end_epoch,
+		});
 		resetUploadProcess();
 	};
 
@@ -114,7 +124,7 @@ export default function FileUpload({
 	// Combine errors from UI and upload hook
 	const displayError = error || uploadError;
 
-	const disableFileAndDuration = currentStep !== "register" || isRegistering;
+	const disableFileAndDuration = !canRegister || isRegistering;
 
 	return (
 		<div className="walrus-form">
@@ -139,7 +149,7 @@ export default function FileUpload({
 									<b>{file.name}</b>
 								</p>
 								<p>{(file.size / (1024 * 1024)).toFixed(2)} MiB</p>
-								{isComputingMetadata ? (
+								{isEncoding ? (
 									<button disabled>Processing...</button>
 								) : (
 									<button type="button" disabled={disableFileAndDuration}>
@@ -225,19 +235,17 @@ export default function FileUpload({
 				{/* Step 1: Register Blob */}
 				<button
 					className={
-						currentStep === "register" &&
-						!isRegistering &&
-						file &&
-						currentAccount &&
-						!isComputingMetadata &&
-						metadata
+						canRegister && !isRegistering && file && currentAccount && !isEncoding
 							? ""
-							: registrationData
+							: uploadStatus === "can-relay" ||
+									uploadStatus === "relaying" ||
+									uploadStatus === "can-certify" ||
+									uploadStatus === "certifying"
 								? "disabled"
 								: "disabled"
 					}
 					onClick={() => {
-						if (currentStep !== "register") return;
+						if (!canRegister) return;
 						if (!currentAccount) {
 							setError("Please connect your wallet first");
 							return;
@@ -246,23 +254,14 @@ export default function FileUpload({
 							setError("Please select a file first");
 							return;
 						}
-						if (isComputingMetadata) {
-							setError("Metadata is still being computed. Please wait.");
-							return;
-						}
-						if (!metadata) {
-							setError("Metadata computation failed. Please try again.");
+						if (isEncoding) {
+							setError("File is still being processed. Please wait.");
 							return;
 						}
 						handleRegisterBlob();
 					}}
 					disabled={
-						currentStep !== "register" ||
-						isRegistering ||
-						!file ||
-						!currentAccount ||
-						isComputingMetadata ||
-						!metadata
+						!canRegister || isRegistering || !file || !currentAccount || isEncoding
 					}
 				>
 					{isRegistering ? (
@@ -270,9 +269,12 @@ export default function FileUpload({
 							<Spinner />
 							<span>Registering...</span>
 						</div>
-					) : registrationData ? (
+					) : uploadStatus === "can-relay" ||
+						uploadStatus === "relaying" ||
+						uploadStatus === "can-certify" ||
+						uploadStatus === "certifying" ? (
 						<span>✓ 1. Register Blob</span>
-					) : currentStep === "register" && !currentAccount ? (
+					) : !currentAccount ? (
 						<span>1. Connect Wallet First</span>
 					) : (
 						<span>1. Register Blob</span>
@@ -282,27 +284,25 @@ export default function FileUpload({
 				{/* Step 2: Write to Upload Relay */}
 				<button
 					className={
-						currentStep === "relay" && !isWritingToUploadRelay && registrationData
+						canRelay && !isRelaying
 							? ""
-							: uploadRelayData
+							: uploadStatus === "can-certify" || uploadStatus === "certifying"
 								? "disabled"
 								: "disabled"
 					}
 					onClick={() => {
-						if (currentStep === "relay") {
+						if (canRelay) {
 							handleWriteToUploadRelay();
 						}
 					}}
-					disabled={
-						currentStep !== "relay" || isWritingToUploadRelay || !registrationData
-					}
+					disabled={!canRelay || isRelaying}
 				>
-					{isWritingToUploadRelay ? (
+					{isRelaying ? (
 						<div className="button-loading">
 							<Spinner />
 							<span>Uploading to Walrus...</span>
 						</div>
-					) : uploadRelayData ? (
+					) : uploadStatus === "can-certify" || uploadStatus === "certifying" ? (
 						<span>✓ 2. Uploaded to Walrus</span>
 					) : (
 						<span>2. Upload to Walrus</span>
@@ -311,17 +311,13 @@ export default function FileUpload({
 
 				{/* Step 3: Certify Blob */}
 				<button
-					className={
-						currentStep === "certify" && !isCertifying && uploadRelayData
-							? ""
-							: "disabled"
-					}
+					className={canCertify && !isCertifying ? "" : "disabled"}
 					onClick={() => {
-						if (currentStep === "certify") {
+						if (canCertify) {
 							handleCertifyBlob();
 						}
 					}}
-					disabled={currentStep !== "certify" || isCertifying || !uploadRelayData}
+					disabled={!canCertify || isCertifying}
 				>
 					{isCertifying ? (
 						<div className="button-loading">
