@@ -1,20 +1,8 @@
 import { useCurrentAccount, useSignAndExecuteTransaction } from "@mysten/dapp-kit";
 import { WalrusFile, type WriteFilesFlow } from "@mysten/walrus";
-import { type QueryClient, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { useReducer } from "react";
 import { useAppContext } from "../app/context";
-
-/**
- * Helper function to invalidate balance queries after transactions
- */
-const invalidateBalanceQueries = (queryClient: QueryClient, address: string) => {
-	queryClient.invalidateQueries({
-		queryKey: ["suiBalance", address],
-	});
-	queryClient.invalidateQueries({
-		queryKey: ["walBalance", address],
-	});
-};
 
 export type UploadStates =
 	| { status: "idle" }
@@ -109,7 +97,6 @@ export function useWalrusUpload() {
 	const { walrusClient } = useAppContext();
 	const currentAccount = useCurrentAccount();
 	const { mutateAsync: signAndExecuteTransaction } = useSignAndExecuteTransaction();
-	const queryClient = useQueryClient();
 
 	// State management for the upload process
 	const [state, dispatch] = useReducer(uploadReducer, { status: "idle" });
@@ -176,11 +163,6 @@ export function useWalrusUpload() {
 		onSuccess: (data) => {
 			const { registerDigest } = data;
 			dispatch({ type: "registered", digest: registerDigest });
-
-			// Invalidate balance queries after successful registration
-			if (currentAccount?.address) {
-				invalidateBalanceQueries(queryClient, currentAccount.address);
-			}
 		},
 		onError: (error: Error) => {
 			dispatch({ type: "error", message: error.message });
@@ -230,10 +212,6 @@ export function useWalrusUpload() {
 		},
 		onSuccess: () => {
 			dispatch({ type: "certified" });
-			// Invalidate balance queries after successful certification
-			if (currentAccount?.address) {
-				invalidateBalanceQueries(queryClient, currentAccount.address);
-			}
 		},
 		onError: (error: Error) => {
 			dispatch({ type: "error", message: error.message });
