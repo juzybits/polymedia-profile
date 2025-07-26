@@ -121,10 +121,17 @@ export default function FileUpload({
 		}
 	};
 
-	// Combine errors from UI and upload hook
 	const displayError = error || uploadError;
-
-	const disableFileAndDuration = isRegistering || isRelaying || isCertifying || isEncoding;
+	const disableFileAndDuration =
+		isRegistering || isRelaying || isCertifying || isEncoding;
+	const registerDisabled =
+		!canRegister || isRegistering || !file || !currentAccount || isEncoding;
+	const relayDisabled = !canRelay || isRelaying;
+	const certifyDisabled = !canCertify || isCertifying;
+	const hasRegistered = ["can-relay", "relaying", "can-certify", "certifying"].includes(
+		uploadStatus,
+	);
+	const hasRelayed = ["can-certify", "certifying"].includes(uploadStatus);
 
 	return (
 		<div className="walrus-form">
@@ -227,47 +234,19 @@ export default function FileUpload({
 			{/* Upload Buttons */}
 			<div className="btn-group">
 				<h3>Upload Steps</h3>
+
 				{/* Step 1: Register Blob */}
 				<button
-					className={
-						canRegister && !isRegistering && file && currentAccount && !isEncoding
-							? ""
-							: uploadStatus === "can-relay" ||
-									uploadStatus === "relaying" ||
-									uploadStatus === "can-certify" ||
-									uploadStatus === "certifying"
-								? "disabled"
-								: "disabled"
-					}
-					onClick={() => {
-						if (!canRegister) return;
-						if (!currentAccount) {
-							setError("Please connect your wallet first");
-							return;
-						}
-						if (!file) {
-							setError("Please select a file first");
-							return;
-						}
-						if (isEncoding) {
-							setError("File is still being processed. Please wait.");
-							return;
-						}
-						handleRegisterBlob();
-					}}
-					disabled={
-						!canRegister || isRegistering || !file || !currentAccount || isEncoding
-					}
+					className={registerDisabled || hasRegistered ? "disabled" : ""}
+					onClick={handleRegisterBlob}
+					disabled={registerDisabled}
 				>
 					{isRegistering ? (
 						<div className="button-loading">
 							<Spinner />
 							<span>Registering...</span>
 						</div>
-					) : uploadStatus === "can-relay" ||
-						uploadStatus === "relaying" ||
-						uploadStatus === "can-certify" ||
-						uploadStatus === "certifying" ? (
+					) : hasRegistered ? (
 						<span>✓ 1. Register Blob</span>
 					) : !currentAccount ? (
 						<span>1. Connect Wallet First</span>
@@ -278,26 +257,16 @@ export default function FileUpload({
 
 				{/* Step 2: Write to Upload Relay */}
 				<button
-					className={
-						canRelay && !isRelaying
-							? ""
-							: uploadStatus === "can-certify" || uploadStatus === "certifying"
-								? "disabled"
-								: "disabled"
-					}
-					onClick={() => {
-						if (canRelay) {
-							handleWriteToUploadRelay();
-						}
-					}}
-					disabled={!canRelay || isRelaying}
+					className={relayDisabled || hasRelayed ? "disabled" : ""}
+					onClick={handleWriteToUploadRelay}
+					disabled={relayDisabled}
 				>
 					{isRelaying ? (
 						<div className="button-loading">
 							<Spinner />
 							<span>Uploading to Walrus...</span>
 						</div>
-					) : uploadStatus === "can-certify" || uploadStatus === "certifying" ? (
+					) : hasRelayed ? (
 						<span>✓ 2. Uploaded to Walrus</span>
 					) : (
 						<span>2. Upload to Walrus</span>
@@ -306,13 +275,9 @@ export default function FileUpload({
 
 				{/* Step 3: Certify Blob */}
 				<button
-					className={canCertify && !isCertifying ? "" : "disabled"}
-					onClick={() => {
-						if (canCertify) {
-							handleCertifyBlob();
-						}
-					}}
-					disabled={!canCertify || isCertifying}
+					className={certifyDisabled ? "disabled" : ""}
+					onClick={handleCertifyBlob}
+					disabled={certifyDisabled}
 				>
 					{isCertifying ? (
 						<div className="button-loading">
