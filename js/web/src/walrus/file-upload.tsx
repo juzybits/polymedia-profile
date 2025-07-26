@@ -74,13 +74,17 @@ export default function FileUpload({
 	}, [hasUploadProgress, onUploadProgressChange]);
 
 	const handleFileSelect = async (selectedFile: File) => {
+		if (isEncoding) {
+			return;
+		}
+
 		setError(null);
 
 		if (selectedFile.size > MAX_FILE_SIZE) {
 			const fileSizeMiB = (selectedFile.size / (1024 * 1024)).toFixed(2);
 			const maxSizeMiB = MAX_FILE_SIZE / (1024 * 1024);
 			setError(
-				`File size (${fileSizeMiB} MiB) exceeds maximum allowed size (${maxSizeMiB} MiB)`
+				`File size (${fileSizeMiB} MiB) exceeds maximum allowed size (${maxSizeMiB} MiB)`,
 			);
 			setFile(null);
 			return;

@@ -38,6 +38,7 @@ export const PageProfileManage: React.FC = () => {
 
 	const onUploadComplete = (uploadedBlob: UploadResult) => {
 		setShowWalrusModal(false);
+		setHasChanged(true);
 		setInputImage(makeWalrusImageUrl(network, uploadedBlob.patchId));
 	};
 
