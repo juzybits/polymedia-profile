@@ -13,9 +13,9 @@ const MAINNET_EPOCH_DAYS = 14;
 const TESTNET_EPOCH_DAYS = 1;
 
 export interface UploadResult {
+	patchId: string;
 	blobId: string;
 	suiObjectId: string;
-	suiEventId: string;
 	endEpoch: number;
 }
 
@@ -104,9 +104,9 @@ export default function FileUpload({
 
 		// Transform the result to match the expected UploadResult interface
 		onUploadComplete({
+			patchId: result[0].id,
 			blobId: result[0].blobId,
 			suiObjectId: result[0].blobObject.id.id,
-			suiEventId: result[0].id, // using patch id as event id
 			endEpoch: result[0].blobObject.storage.end_epoch,
 		});
 		resetUploadProcess();

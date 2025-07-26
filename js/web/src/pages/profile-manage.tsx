@@ -38,7 +38,7 @@ export const PageProfileManage: React.FC = () => {
 
 	const onUploadComplete = (uploadedBlob: UploadResult) => {
 		setShowWalrusModal(false);
-		setInputImage(makeWalrusImageUrl(network, uploadedBlob.blobId));
+		setInputImage(makeWalrusImageUrl(network, uploadedBlob.patchId));
 	};
 
 	const onUploadProgressChange = (hasProgress: boolean) => {

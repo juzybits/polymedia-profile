@@ -1,6 +1,6 @@
-export const makeWalrusImageUrl = (network: string, blobId: string) => {
+export const makeWalrusImageUrl = (network: string, patchId: string) => {
 	const AGGREGATOR_URL = `https://aggregator.walrus-${network}.walrus.space`;
-	return `${AGGREGATOR_URL}/v1/blobs/${blobId}`;
+	return `${AGGREGATOR_URL}/v1/blobs/by-quilt-patch-id/${patchId}`;
 };
 
 export const formatEpochDuration = (epochs: number, epochDurationDays: number) => {
