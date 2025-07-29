@@ -86,7 +86,13 @@ export default function FileUpload({
 		}
 
 		setFile(selectedFile);
-		await encodeFile(selectedFile);
+
+		document.body.classList.add("cursor-wait");
+		try {
+			await encodeFile(selectedFile);
+		} finally {
+			document.body.classList.remove("cursor-wait");
+		}
 	};
 
 	const handleRegisterBlob = async () => {

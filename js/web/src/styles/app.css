@@ -215,3 +215,7 @@ button,
 	letter-spacing: 0.1em;
 	user-select: none;
 }
+
+.cursor-wait * {
+	cursor: wait !important;
+}
