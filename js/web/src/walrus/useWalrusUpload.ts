@@ -25,7 +25,9 @@ export type UploadActions =
 	| { type: "certify" }
 	| { type: "certified" }
 	| { type: "error"; message: string }
-	| { type: "reset" };
+	| { type: "reset" }
+	| { type: "user-rejected-register" }
+	| { type: "user-rejected-certify" };
 
 export const uploadReducer = (
 	state: UploadStates,
@@ -80,6 +82,16 @@ export const uploadReducer = (
 			return { status: "error", message: action.message };
 		case "reset":
 			return { status: "idle" };
+		case "user-rejected-register":
+			if (state.status !== "registering") {
+				throw new Error("Invalid state: not in registering state");
+			}
+			return { status: "can-register", writeFileFlow: state.writeFileFlow };
+		case "user-rejected-certify":
+			if (state.status !== "certifying") {
+				throw new Error("Invalid state: not in certifying state");
+			}
+			return { status: "can-certify", writeFileFlow: state.writeFileFlow };
 	}
 };
 
@@ -165,7 +177,12 @@ export function useWalrusUpload() {
 			dispatch({ type: "registered", digest: registerDigest });
 		},
 		onError: (error: Error) => {
-			dispatch({ type: "error", message: error.message });
+			const isUserRejected = error.message.toLowerCase().includes("user rejected");
+			if (isUserRejected) {
+				dispatch({ type: "user-rejected-register" });
+			} else {
+				dispatch({ type: "error", message: error.message });
+			}
 		},
 	});
 
@@ -214,7 +231,12 @@ export function useWalrusUpload() {
 			dispatch({ type: "certified" });
 		},
 		onError: (error: Error) => {
-			dispatch({ type: "error", message: error.message });
+			const isUserRejected = error.message.toLowerCase().includes("user rejected");
+			if (isUserRejected) {
+				dispatch({ type: "user-rejected-certify" });
+			} else {
+				dispatch({ type: "error", message: error.message });
+			}
 		},
 	});
 
