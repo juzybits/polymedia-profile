@@ -10,7 +10,6 @@ import "../styles/walrus.css";
 import { Modal } from "../comp/modal";
 import type { UploadResult } from "../walrus/file-upload";
 import FileUpload from "../walrus/file-upload";
-import { makeWalrusImageUrl } from "../walrus/utils";
 
 export const PageProfileManage: React.FC = () => {
 	/* State */
@@ -295,3 +294,8 @@ export const PageProfileManage: React.FC = () => {
 		</div>
 	);
 };
+
+function makeWalrusImageUrl(network: string, patchId: string) {
+	const AGGREGATOR_URL = `https://aggregator.walrus-${network}.walrus.space`;
+	return `${AGGREGATOR_URL}/v1/blobs/by-quilt-patch-id/${patchId}`;
+}

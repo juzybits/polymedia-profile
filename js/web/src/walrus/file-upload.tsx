@@ -2,9 +2,7 @@ import { useCurrentAccount } from "@mysten/dapp-kit";
 import { useEffect, useRef, useState } from "react";
 import { useAppContext } from "../app/context";
 import { Spinner } from "../comp/spinner";
-import { useStorageCost } from "./useStorageCost";
 import { useWalrusUpload } from "./useWalrusUpload";
-import { formatEpochDuration, formatSmallNumber } from "./utils";
 
 const MAX_FILE_SIZE = 500 * 1024 * 1024; // 500 MiB in bytes
 const DELETABLE = true; // always allow blobs to be deleted
@@ -36,7 +34,6 @@ export default function FileUpload({
 	const [file, setFile] = useState<File | null>(null);
 	const [epochs, setEpochs] = useState(1);
 	const [error, setError] = useState<string | null>(null);
-	const [tipAmountMist] = useState("105");
 
 	// Use the new Walrus upload hook
 	const {
@@ -58,8 +55,6 @@ export default function FileUpload({
 	const canCertify = uploadStatus === "can-certify";
 	const isCertifying = uploadStatus === "certifying";
 	const uploadError = uploadStatus === "error" ? state.message : null;
-
-	const { data: storageCost } = useStorageCost(file?.size || 0, epochs);
 
 	// Check if there's upload progress that would be lost
 	const hasUploadProgress = !!(
@@ -203,40 +198,6 @@ export default function FileUpload({
 				</div>
 			</div>
 
-			{/* Cost Information */}
-			<div className="form-field">
-				<h3>Cost Estimate</h3>
-				<div>
-					<p>
-						<b>
-							{storageCost
-								? (() => {
-										const totalCostMist = parseInt(tipAmountMist);
-										const totalCostFrost = parseInt(storageCost.totalCost);
-										const formattedMist = formatSmallNumber(totalCostMist / 10 ** 9);
-										const formattedFrost = formatSmallNumber(totalCostFrost / 10 ** 9);
-										return (
-											<>
-												{formattedMist.prefix}
-												{formattedMist.subscript && <sub>{formattedMist.subscript}</sub>}
-												{formattedMist.significantDigits}
-												{" SUI"}
-												{" + "}
-												{formattedFrost.prefix}
-												{formattedFrost.subscript && (
-													<sub>{formattedFrost.subscript}</sub>
-												)}
-												{formattedFrost.significantDigits}
-												{" WAL"}
-											</>
-										);
-									})()
-								: "---"}
-						</b>
-					</p>
-				</div>
-			</div>
-
 			{/* Upload Buttons */}
 			<div className="btn-group">
 				<h3>Upload Steps</h3>
@@ -298,3 +259,13 @@ export default function FileUpload({
 		</div>
 	);
 }
+
+const formatEpochDuration = (epochs: number, epochDurationDays: number) => {
+	if (epochDurationDays % 7 === 0) {
+		const weeks = Math.floor((epochs * epochDurationDays) / 7);
+		const weekLabel = weeks === 1 ? "week" : "weeks";
+		return `${weeks} ${weekLabel}`;
+	}
+	const dayLabel = epochs === 1 ? "day" : "days";
+	return `${epochs} ${dayLabel}`;
+};
