@@ -116,7 +116,7 @@ const App: React.FC<{
 				timeout: 600_000,
 				host: `https://upload-relay.${network2}.walrus.space`,
 				sendTip: {
-					max: 1_000,
+					max: 5_000_000_000,
 				},
 			},
 		});
