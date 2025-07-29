@@ -85,6 +85,8 @@ export default function FileUpload({
 			return;
 		}
 
+		resetUpload();
+
 		setFile(selectedFile);
 
 		document.body.classList.add("cursor-wait");
