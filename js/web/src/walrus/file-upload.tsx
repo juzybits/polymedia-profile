@@ -161,9 +161,9 @@ export default function FileUpload({
 					<div className="walrus-drop-zone">
 						{file ? (
 							<div>
-								<p>
-									<b>{file.name}</b>
-								</p>
+								<div>
+									{isEncoding ? "⏳" : "✅"} <b>{file.name}</b>
+								</div>
 								<p>{(file.size / (1024 * 1024)).toFixed(2)} MiB</p>
 								{isEncoding ? (
 									<button disabled>Processing...</button>
